@@ -1,0 +1,117 @@
+/* src/pages/Auth_Page/Login.module.css */
+
+.loginPageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 420px;
+  padding: 30px;
+  background: white;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.loginBox {
+  width: 100%;
+}
+
+.logo {
+  width: 180px;
+  margin-bottom: 15px;
+  animation: pop 0.5s ease-in-out;
+}
+
+.loginBox h1 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--color-primary);
+}
+
+.loginBox p {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.loginForm {
+  margin-top: 20px;
+}
+
+.inputGroup {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* --- ส่วนที่แก้ไข --- */
+/* ทำให้ selector เจาะจงมากขึ้น เพื่อให้สไตล์สีส้มถูกใช้เป็นค่าเริ่มต้น */
+.loginForm button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: var(--color-secondary); /* ตั้งค่าพื้นหลังสีส้มเป็นค่าเริ่มต้น */
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* สไตล์เมื่อนำเมาส์ไปวาง จะเปลี่ยนเป็นสีส้มที่เข้มขึ้นเล็กน้อย */
+.loginForm button:hover {
+  background-color: #e24a1e;
+}
+/* --- จบส่วนที่แก้ไข --- */
+
+.errorMsg {
+  color: red;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+@media screen and (max-width: 480px) {
+  .loginContainer {
+    padding: 20px;
+    width: 95%;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

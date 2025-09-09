@@ -1,0 +1,15 @@
+/* src/index.css */
+:root {
+  --color-primary: #ed4988;
+  --color-secondary: #f1592b;
+  --bg-color: #fef7ff;
+  --text-color: #333;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  /* ไม่ต้องใช้ flexbox ที่ body แล้ว เพราะเราจะไปจัดการที่ตัว Component แทน */
+}
