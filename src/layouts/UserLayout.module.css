@@ -1,0 +1,83 @@
+/* src/layouts/UserLayout.module.css */
+
+.userLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.mainContent {
+  padding-top: 80px; /* กันพื้นที่สำหรับ Navbar ที่เป็น fixed */
+  flex-grow: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- Logout Modal Styles --- */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalBox {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modalBox h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.modalBox p {
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modalActions button {
+  padding: 10px 25px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.modalActions button:hover {
+  opacity: 0.8;
+}
+
+.btnSecondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btnDanger {
+  background-color: #dc3545;
+  color: white;
+}

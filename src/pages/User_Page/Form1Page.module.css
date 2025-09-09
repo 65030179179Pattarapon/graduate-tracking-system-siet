@@ -1,0 +1,127 @@
+/* src/pages/User_Page/Form1Page.module.css */
+/* แปลงมาจาก form1.css เดิม */
+
+.formContainer {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.formContainer h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+fieldset {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+legend {
+  padding: 0 10px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.infoGrid label, .formGroup label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.infoGrid input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.formGroup select:required:invalid {
+  color: #6c757d;
+}
+
+.formGroup textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 15px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.charCounter {
+  text-align: right;
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.formContainer button[type="submit"] {
+  width: 100%;
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.formContainer button[type="submit"]:hover {
+  background: #e24a1e;
+}
+
+.loading, .error {
+  padding: 50px;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+}
+.error { color: var(--rejected-color); }

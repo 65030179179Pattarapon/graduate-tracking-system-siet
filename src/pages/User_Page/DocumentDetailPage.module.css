@@ -1,0 +1,105 @@
+/* แปลงมาจาก student_document_detail.css เดิม */
+.detailContainer {
+  max-width: 1500px;
+  margin: 40px auto;
+  padding: 0 30px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.documentContent {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.documentSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: sticky;
+  top: 100px;
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contentHeader h1 { font-size: 28px; margin: 0; }
+
+.backLink {
+  color: #555;
+  text-decoration: none;
+  font-weight: 500;
+}
+.backLink:hover { color: var(--color-primary); }
+
+.detailCard {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.detailCard h3, .detailCard h4 {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+.subtleDivider {
+    border: none;
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 20px 0;
+}
+
+/* Status Highlight Card */
+.statusCard {
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-left: 5px solid;
+}
+.statusCard.approved { background-color: #e6f7ec; border-color: var(--approved-color); }
+.statusCard.pending { background-color: #fffbe6; border-color: var(--pending-color); }
+.statusCard.rejected { background-color: #fff1f0; border-color: var(--rejected-color); }
+
+.statusText p { margin: 0 0 5px 0; color: #555; }
+.statusText h2 { margin: 0; font-size: 24px; }
+
+/* Info List */
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+}
+.infoList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+.infoList label { color: #555; }
+.infoList span { font-weight: 600; text-align: right; }
+.commentBox {
+  background-color: #f8f9fa;
+  border-left: 4px solid #e9ecef;
+  padding: 15px 20px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.loadingText, .errorText {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+}
+.errorText { color: var(--rejected-color); }

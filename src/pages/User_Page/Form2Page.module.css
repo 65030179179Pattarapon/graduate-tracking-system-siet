@@ -1,0 +1,160 @@
+/* src/pages/User_Page/Form2Page.module.css */
+
+.formContainer { 
+  max-width: 800px; 
+  margin: 40px auto; 
+  padding: 30px; 
+  background: white; 
+  border-radius: 12px; 
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+.formContainer h2 { 
+    text-align: center; 
+    margin-top: 0;
+    margin-bottom: 25px; 
+    font-size: 22px; 
+}
+fieldset { 
+    border: 1px solid #e9ecef; 
+    border-radius: 8px; 
+    padding: 20px; 
+    margin-bottom: 20px; 
+}
+legend { 
+    padding: 0 10px; 
+    font-weight: 600; 
+    color: var(--color-primary); 
+}
+.infoGrid { 
+    display: grid; 
+    gap: 15px; 
+    margin-bottom: 15px; 
+    grid-template-columns: 1fr 1fr;
+}
+.infoGrid.threeCols { 
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+}
+.formGroup { 
+    margin-bottom: 20px; 
+}
+.subSection { 
+    background-color: #f8f9fa; 
+    padding: 20px; 
+    border-radius: 8px; 
+    border: 1px solid #e9ecef; 
+    margin-top: 15px; 
+}
+.subSection:not(:last-child) {
+    margin-bottom: 20px;
+}
+.subSectionLabel { 
+    font-weight: 600; 
+    font-size: 16px; 
+    border-bottom: 1px solid #e9ecef; 
+    padding-bottom: 10px; 
+    margin-bottom: 20px; 
+    display: block; 
+}
+label { 
+    font-size: 14px; 
+    color: #555; 
+    margin-bottom: 5px; 
+    display: block; 
+}
+input, select, textarea { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-family: 'Sarabun', sans-serif; 
+    font-size: 15px; 
+}
+input:disabled { 
+    background-color: #e9ecef; 
+    cursor: not-allowed; 
+}
+textarea { 
+    resize: vertical; 
+    min-height: 80px; 
+}
+.fileInput { 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    padding: 5px; 
+    cursor: pointer;
+    font-size: 14px;
+}
+.fileInput::file-selector-button { 
+    margin-right: 10px; 
+    border: none; 
+    background: var(--color-primary); 
+    padding: 8px 12px; 
+    border-radius: 4px; 
+    color: #fff; 
+    cursor: pointer; 
+    transition: background-color .2s ease-in-out; 
+}
+.fileInput::file-selector-button:hover { 
+    background: #c93870; 
+}
+.fileNameDisplay { 
+    display: block; 
+    margin-top: 8px; 
+    font-size: 13px; 
+    color: #555; 
+    font-style: italic; 
+}
+.fileNamingInstruction {
+    display: block;
+    font-size: 13px;
+    color: #e74c3c;
+    margin-bottom: 10px;
+    background-color: #fef5f5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-style: italic;
+}
+.inlineSelectGroup { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    background-color: #f7f7f7; 
+    padding: 15px; 
+    border-radius: 8px; 
+    border: 1px solid #e9ecef; 
+    margin-bottom: 15px; 
+}
+.inlineSelectGroup label { 
+    margin-bottom: 0; 
+}
+.inlineSelect { 
+    flex: 1; 
+}
+.formContainer button[type="submit"] { 
+    width: 100%; 
+    background: var(--color-secondary); 
+    color: white; 
+    border: none; 
+    padding: 12px; 
+    border-radius: 6px; 
+    font-size: 16px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
+    margin-top: 10px; 
+}
+.loading, .error { 
+    text-align: center; 
+    padding: 40px; 
+    font-size: 18px; 
+}
+.error { 
+    color: var(--rejected-color); 
+}
+.charCounter {
+    text-align: right;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}

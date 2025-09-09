@@ -51,11 +51,12 @@ function LoginPage() {
       return;
     }
 
-    const currentUser = users[formattedEmail];
+  const currentUser = users[formattedEmail];
     localStorage.setItem("current_user", formattedEmail);
     localStorage.setItem("role", currentUser.role);
     const userFullName = `${currentUser.prefix_th || ''}${currentUser.first_name_th || currentUser.fullname || ''} ${currentUser.last_name_th || ''}`.trim();
     localStorage.setItem("current_user_name", userFullName);
+    localStorage.setItem("student_id", currentUser.student_id);
 
     const userRole = currentUser.role;
 
