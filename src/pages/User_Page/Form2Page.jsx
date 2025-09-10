@@ -16,8 +16,10 @@ function Form2Page() {
     committeeMember5: '', reserveExternal: '', reserveInternal: '',
     registrationSemester: '', registrationYear: '', comment: '',
     files: {
-      proposalFile: null,
-      coverPageFile: null,
+      proposalFile_th: null, // <-- เพิ่ม
+      proposalFile_en: null, // <-- เพิ่ม
+      coverPageFile_th: null, // <-- เพิ่ม
+      coverPageFile_en: null, // <-- เพิ่ม
       registrationProofFile: null,
     },
   });
@@ -216,23 +218,58 @@ function Form2Page() {
 
         <fieldset>
           <legend>📎 แนบเอกสารประกอบ</legend>
+
+          {/* === หัวข้อที่ 1: ไฟล์เค้าโครงวิทยานิพนธ์ === */}
           <div className={styles.subSection}>
             <label>1. ไฟล์หัวข้อและเค้าโครงวิทยานิพนธ์* (.pdf, .docx)</label>
-            <small className={styles.fileNamingInstruction}>*กรุณาตั้งชื่อไฟล์เป็น: รหัสนักศึกษา_F2_PROPOSAL_DD-MM-YYYY.pdf</small>
-            <div className={styles.fileInputWrapper}>
-              <label htmlFor="proposalFile" className={styles.fileInputLabel}>เลือกไฟล์</label>
-              <input type="file" id="proposalFile" name="proposalFile" onChange={handleFileChange} required />
-              <span className={styles.fileNameDisplay}>{formData.files.proposalFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+            <div className={styles.fileGroup}>
+                {/* --- ไฟล์ภาษาไทย --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาไทย:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_PROPOSAL_TH_DD-MM-YYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="proposalFile_th" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="proposalFile_th" name="proposalFile_th" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.proposalFile_th?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+                {/* --- ไฟล์ภาษาอังกฤษ --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาอังกฤษ:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_PROPOSAL_EN_DD-MM-YYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="proposalFile_en" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="proposalFile_en" name="proposalFile_en" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.proposalFile_en?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
             </div>
           </div>
 
+          {/* === หัวข้อที่ 2: ไฟล์หน้าปก === */}
           <div className={styles.subSection}>
             <label>2. ไฟล์หน้าปกของหัวข้อและเค้าโครง* (.pdf, .docx)</label>
-            <small className={styles.fileNamingInstruction}>*กรุณาตั้งชื่อไฟล์เป็น: รหัสนักศึกษา_F2_COVER_DDMMYYYY.pdf</small>
-            <div className={styles.fileInputWrapper}>
-              <label htmlFor="coverPageFile" className={styles.fileInputLabel}>เลือกไฟล์</label>
-              <input type="file" id="coverPageFile" name="coverPageFile" onChange={handleFileChange} required />
-              <span className={styles.fileNameDisplay}>{formData.files.coverPageFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+            <div className={styles.fileGroup}>
+                {/* --- ไฟล์ภาษาไทย --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาไทย:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_COVER_TH_DDMMYYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="coverPageFile_th" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="coverPageFile_th" name="coverPageFile_th" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.coverPageFile_th?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+                {/* --- ไฟล์ภาษาอังกฤษ --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาอังกฤษ:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_COVER_EN_DDMMYYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="coverPageFile_en" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="coverPageFile_en" name="coverPageFile_en" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.coverPageFile_en?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
             </div>
           </div>
           
