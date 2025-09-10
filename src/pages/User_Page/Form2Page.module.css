@@ -61,7 +61,9 @@ label {
     margin-bottom: 5px; 
     display: block; 
 }
-input, select, textarea { 
+input[type="text"], 
+select, 
+textarea { 
     width: 100%; 
     padding: 10px; 
     border: 1px solid #ccc; 
@@ -78,33 +80,41 @@ textarea {
     resize: vertical; 
     min-height: 80px; 
 }
-.fileInput { 
-    border: 1px solid #ccc; 
-    border-radius: 6px; 
-    padding: 5px; 
-    cursor: pointer;
-    font-size: 14px;
+
+/* --- ✅ นี่คือส่วนที่แก้ไข --- */
+.fileInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
 }
-.fileInput::file-selector-button { 
-    margin-right: 10px; 
-    border: none; 
-    background: var(--color-primary); 
-    padding: 8px 12px; 
-    border-radius: 4px; 
-    color: #fff; 
-    cursor: pointer; 
-    transition: background-color .2s ease-in-out; 
+.fileInputWrapper input[type="file"] {
+  display: none;
 }
-.fileInput::file-selector-button:hover { 
-    background: #c93870; 
+.fileInputLabel {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0; /* ป้องกันไม่ให้ปุ่มถูกบีบ */
 }
-.fileNameDisplay { 
-    display: block; 
-    margin-top: 8px; 
-    font-size: 13px; 
-    color: #555; 
-    font-style: italic; 
+.fileInputLabel:hover {
+  background-color: #c93870;
 }
+.fileNameDisplay {
+  font-size: 14px;
+  color: #555;
+  font-style: italic;
+  /* --- ลบคำสั่งตัดข้อความ และเพิ่มคำสั่งให้ตัดคำที่ยาวเกินไป --- */
+  word-break: break-all;
+}
+/* --- จบส่วนที่แก้ไข --- */
+
 .fileNamingInstruction {
     display: block;
     font-size: 13px;
