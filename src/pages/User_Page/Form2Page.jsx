@@ -16,8 +16,10 @@ function Form2Page() {
     committeeMember5: '', reserveExternal: '', reserveInternal: '',
     registrationSemester: '', registrationYear: '', comment: '',
     files: {
-      proposalFile: null,
-      coverPageFile: null,
+      proposalFile_th: null, // <-- เพิ่ม
+      proposalFile_en: null, // <-- เพิ่ม
+      coverPageFile_th: null, // <-- เพิ่ม
+      coverPageFile_en: null, // <-- เพิ่ม
       registrationProofFile: null,
     },
   });
@@ -44,7 +46,7 @@ function Form2Page() {
         setStudentInfo({ ...currentUser, programName, departmentName, fullname });
 
         const mainAdvisor = allAdvisors.find(a => a.advisor_id === currentUser.main_advisor_id);
-        const coAdvisor1 = allAdvisors.find(a => a.advisor_id === currentUser.co_advisor_id);
+        const coAdvisor1 = allAdvisors.find(a => a.advisor_id === currentUser.co_advisor1_id);
         const mainAdvisorName = mainAdvisor ? `${mainAdvisor.prefix_th}${mainAdvisor.first_name_th} ${mainAdvisor.last_name_th}`.trim() : 'ไม่มีข้อมูล';
         const coAdvisor1Name = coAdvisor1 ? `${coAdvisor1.prefix_th}${coAdvisor1.first_name_th} ${coAdvisor1.last_name_th}`.trim() : 'ไม่มีข้อมูล';
         
@@ -69,10 +71,12 @@ function Form2Page() {
   }, []);
 
   const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({ ...prev, [id]: value }));
+    const { id, value, name } = e.target;
+    // ใช้ name สำหรับ select, ใช้ id สำหรับ input/textarea อื่นๆ
+    const key = name || id;
+    setFormData(prev => ({ ...prev, [key]: value }));
   };
-
+  
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files.length > 0) {
@@ -83,7 +87,6 @@ function Form2Page() {
     }
   };
   
-  // --- 🎯 นี่คือส่วนที่แก้ไข ---
   const handleSubmit = (e) => {
      e.preventDefault();
      const userEmail = localStorage.getItem("current_user");
@@ -94,21 +97,15 @@ function Form2Page() {
      }
 
      const submissionData = {
-       doc_id: `form2_${userEmail}_${Date.now()}`,
-       type: "ฟอร์ม 2",
-       title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์",
-       student_email: userEmail,
-       student_id: studentInfo.student_id,
-       thesis_title_th: formData.thesisTitleTh,
+       doc_id: `form2_${userEmail}_${Date.now()}`, type: "ฟอร์ม 2",
+       title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", student_email: userEmail,
+       student_id: studentInfo.student_id, thesis_title_th: formData.thesisTitleTh,
        thesis_title_en: formData.thesisTitleEn,
        committee: {
-         chair_id: formData.committeeChair,
-         co_advisor2_id: formData.coAdvisor2,
-         member5_id: formData.committeeMember5,
-         reserve_external_id: formData.reserveExternal,
+         chair_id: formData.committeeChair, co_advisor2_id: formData.coAdvisor2,
+         member5_id: formData.committeeMember5, reserve_external_id: formData.reserveExternal,
          reserve_internal_id: formData.reserveInternal,
        },
-       // แก้ไขการสร้าง array ของไฟล์ให้ถูกต้อง
        files: [
            { type: 'เค้าโครงวิทยานิพนธ์', name: formData.files.proposalFile.name },
            { type: 'หน้าปก', name: formData.files.coverPageFile.name },
@@ -118,8 +115,7 @@ function Form2Page() {
          registration_semester: formData.registrationSemester,
          registration_year: formData.registrationYear,
        },
-       student_comment: formData.comment,
-       submitted_date: new Date().toISOString(),
+       student_comment: formData.comment, submitted_date: new Date().toISOString(),
        status: "รอตรวจ"
      };
 
@@ -130,7 +126,6 @@ function Form2Page() {
      alert("✅ ยืนยันและส่งแบบฟอร์มเสนอหัวข้อเรียบร้อยแล้ว!");
      navigate("/student/status");
   };
-  // --- จบส่วนที่แก้ไข ---
 
   if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.error}>เกิดข้อผิดพลาด: {error}</div>;
@@ -145,25 +140,25 @@ function Form2Page() {
         <fieldset>
           <legend>📌 ข้อมูลนักศึกษา</legend>
           <div className={`${styles.infoGrid} ${styles.threeCols}`}>
-            <div><label>ชื่อ-นามสกุล:</label><input type="text" value={studentInfo.fullname} disabled /></div>
-            <div><label>รหัสนักศึกษา:</label><input type="text" value={studentInfo.student_id} disabled /></div>
-            <div><label>ระดับปริญญา:</label><input type="text" value={studentInfo.degree} disabled /></div>
+            <div><label>ชื่อ-นามสกุล:</label><input type="text" value={studentInfo?.fullname || ''} disabled /></div>
+            <div><label>รหัสนักศึกษา:</label><input type="text" value={studentInfo?.student_id || ''} disabled /></div>
+            <div><label>ระดับปริญญา:</label><input type="text" value={studentInfo?.degree || ''} disabled /></div>
           </div>
           <div className={styles.infoGrid}>
-            <div><label>หลักสูตรและสาขาวิชา:</label><input type="text" value={studentInfo.programName} disabled /></div>
-            <div><label>ภาควิชา:</label><input type="text" value={studentInfo.departmentName} disabled /></div>
+            <div><label>หลักสูตรและสาขาวิชา:</label><input type="text" value={studentInfo?.programName || ''} disabled /></div>
+            <div><label>ภาควิชา:</label><input type="text" value={studentInfo?.departmentName || ''} disabled /></div>
           </div>
         </fieldset>
-
+        
         <fieldset>
           <legend>📖 หัวข้อวิทยานิพนธ์</legend>
           <div className={styles.formGroup}>
             <label htmlFor="thesisTitleTh">ชื่อเรื่อง (ภาษาไทย)*</label>
-            <textarea id="thesisTitleTh" value={formData.thesisTitleTh} onChange={handleChange} rows="3" placeholder="กรอกชื่อเรื่องวิทยานิพนธ์ภาษาไทย..." required />
+            <textarea id="thesisTitleTh" name="thesisTitleTh" value={formData.thesisTitleTh} onChange={handleChange} rows="3" placeholder="กรอกชื่อเรื่องวิทยานิพนธ์ภาษาไทย..." required />
           </div>
           <div className={styles.formGroup}>
             <label htmlFor="thesisTitleEn">ชื่อเรื่อง (ภาษาอังกฤษ)*</label>
-            <textarea id="thesisTitleEn" value={formData.thesisTitleEn} onChange={handleChange} rows="3" placeholder="กรอกชื่อเรื่องวิทยานิพนธ์ภาษาอังกฤษ..." required />
+            <textarea id="thesisTitleEn" name="thesisTitleEn" value={formData.thesisTitleEn} onChange={handleChange} rows="3" placeholder="กรอกชื่อเรื่องวิทยานิพนธ์ภาษาอังกฤษ..." required />
           </div>
         </fieldset>
 
@@ -180,21 +175,21 @@ function Form2Page() {
                 <label className={styles.subSectionLabel}>เสนอชื่อคณะกรรมการสอบ*</label>
                 <div className={styles.formGroup}>
                     <label htmlFor="committeeChair">ประธานกรรมการสอบ*</label>
-                    <select id="committeeChair" value={formData.committeeChair} onChange={handleChange} required>
+                    <select id="committeeChair" name="committeeChair" value={formData.committeeChair} onChange={handleChange} required>
                         <option value="">-- เลือก --</option>
                         {advisorLists.potentialChairs.map(adv => <option key={adv.advisor_id} value={adv.advisor_id}>{`${adv.prefix_th}${adv.first_name_th} ${adv.last_name_th}`.trim()}</option>)}
                     </select>
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="coAdvisor2">กรรมการ (ที่ปรึกษาร่วม 2)*</label>
-                    <select id="coAdvisor2" value={formData.coAdvisor2} onChange={handleChange} required>
+                    <select id="coAdvisor2" name="coAdvisor2" value={formData.coAdvisor2} onChange={handleChange} required>
                         <option value="">-- เลือก --</option>
                         {advisorLists.potentialCoAdvisors2.map(adv => <option key={adv.advisor_id} value={adv.advisor_id}>{`${adv.prefix_th}${adv.first_name_th} ${adv.last_name_th}`.trim()}</option>)}
                     </select>
                 </div>
                 <div className={styles.formGroup}>
                     <label htmlFor="committeeMember5">กรรมการสอบ (คนที่ 5)*</label>
-                    <select id="committeeMember5" value={formData.committeeMember5} onChange={handleChange} required>
+                    <select id="committeeMember5" name="committeeMember5" value={formData.committeeMember5} onChange={handleChange} required>
                         <option value="">-- เลือก --</option>
                         {advisorLists.internalMembers.map(adv => <option key={adv.advisor_id} value={adv.advisor_id}>{`${adv.prefix_th}${adv.first_name_th} ${adv.last_name_th}`.trim()}</option>)}
                     </select>
@@ -205,14 +200,14 @@ function Form2Page() {
               <div className={styles.infoGrid}>
                 <div className={styles.formGroup}>
                   <label htmlFor="reserveExternal">กรรมการสำรอง (จากภายนอก)*</label>
-                  <select id="reserveExternal" value={formData.reserveExternal} onChange={handleChange} required>
+                  <select id="reserveExternal" name="reserveExternal" value={formData.reserveExternal} onChange={handleChange} required>
                     <option value="">-- เลือก --</option>
                     {advisorLists.externalMembers.map(adv => <option key={adv.advisor_id} value={adv.advisor_id}>{`${adv.prefix_th}${adv.first_name_th} ${adv.last_name_th}`.trim()}</option>)}
                   </select>
                 </div>
                 <div className={styles.formGroup}>
                   <label htmlFor="reserveInternal">กรรมการสำรอง (จากภายใน)*</label>
-                  <select id="reserveInternal" value={formData.reserveInternal} onChange={handleChange} required>
+                  <select id="reserveInternal" name="reserveInternal" value={formData.reserveInternal} onChange={handleChange} required>
                     <option value="">-- เลือก --</option>
                     {advisorLists.internalMembers.map(adv => <option key={adv.advisor_id} value={adv.advisor_id}>{`${adv.prefix_th}${adv.first_name_th} ${adv.last_name_th}`.trim()}</option>)}
                   </select>
@@ -221,38 +216,103 @@ function Form2Page() {
             </div>
         </fieldset>
 
-      <fieldset>
+        <fieldset>
           <legend>📎 แนบเอกสารประกอบ</legend>
+
+          {/* === หัวข้อที่ 1: ไฟล์เค้าโครงวิทยานิพนธ์ === */}
           <div className={styles.subSection}>
-            <label htmlFor="proposalFile">1. ไฟล์หัวข้อและเค้าโครงวิทยานิพนธ์* (.pdf, .docx)</label>
-            <small className={styles.fileNamingInstruction}>*กรุณาตั้งชื่อไฟล์เป็น: รหัสนักศึกษา_F2_PROPOSAL_DD-MM-YYYY.pdf</small>
-            <input type="file" id="proposalFile" name="proposalFile" onChange={handleFileChange} className={styles.fileInput} required />
-            <span className={styles.fileNameDisplay}>{formData.files.proposalFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+            <label>1. ไฟล์หัวข้อและเค้าโครงวิทยานิพนธ์* (.pdf, .docx)</label>
+            <div className={styles.fileGroup}>
+                {/* --- ไฟล์ภาษาไทย --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาไทย:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_PROPOSAL_TH_DD-MM-YYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="proposalFile_th" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="proposalFile_th" name="proposalFile_th" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.proposalFile_th?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+                {/* --- ไฟล์ภาษาอังกฤษ --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาอังกฤษ:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_PROPOSAL_EN_DD-MM-YYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="proposalFile_en" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="proposalFile_en" name="proposalFile_en" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.proposalFile_en?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+            </div>
           </div>
 
+          {/* === หัวข้อที่ 2: ไฟล์หน้าปก === */}
           <div className={styles.subSection}>
-            <label htmlFor="coverPageFile">2. ไฟล์หน้าปกของหัวข้อและเค้าโครง* (.pdf, .docx)</label>
-            <small className={styles.fileNamingInstruction}>*กรุณาตั้งชื่อไฟล์เป็น: รหัสนักศึกษา_F2_COVER_DDMMYYYY.pdf</small>
-            <input type="file" id="coverPageFile" name="coverPageFile" onChange={handleFileChange} className={styles.fileInput} required />
-            <span className={styles.fileNameDisplay}>{formData.files.coverPageFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+            <label>2. ไฟล์หน้าปกของหัวข้อและเค้าโครง* (.pdf, .docx)</label>
+            <div className={styles.fileGroup}>
+                {/* --- ไฟล์ภาษาไทย --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาไทย:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_COVER_TH_DDMMYYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="coverPageFile_th" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="coverPageFile_th" name="coverPageFile_th" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.coverPageFile_th?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+                {/* --- ไฟล์ภาษาอังกฤษ --- */}
+                <div className={styles.fileInputSubgroup}>
+                    <label className={styles.subLabel}>ไฟล์ภาษาอังกฤษ:</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F2_COVER_EN_DDMMYYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="coverPageFile_en" className={styles.fileInputLabel}>เลือกไฟล์</label>
+                        <input type="file" id="coverPageFile_en" name="coverPageFile_en" onChange={handleFileChange} required />
+                        <span className={styles.fileNameDisplay}>{formData.files.coverPageFile_en?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+                    </div>
+                </div>
+            </div>
           </div>
           
           <div className={styles.subSection}>
-            <label htmlFor="registrationProofFile">3. ไฟล์สำเนาการลงทะเบียนภาคการศึกษาล่าสุด* (.pdf, .jpg)</label>
+            <label>3. ไฟล์สำเนาการลงทะเบียนภาคการศึกษาล่าสุด* (.pdf, .jpg)</label>
             <small className={styles.fileNamingInstruction}>*กรุณาตั้งชื่อไฟล์เป็น: รหัสนักศึกษา_F2_REGIS_DDMMYYYY.jpg</small>
+
+            {/* --- ✅ นี่คือส่วนของ Dropdown ที่เพิ่มเข้ามา --- */}
             <div className={styles.inlineSelectGroup}>
               <label htmlFor="registrationSemester">ภาคการศึกษาที่:</label>
-              <select id="registrationSemester" value={formData.registrationSemester} onChange={handleChange} className={styles.inlineSelect} required>
-                <option value="">เลือก</option><option value="1">1</option><option value="2">2</option><option value="ภาคฤดูร้อน">ภาคฤดูร้อน</option>
+              <select 
+                id="registrationSemester" 
+                name="registrationSemester" 
+                value={formData.registrationSemester} 
+                onChange={handleChange} 
+                className={styles.inlineSelect} 
+                required
+              >
+                <option value="">เลือก</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="ภาคพิเศษ">ภาคพิเศษ</option>
               </select>
+              
               <label htmlFor="registrationYear">ปีการศึกษา:</label>
-              <select id="registrationYear" value={formData.registrationYear} onChange={handleChange} className={styles.inlineSelect} required>
+              <select 
+                id="registrationYear" 
+                name="registrationYear" 
+                value={formData.registrationYear} 
+                onChange={handleChange} 
+                className={styles.inlineSelect} 
+                required
+              >
                 <option value="">เลือกปี</option>
                 {yearOptions.map(year => <option key={year} value={year}>{year}</option>)}
               </select>
             </div>
-            <input type="file" id="registrationProofFile" name="registrationProofFile" onChange={handleFileChange} className={styles.fileInput} required />
-            <span className={styles.fileNameDisplay}>{formData.files.registrationProofFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+
+            <div className={styles.fileInputWrapper}>
+              <label htmlFor="registrationProofFile" className={styles.fileInputLabel}>เลือกไฟล์</label>
+              <input type="file" id="registrationProofFile" name="registrationProofFile" onChange={handleFileChange} required />
+              <span className={styles.fileNameDisplay}>{formData.files.registrationProofFile?.name || 'ยังไม่ได้เลือกไฟล์'}</span>
+            </div>
           </div>
         </fieldset>
         
@@ -262,6 +322,7 @@ function Form2Page() {
             <label htmlFor="comment">คุณสามารถใส่คำแนะนำหรือข้อมูลเพิ่มเติมถึงเจ้าหน้าที่ได้ที่นี่</label>
             <textarea 
               id="comment" 
+              name="comment"
               rows="4" 
               maxLength="250" 
               placeholder="ความคิดเห็นเพิ่มเติม... (ไม่เกิน 250 ตัวอักษร)"
