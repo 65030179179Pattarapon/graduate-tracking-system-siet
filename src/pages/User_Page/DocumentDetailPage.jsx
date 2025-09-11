@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styles from './DocumentDetailPage.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 import Form1Detail from '../../components/document-details/Form1Detail';
+import Form2Detail from '../../components/document-details/Form2Detail';
+import Form3Detail from '../../components/document-details/Form3Detail';
+import Form4Detail from '../../components/document-details/Form4Detail';
+import Form5Detail from '../../components/document-details/Form5Detail';
+import Form6Detail from '../../components/document-details/Form6Detail';
 
 const detailComponentMap = {
   'ฟอร์ม 1': Form1Detail,
+  'ฟอร์ม 2': Form2Detail,
+  'ฟอร์ม 3': Form3Detail,
+  'ฟอร์ม 4': Form4Detail,
+  'ฟอร์ม 5': Form5Detail,
+  'ฟอร์ม 6': Form6Detail,
 };
 
 const formatThaiDateTime = (isoString) => {
@@ -23,7 +35,6 @@ function DocumentDetailPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // --- ส่วนที่แก้ไข: ปรับปรุงการดึงและค้นหาข้อมูล ---
     const loadDocumentDetail = async () => {
       try {
         if (!docId) throw new Error("ไม่พบ ID ของเอกสารใน URL");
@@ -31,29 +42,24 @@ function DocumentDetailPage() {
         const userEmail = localStorage.getItem("current_user");
         if (!userEmail) throw new Error("ไม่พบข้อมูลผู้ใช้");
 
-        // 1. ดึงข้อมูลนักศึกษาทั้งหมด
         const studentsRes = await fetch("/data/student.json");
         const students = await studentsRes.json();
         const currentUser = students.find(s => s.email === userEmail);
         if(!currentUser) throw new Error("ไม่พบข้อมูลผู้ใช้ปัจจุบันในระบบ");
 
-        // 2. รวบรวมเอกสารทั้งหมดจากทุกแหล่ง
         const baseDocs = currentUser.documents || [];
         const newPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]').filter(doc => doc.student_email === userEmail);
         const allUserDocuments = [...baseDocs, ...newPendingDocs];
 
-        // 3. ค้นหาเอกสารที่ต้องการจาก ID
         const document = allUserDocuments.find(doc => doc.doc_id === docId);
         if (!document) throw new Error("ไม่พบข้อมูลเอกสาร");
 
-        // 4. ดึงข้อมูลเสริมอื่นๆ ที่จำเป็น
         const [advisors, programs, departments] = await Promise.all([
           fetch("/data/advisor.json").then(res => res.json()),
           fetch("/data/structures/programs.json").then(res => res.json()),
           fetch("/data/structures/departments.json").then(res => res.json()),
         ]);
-
-        // 5. ตั้งค่า State เพื่อแสดงผล
+        
         setDocData({ 
           document, 
           user: {
@@ -62,24 +68,23 @@ function DocumentDetailPage() {
           }, 
           advisors, 
           programs, 
-          departments 
+          departments,
+          allUserDocs: allUserDocuments
         });
 
-      } catch (err) {
+      } catch (err) { // --- ✅ นี่คือจุดที่แก้ไข: ลบ "=>" ที่ไม่จำเป็นออก ---
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    // --- จบส่วนที่แก้ไข ---
-
     loadDocumentDetail();
   }, [docId]);
 
   if (loading) return <div className={styles.loadingText}>กำลังโหลดรายละเอียด...</div>;
   if (error) return <div className={styles.errorText}>เกิดข้อผิดพลาด: {error}</div>;
 
-  const { document, user, ...restData } = docData;
+  const { document, user, allUserDocs, ...restData } = docData;
   const DetailComponent = detailComponentMap[document.type];
 
   const statusClass = (docStatus) => {
@@ -95,12 +100,14 @@ function DocumentDetailPage() {
       <div className={styles.documentContent}>
         <div className={styles.contentHeader}>
           <h1>{document.title}</h1>
-          <Link to="/student/status" className={styles.backLink}> กลับหน้ารวมสถานะ</Link>
+          <Link to="/student/status" className={styles.backLink}>
+            <FontAwesomeIcon icon={faArrowLeft} /> กลับหน้ารวมสถานะ
+          </Link>
         </div>
         
         <div className={styles.detailCard}>
           {DetailComponent ? (
-            <DetailComponent doc={document} user={user} {...restData} />
+            <DetailComponent doc={document} user={user} allUserDocs={allUserDocs} {...restData} />
           ) : (
             <p>ไม่มีรายละเอียดเพิ่มเติมสำหรับเอกสารประเภทนี้</p>
           )}

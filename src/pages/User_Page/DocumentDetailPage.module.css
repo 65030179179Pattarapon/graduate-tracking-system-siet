@@ -1,4 +1,5 @@
-/* แปลงมาจาก student_document_detail.css เดิม */
+/* src/pages/User_Page/DocumentDetailPage.module.css */
+
 .detailContainer {
   max-width: 1500px;
   margin: 40px auto;
@@ -34,11 +35,16 @@
   color: #555;
   text-decoration: none;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .backLink:hover { color: var(--color-primary); }
 
+/* --- ✅ นี่คือส่วนที่แก้ไขหลัก --- */
+/* ทำให้ .detailCard มีสไตล์เหมือน .subsection */
 .detailCard {
-  background: white;
+  background: #f8f9fa; /* เปลี่ยนพื้นหลังจากขาวเป็นเทาอ่อน */
   border: 1px solid #e9ecef;
   border-radius: 12px;
   padding: 25px;
@@ -51,12 +57,36 @@
   padding-bottom: 15px;
   border-bottom: 1px solid #e9ecef;
 }
-.subtleDivider {
-    border: none;
-    height: 1px;
-    background-color: #f0f0f0;
-    margin: 20px 0;
+
+/* --- ✅ นี่คือส่วนที่แก้ไขหลัก --- */
+/* เราจะเปลี่ยนสไตล์ของ h4 ให้มีลักษณะเหมือน subsection */
+.detailCard h4 {
+  background-color: #f8f9fa; /* พื้นหลังสีเทาอ่อน */
+  padding: 15px;
+  border-radius: 8px 8px 0 0; /* ขอบมนเฉพาะด้านบน */
+  margin: 0; /* ลบ margin เดิม */
+  border-bottom: 1px solid #e9ecef;
+  font-size: 16px;
+  font-weight: 600;
 }
+
+/* ทำให้ ul ที่ตามหลัง h4 มีกรอบและพื้นหลังขาว */
+.detailCard h4 + ul,
+.detailCard h4 + div {
+  background-color: #ffffff; /* พื้นหลังสีขาว */
+  padding: 15px;
+  margin: 0;
+  border-radius: 0 0 8px 8px; /* ขอบมนเฉพาะด้านล่าง */
+  border: 1px solid #e9ecef;
+  border-top: none; /* เอาเส้นขอบบนออก */
+}
+
+.subtleDivider {
+    /* เราอาจจะไม่ต้องใช้ <hr> แล้ว แต่เก็บไว้ก่อน */
+    display: none; 
+}
+/* --- จบส่วนที่แก้ไขหลัก --- */
+
 
 /* Status Highlight Card */
 .statusCard {
@@ -103,3 +133,50 @@
     font-size: 18px;
 }
 .errorText { color: var(--rejected-color); }
+
+/* สไตล์ .subsection ตอนนี้จะเหมือน .detailCard โดยอัตโนมัติ */
+.subsection {
+  background-color: #ffffff; /* ทำให้พื้นหลังของกล่องย่อยเป็นสีขาวเพื่อตัดกัน */
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+.subsection:not(:last-child) {
+  margin-bottom: 15px;
+}
+.subsection h5 {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.infoList.compact li {
+  padding: 6px 0;
+}
+.thesisTitle {
+    font-style: italic;
+    word-break: break-word;
+}
+.fileLink {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 500;
+  word-break: break-all;
+}
+.fileLink:hover {
+  text-decoration: underline;
+}
+.evaluatorDetailCard {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 6px;
+}
+.evaluatorDetailCard:not(:last-child) {
+    margin-bottom: 10px;
+}
+.evaluatorDetailCard h6 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+}

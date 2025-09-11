@@ -1,0 +1,140 @@
+/* คัดลอกสไตล์ส่วนใหญ่มาจาก Form2Page.module.css */
+.formContainer { 
+  max-width: 800px; 
+  margin: 40px auto; 
+  padding: 30px; 
+  background: white; 
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+.formContainer h2 {
+    text-align: center;
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 22px;
+}
+fieldset {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+legend {
+    padding: 0 10px;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+.infoGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.infoGrid.threeCols {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.formGroup {
+    margin-bottom: 20px;
+}
+label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+}
+input:disabled, textarea:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+.charCounter {
+    text-align: right;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+.checkboxGroup {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.checkboxItem {
+    display: grid;
+    grid-template-columns: 1fr auto; 
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+    gap: 15px;
+}
+.checkboxItem:last-child {
+    border-bottom: none;
+}
+.checkboxItem label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+.checkboxItem input[type="checkbox"] {
+    width: 1.3em;
+    height: 1.3em;
+}
+.quantityWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.quantityInput {
+    width: 60px !important;
+    text-align: center;
+    padding: 6px 8px;
+}
+.checkboxItem.otherItem {
+    grid-template-columns: auto 1fr auto; 
+}
+.evaluatorCard {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-top: 20px;
+}
+.evaluatorCard h4 {
+  margin-top: 0;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+.formContainer button[type="submit"] {
+    width: 100%;
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+.loading, .error {
+    text-align: center;
+    padding: 40px;
+}

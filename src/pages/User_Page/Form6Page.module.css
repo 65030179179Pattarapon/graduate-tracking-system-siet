@@ -1,0 +1,226 @@
+/* src/pages/User_Page/Form6Page.module.css */
+
+.formContainer {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+
+.formContainer h2 {
+  text-align: center;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 22px;
+}
+
+fieldset {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+legend {
+  padding: 0 10px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.fieldsetDescription {
+  font-size: 14px;
+  color: #555;
+  margin: -10px 0 20px 5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.subSection {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+.subSection:last-child {
+  margin-bottom: 0;
+}
+
+/* --- ✅ นี่คือส่วนที่แก้ไข --- */
+/* ปรับสไตล์เมื่อแนบไฟล์แล้ว ให้เปลี่ยนแค่สีพื้นหลัง */
+.subSection.attached {
+  background-color: #e6f7ec; /* สีเขียวอ่อน */
+  /* ลบ border-left ออกจากตรงนี้ */
+}
+/* --- จบส่วนที่แก้ไข --- */
+
+.subSectionLabel {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 15px;
+}
+
+.infoGrid { 
+    display: grid; 
+    gap: 20px; 
+    margin-bottom: 10px;
+}
+.infoGrid.twoCols { 
+    grid-template-columns: 1fr 1fr; 
+}
+.infoGrid.threeCols { 
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+}
+.formGroup { 
+    margin-bottom: 15px; 
+}
+.formGroup:last-child { 
+    margin-bottom: 0; 
+}
+
+label { 
+    font-size: 14px; 
+    color: #555; 
+    margin-bottom: 8px; 
+    display: block; 
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(237, 73, 136, 0.2);
+}
+input:disabled, textarea:disabled { 
+    background-color: #e9ecef; 
+    color: #495057; 
+    cursor: not-allowed; 
+}
+textarea { 
+    resize: vertical; 
+    min-height: 60px; 
+}
+
+.fileNamingInstruction {
+  display: block;
+  font-size: 12px;
+  color: #e74c3c;
+  margin-bottom: 10px;
+  background-color: #fef5f5;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.fileInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+.fileInputWrapper input[type="file"] {
+  display: none;
+}
+.fileInputLabel {
+  background-color: var(--color-primary);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.fileInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+  min-width: 0;
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
+.checkIcon {
+  color: var(--approved-color);
+  font-size: 18px;
+}
+.fileNameDisplay { 
+  font-size: 14px; 
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
+a.fileNameDisplay:hover {
+  text-decoration: underline;
+}
+.removeFileBtn {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  margin-left: auto;
+}
+.removeFileBtn:hover {
+  color: #dc3545;
+}
+
+.submitContainer {
+    padding-top: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+.formContainer button[type="submit"] {
+    width: 100%;
+    background: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.formBlockedMessage {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: var(--rejected-color);
+    background-color: #fff6f6;
+    border-radius: 12px;
+}
+.loading, .error { 
+    text-align: center; 
+    padding: 40px; 
+    font-size: 18px; 
+}
+.error { 
+    color: var(--rejected-color); 
+}
+.charCounter {
+    text-align: right;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}

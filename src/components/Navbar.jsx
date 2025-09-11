@@ -34,14 +34,14 @@ function Navbar({ userData, onLogoutClick }) {
           {formsOpen && (
             <ul className={styles.dropdownMenu}>
               <li className={styles.dropdownHeader}>ขั้นการสอบหัวข้อและเค้าโครง</li>
-              <li><Link to="/student/form1">แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษา</Link></li>
-              <li><Link to="/student/form2">แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์</Link></li>
-              <li><Link to="/student/form3">แบบนำส่งเอกสารหัวข้อและเค้าโครง</Link></li>
-              <li><Link to="/student/form4">แบบขอหนังสือเชิญเป็นผู้ทรงคุณวุฒิ</Link></li>
-              <li><Link to="/student/form5">แบบขอหนังสือขออนุญาตเก็บรวบรวมข้อมูล</Link></li>
+              <li><Link to="/student/form1">แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม</Link></li>
+              <li><Link to="/student/form2">แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์ ระดับบัณฑิตศึกษ</Link></li>
+              <li><Link to="/student/form3">แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม</Link></li>
+              <li><Link to="/student/form4">แบบขอหนังสือเชิญเป็นผู้ทรงคุณวุฒิตรวจและประเมิน...เพื่อการวิจัย</Link></li>
+              <li><Link to="/student/form5">แบบขอหนังสือขออนุญาตเก็บรวบรวมข้อมูล (วิทยานิพนธ์)</Link></li>
               <li className={styles.dropdownDivider}></li>
               <li className={styles.dropdownHeader}>ขั้นการสอบวิทยานิพนธ์ขั้นสุดท้าย</li>
-              <li><Link to="/student/form6">บันทึกข้อความ เรื่อง ขอแต่งตั้งคณะกรรมการ</Link></li>
+              <li><Link to="/student/form6">บันทึกข้อความ เรื่อง ขอแต่งตั้งคณะกรรมการการสอบวิทยานิพนธ์ขั้นสุดท้าย</Link></li>
             </ul>
           )}
         </li>
