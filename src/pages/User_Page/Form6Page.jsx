@@ -300,56 +300,48 @@ function Form6Page() {
             
             <div className={styles.subSection}>
                 <label className={styles.subSectionLabel}>2. บทคัดย่อ (Abstract)*</label>
-                <div className={`${styles.infoGrid} ${styles.twoCols}`}>
-                    <div className={styles.fileInputColumn}>
-                        <FileInputBox 
-                            id="abstractThFile" 
-                            name="abstractThFile"
-                            label="ไฟล์ภาษาไทย (.pdf)" 
-                            instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_ABSTRACT_TH_DDMMYYYY.pdf" 
-                            file={formData.files.abstractThFile} 
-                            onChange={handleFileChange} 
-                            onRemove={handleRemoveFile} 
-                        />
-                    </div>
-                    <div className={styles.fileInputColumn}>
-                        <FileInputBox 
-                            id="abstractEnFile" 
-                            name="abstractEnFile"
-                            label="ไฟล์ภาษาอังกฤษ (.pdf)" 
-                            instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_ABSTRACT_EN_DDMMYYYY.pdf" 
-                            file={formData.files.abstractEnFile} 
-                            onChange={handleFileChange} 
-                            onRemove={handleRemoveFile} 
-                        />
-                    </div>
+                <div className={styles.fileGroup}>
+                    <FileInputBox 
+                        id="abstractThFile" 
+                        name="abstractThFile"
+                        label="ไฟล์ภาษาไทย (.pdf)" 
+                        instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_ABSTRACT_TH_DDMMYYYY.pdf" 
+                        file={formData.files.abstractThFile} 
+                        onChange={handleFileChange} 
+                        onRemove={handleRemoveFile} 
+                    />
+                    <FileInputBox 
+                        id="abstractEnFile" 
+                        name="abstractEnFile"
+                        label="ไฟล์ภาษาอังกฤษ (.pdf)" 
+                        instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_ABSTRACT_EN_DDMMYYYY.pdf" 
+                        file={formData.files.abstractEnFile} 
+                        onChange={handleFileChange} 
+                        onRemove={handleRemoveFile} 
+                    />
                 </div>
             </div>
              <div className={styles.subSection}>
                 <label className={styles.subSectionLabel}>3. สารบัญ, สารบัญตาราง, สารบัญภาพ*</label>
-                <div className={`${styles.infoGrid} ${styles.twoCols}`}>
-                    <div className={styles.fileInputColumn}>
-                        <FileInputBox 
-                            id="tocThFile" 
-                            name="tocThFile"
-                            label="ไฟล์ภาษาไทย (.pdf)" 
-                            instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_TOC_TH_DDMMYYYY.pdf" 
-                            file={formData.files.tocThFile} 
-                            onChange={handleFileChange} 
-                            onRemove={handleRemoveFile} 
-                        />
-                    </div>
-                    <div className={styles.fileInputColumn}>
-                        <FileInputBox 
-                            id="tocEnFile" 
-                            name="tocEnFile"
-                            label="ไฟล์ภาษาอังกฤษ (.pdf)" 
-                            instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_TOC_EN_DDMMYYYY.pdf" 
-                            file={formData.files.tocEnFile} 
-                            onChange={handleFileChange} 
-                            onRemove={handleRemoveFile} 
-                        />
-                    </div>
+                <div className={styles.fileGroup}>
+                    <FileInputBox 
+                        id="tocThFile" 
+                        name="tocThFile"
+                        label="ไฟล์ภาษาไทย (.pdf)" 
+                        instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_TOC_TH_DDMMYYYY.pdf" 
+                        file={formData.files.tocThFile} 
+                        onChange={handleFileChange} 
+                        onRemove={handleRemoveFile} 
+                    />
+                    <FileInputBox 
+                        id="tocEnFile" 
+                        name="tocEnFile"
+                        label="ไฟล์ภาษาอังกฤษ (.pdf)" 
+                        instruction="*ตั้งชื่อไฟล์: รหัสนักศึกษา_F6_TOC_EN_DDMMYYYY.pdf" 
+                        file={formData.files.tocEnFile} 
+                        onChange={handleFileChange} 
+                        onRemove={handleRemoveFile} 
+                    />
                 </div>
             </div>
 

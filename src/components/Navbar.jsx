@@ -46,7 +46,7 @@ function Navbar({ userData, onLogoutClick }) {
           )}
         </li>
         
-        <li><NavLink to="/student/eng" className={({ isActive }) => isActive ? styles.active : ''}><FontAwesomeIcon icon={faLanguage} /> ยื่นผลสอบอังกฤษ</NavLink></li>
+         <li><NavLink to="/student/exam-submit" className={({ isActive }) => isActive ? styles.active : ''}><i className="fas fa-file-import"></i> ยื่นคะแนนสอบ</NavLink></li>
         <li><NavLink to="/student/templates" className={({ isActive }) => isActive ? styles.active : ''}><FontAwesomeIcon icon={faDownload} /> ดาวน์โหลดเอกสาร</NavLink></li>
         <li><NavLink to="/student/guide" className={({ isActive }) => isActive ? styles.active : ''}><FontAwesomeIcon icon={faBookOpen} /> คู่มือการใช้งาน</NavLink></li>
       </ul>

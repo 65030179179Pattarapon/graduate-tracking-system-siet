@@ -10,6 +10,7 @@ import Form3Detail from '../../components/document-details/Form3Detail';
 import Form4Detail from '../../components/document-details/Form4Detail';
 import Form5Detail from '../../components/document-details/Form5Detail';
 import Form6Detail from '../../components/document-details/Form6Detail';
+import ExamResultDetail from '../../components/document-details/ExamResultDetail'; // <-- 1. นำเข้า
 
 const detailComponentMap = {
   'ฟอร์ม 1': Form1Detail,
@@ -18,6 +19,8 @@ const detailComponentMap = {
   'ฟอร์ม 4': Form4Detail,
   'ฟอร์ม 5': Form5Detail,
   'ฟอร์ม 6': Form6Detail,
+  'ผลสอบภาษาอังกฤษ': ExamResultDetail, // <-- 2. เพิ่มเข้าไปใน Map
+  'ผลสอบวัดคุณสมบัติ': ExamResultDetail, // <-- 2. เพิ่มเข้าไปใน Map
 };
 
 const formatThaiDateTime = (isoString) => {

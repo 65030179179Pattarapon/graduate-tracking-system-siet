@@ -18,6 +18,7 @@ import Form3Page from './pages/User_Page/Form3Page';
 import Form4Page from './pages/User_Page/Form4Page';
 import Form5Page from './pages/User_Page/Form5Page';
 import Form6Page from './pages/User_Page/Form6Page';
+import ExamSubmitPage from './pages/User_Page/ExamSubmitPage'; // 1. นำเข้า
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
         <Route path="form4" element={<Form4Page />} />
         <Route path="form5" element={<Form5Page />} />
         <Route path="form6" element={<Form6Page />} />
-        
+        <Route path="exam-submit" element={<ExamSubmitPage />} />
         {/* Dynamic Route for Document Details */}
         <Route path="docs/:docId" element={<DocumentDetailPage />} />
       </Route>

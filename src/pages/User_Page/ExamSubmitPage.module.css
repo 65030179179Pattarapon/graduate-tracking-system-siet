@@ -1,0 +1,193 @@
+/* src/pages/User_Page/ExamSubmitPage.module.css */
+
+.formContainer { 
+  max-width: 800px; 
+  margin: 40px auto; 
+  padding: 30px; 
+  background: white; 
+  border-radius: 12px; 
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+}
+.formContainer h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.selectionGroup {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+.selectionGroup label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+.selectionGroup select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-family: 'Sarabun', sans-serif;
+}
+.dynamicFormContainer {
+    margin-top: 20px;
+}
+.formPlaceholder {
+    text-align: center;
+    color: #888;
+    padding: 40px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #e9ecef;
+}
+.fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- General Form Styles (นำมาจากฟอร์มอื่นๆ) --- */
+fieldset { 
+    border: 1px solid #e9ecef; 
+    border-radius: 8px; 
+    padding: 20px; 
+    margin-bottom: 20px; 
+}
+legend { 
+    padding: 0 10px; 
+    font-weight: 600; 
+    color: var(--color-primary); 
+}
+.infoGrid { 
+    display: grid; 
+    gap: 15px; 
+    grid-template-columns: 1fr 1fr;
+}
+.formGroup { 
+    margin-bottom: 20px; 
+}
+label { 
+    font-size: 14px; 
+    color: #555; 
+    margin-bottom: 5px; 
+    display: block; 
+}
+input, select, textarea { 
+    width: 100%; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    box-sizing: border-box; 
+    font-family: 'Sarabun', sans-serif; 
+    font-size: 15px; 
+}
+input:disabled { 
+    background-color: #e9ecef; 
+    cursor: not-allowed; 
+}
+.scoreGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+.scoreGrid .fullWidth {
+    grid-column: 1 / -1;
+}
+
+/* --- ✅ นี่คือส่วนที่แก้ไข: สไตล์ปุ่มและไฟล์แนบ --- */
+.uploadArea { 
+    margin-bottom: 15px; 
+}
+
+/* ทำให้ Label ดูเหมือนปุ่มแนบไฟล์ในฟอร์มอื่นๆ */
+.uploadBtn {
+  background-color: var(--color-primary); /* เปลี่ยนเป็นสีชมพู */
+  color: white;
+  padding: 8px 15px; /* ปรับ Padding ให้เหมือนปุ่มอื่น */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none; /* เพิ่ม border: none */
+}
+.uploadBtn:hover {
+  background-color: #c93870; /* สีชมพูเข้มขึ้นเมื่อ hover */
+}
+
+.fileListContainer {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px; /* เพิ่มระยะห่างด้านบน */
+}
+.fileListContainer li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+.fileInfo { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    word-break: break-all; 
+    min-width: 0;
+    color: #333; /* เพิ่มสีตัวอักษร */
+    text-decoration: none; /* เอาขีดเส้นใต้ลิงก์ออก */
+}
+.fileInfo:hover {
+    color: var(--color-primary); /* เปลี่ยนสีเมื่อ hover */
+}
+.fileIcon { 
+    color: #555; 
+}
+.deleteFileBtn {
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  transition: color 0.2s; /* เพิ่ม transition */
+}
+.deleteFileBtn:hover {
+  color: #dc3545;
+}
+
+/* ทำให้ปุ่ม Submit เหมือนฟอร์มอื่นๆ */
+.submitButton { 
+    width: 100%; 
+    background: var(--color-secondary); 
+    color: white; 
+    border: none; 
+    padding: 12px; 
+    border-radius: 6px; 
+    font-size: 16px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: background-color 0.2s; 
+    margin-top: 10px; 
+}
+.submitButton:hover {
+    background: #e24a1e;
+}
+/* --- จบส่วนที่แก้ไข --- */
