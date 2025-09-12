@@ -18,7 +18,8 @@ import Form3Page from './pages/User_Page/Form3Page';
 import Form4Page from './pages/User_Page/Form4Page';
 import Form5Page from './pages/User_Page/Form5Page';
 import Form6Page from './pages/User_Page/Form6Page';
-import ExamSubmitPage from './pages/User_Page/ExamSubmitPage'; // 1. นำเข้า
+import ExamSubmitPage from './pages/User_Page/ExamSubmitPage';
+import TemplatesPage from './pages/User_Page/TemplatesPage';
 
 function App() {
   return (
@@ -40,8 +41,13 @@ function App() {
         <Route path="form5" element={<Form5Page />} />
         <Route path="form6" element={<Form6Page />} />
         <Route path="exam-submit" element={<ExamSubmitPage />} />
+        
         {/* Dynamic Route for Document Details */}
         <Route path="docs/:docId" element={<DocumentDetailPage />} />
+        
+        {/* 👇 เพิ่มบรรทัดนี้เข้าไปสำหรับหน้าดาวน์โหลดเอกสาร */}
+        <Route path="templates" element={<TemplatesPage />} />
+
       </Route>
       
       {/* You can add routes for other roles like Admin here in the future */}
