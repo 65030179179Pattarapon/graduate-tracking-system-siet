@@ -20,6 +20,8 @@ import Form5Page from './pages/User_Page/Form5Page';
 import Form6Page from './pages/User_Page/Form6Page';
 import ExamSubmitPage from './pages/User_Page/ExamSubmitPage';
 import TemplatesPage from './pages/User_Page/TemplatesPage';
+import GuidePage from './pages/User_Page/GuidePage'; // 👈 1. Import หน้า GuidePage เข้ามา
+import ProfilePage from './pages/User_Page/ProfilePage';
 
 function App() {
   return (
@@ -45,9 +47,11 @@ function App() {
         {/* Dynamic Route for Document Details */}
         <Route path="docs/:docId" element={<DocumentDetailPage />} />
         
-        {/* 👇 เพิ่มบรรทัดนี้เข้าไปสำหรับหน้าดาวน์โหลดเอกสาร */}
         <Route path="templates" element={<TemplatesPage />} />
 
+        <Route path="guide" element={<GuidePage />} /> {/* 👈 2. เพิ่ม Route สำหรับหน้า GuidePage */}
+
+        <Route path="profile" element={<ProfilePage />} />
       </Route>
       
       {/* You can add routes for other roles like Admin here in the future */}

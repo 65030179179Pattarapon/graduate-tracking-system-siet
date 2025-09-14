@@ -1,0 +1,278 @@
+/* src/pages/User_Page/ProfilePage.module.css */
+
+.profileContainer {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 30px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profileContainer h1 {
+    font-size: 28px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-primary);
+}
+
+.profileLayout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.mainProfileColumn, .sideProfileColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.profileCard {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+.profileCard h3 {
+    font-size: 18px;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.profilePictureWrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profilePictureWrapper img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.editPictureBtn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-primary);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.editPictureBtn:hover {
+    transform: scale(1.1);
+}
+
+.profileNameGroup h2 {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+}
+
+.profileNameGroup p {
+    margin: 0;
+    color: #555;
+    font-size: 16px;
+}
+
+.profileDetails {
+    margin-top: 15px;
+}
+
+.detailsGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.detailsGrid > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.detailsGrid label {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.detailsGrid span {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.editableField {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.editableField input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btnIcon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 16px;
+}
+.btnIcon:hover {
+    color: var(--color-primary);
+}
+
+.statusGroup {
+    margin-bottom: 25px;
+}
+.statusGroup:last-child {
+    margin-bottom: 0;
+}
+.groupTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+}
+.statusListDetailed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.statusListDetailed li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 8px 0;
+}
+.statusListDetailed li:not(:last-child){
+    border-bottom: 1px dashed #e9ecef;
+}
+.statusListDetailed label {
+    color: #555;
+    margin: 0;
+}
+.statusListDetailed span {
+    font-weight: 600;
+    text-align: right;
+}
+
+.signatureDisplayArea {
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    min-height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signatureDisplayArea img {
+    max-width: 200px;
+    max-height: 100px;
+}
+.signatureDisplayArea p {
+    color: #888;
+}
+
+.signatureActions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn.btnDanger {
+    background-color: var(--rejected-color);
+    color: white;
+}
+
+.fileList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.fileList li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+}
+.fileList li:not(:last-child) {
+    border-bottom: 1px solid #e9ecef;
+}
+.fileList a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.fileList a:hover {
+    text-decoration: underline;
+}
+.textMuted {
+    color: #888;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.status-badge {
+    font-weight: 600;
+}
+.approved { color: var(--approved-color); }
+.rejected { color: var(--rejected-color); }
+.pending { color: var(--pending-color); }
+
+
+.loadingText, .errorText {
+    padding: 50px;
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+.errorText {
+    color: var(--rejected-color);
+}
