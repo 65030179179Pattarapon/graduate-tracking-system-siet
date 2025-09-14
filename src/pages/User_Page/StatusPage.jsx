@@ -63,9 +63,9 @@ function StatusPage() {
     <main className={styles.statusPageContainer}>
       <h1>📄 สถานะเอกสารของคุณ</h1>
       <div className={styles.statusGrid}>
-        <StatusColumn title="✔️ อนุมัติแล้ว" statusType="approved" documents={documents.approved} />
-        <StatusColumn title="⌛ กำลังดำเนินการ" statusType="pending" documents={documents.pending} />
         <StatusColumn title="❌ ไม่อนุมัติ / ต้องแก้ไข" statusType="rejected" documents={documents.rejected} />
+        <StatusColumn title="⌛ กำลังดำเนินการ" statusType="pending" documents={documents.pending} />
+        <StatusColumn title="✔️ อนุมัติแล้ว" statusType="approved" documents={documents.approved} />
       </div>
     </main>
   );

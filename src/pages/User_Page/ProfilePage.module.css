@@ -23,7 +23,7 @@
 
 .profileLayout {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1.5fr;
     gap: 30px;
     align-items: start;
 }
@@ -32,6 +32,12 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
+}
+
+.sideProfileColumn {
+    max-height: calc(100vh - 120px); 
+    overflow-y: auto;
+    padding-right: 15px;
 }
 
 .profileCard {
@@ -176,8 +182,10 @@
 .statusListDetailed li {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 14px;
     padding: 8px 0;
+    gap: 15px;
 }
 .statusListDetailed li:not(:last-child){
     border-bottom: 1px dashed #e9ecef;
@@ -185,10 +193,12 @@
 .statusListDetailed label {
     color: #555;
     margin: 0;
+    flex-shrink: 0;
 }
 .statusListDetailed span {
     font-weight: 600;
     text-align: right;
+    word-break: break-word;
 }
 
 .signatureDisplayArea {
@@ -216,20 +226,47 @@
     justify-content: center;
     gap: 15px;
 }
-.btn {
-    padding: 10px 20px;
-    border-radius: 6px;
+.btn, .btnPrimary, .btnSecondary {
+    padding: 10px 25px;
     border: none;
+    border-radius: 6px;
+    font-size: 16px;
     cursor: pointer;
     font-weight: 600;
+
+    /* เพิ่ม 3 บรรทัดนี้เพื่อจัดให้อยู่ตรงกลาง */
     display: inline-flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
 }
 .btn.btnDanger {
     background-color: var(--rejected-color);
     color: white;
 }
+.btn.btnPrimary {
+    background-color: var(--color-primary);
+    color: white;
+}
+.btn.btnSecondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* --- ✅ นี่คือส่วนที่แก้ไข --- */
+.btnText {
+    background: none;
+    border: none;
+    color: #6c757d; /* เปลี่ยนเป็นสีเทา */
+    cursor: pointer;
+    font-weight: 500; /* ลดความหนาตัวอักษร */
+    font-size: 14px; /* ลดขนาดตัวอักษร */
+    text-decoration: underline; /* เพิ่มขีดเส้นใต้ */
+    transition: color 0.2s;
+}
+.btnText:hover {
+    color: var(--rejected-color); /* เมื่อ hover เป็นสีแดง */
+}
+/* --- จบส่วนที่แก้ไข --- */
 
 .fileList {
     list-style: none;
@@ -266,7 +303,6 @@
 .rejected { color: var(--rejected-color); }
 .pending { color: var(--pending-color); }
 
-
 .loadingText, .errorText {
     padding: 50px;
     text-align: center;
@@ -275,4 +311,105 @@
 }
 .errorText {
     color: var(--rejected-color);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+.modalBox {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+}
+.modalBox h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.cropModalBox {
+    width: 90%;
+    max-width: 500px;
+}
+.cropperContainer {
+    margin: 20px 0;
+    height: 400px;
+    width: 100%;
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+.signatureModalBox {
+    width: 90%;
+    max-width: 480px;
+}
+.tabNav {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+.tabBtn {
+  flex: 1;
+  padding: 12px 10px;
+  border: none;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  transition: all 0.3s ease;
+}
+.tabBtn.active {
+  background-color: #17a2b8;
+  color: white;
+}
+.tabContent {
+    margin-bottom: 20px;
+}
+.canvasWrapper {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    height: 200px;
+    touch-action: none;
+}
+.signatureCanvas {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+.uploadPlaceholder {
+    padding: 40px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+}
+.modalActionsStacked {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 25px;
+}
+.mainActions {
+    display: flex;
+    gap: 10px;
+}
+.mainActions > * {
+    flex: 1;
+}
+.secondaryActions {
+    text-align: center;
 }

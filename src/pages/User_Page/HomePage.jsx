@@ -9,8 +9,8 @@ function StatusSummaryCard({ counts }) {
       <h3>ภาพรวมเอกสาร</h3>
       <div className={styles.statusBoxes}>
         <div className={`${styles.box} ${styles.pending}`}><span>กำลังดำเนินการ</span><strong>{counts.pending}</strong></div>
-        <div className={`${styles.box} ${styles.approved}`}><span>อนุมัติ</span><strong>{counts.approved}</strong></div>
         <div className={`${styles.box} ${styles.rejected}`}><span>ตีกลับ</span><strong>{counts.rejected}</strong></div>
+        <div className={`${styles.box} ${styles.approved}`}><span>อนุมัติ</span><strong>{counts.approved}</strong></div>
       </div>
       <Link to="/student/status" className={styles.viewAllLink}>ดูสถานะเอกสารทั้งหมด →</Link>
     </div>

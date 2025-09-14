@@ -346,7 +346,7 @@ function Form2Page() {
             <div className={styles.inlineSelectGroup}>
               <label htmlFor="registrationSemester">ภาคการศึกษาที่:</label>
               <select id="registrationSemester" name="registrationSemester" value={formData.registrationSemester} onChange={handleChange} className={styles.inlineSelect} required>
-                <option value="">เลือก</option><option value="1">1</option><option value="2">2</option><option value="ภาคฤดูร้อน">ภาคฤดูร้อน</option>
+                <option value="">เลือก</option><option value="1">1</option><option value="2">2</option><option value="ภาคพิเศษ">ภาคพิเศษ</option>
               </select>
               <label htmlFor="registrationYear">ปีการศึกษา:</label>
               <select id="registrationYear" name="registrationYear" value={formData.registrationYear} onChange={handleChange} className={styles.inlineSelect} required>

@@ -333,7 +333,7 @@ function ExamSubmitPage() {
 
   return (
     <div className={styles.formContainer}>
-      <h2><i className="fas fa-file-import"></i> ยื่นผลสอบ / อื่นๆ</h2>
+      <h2><i className="fas fa-file-import"></i> ยื่นผลสอบวัดผลภาษาอังกฤษ ป.โท/ป.เอก และยื่นผลสอบวัดคุณสมบัติ</h2>
       
       <div className={styles.selectionGroup}>
         <label htmlFor="submissionType">กรุณาเลือกประเภทการยื่นผลสอบ*</label>
