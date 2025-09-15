@@ -111,8 +111,10 @@ function Form5Page() {
         return;
     }
 
+    const formPrefix = "Form5"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+    const newDocId = `${formPrefix}`;
     const submissionData = {
-        doc_id: `form5_${userEmail}_${Date.now()}`,
+        doc_id: newDocId,
         type: "ฟอร์ม 5",
         title: "แบบขอหนังสือขออนุญาตเก็บรวบรวมข้อมูล (วิทยานิพนธ์)",
         student_email: userEmail,

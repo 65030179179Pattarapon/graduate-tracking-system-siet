@@ -1,0 +1,161 @@
+/* src/pages/Admin_Page/AdminDocumentDetailPage.module.css */
+
+.detailContainer {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.documentContent {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.documentSidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    position: sticky;
+    top: 30px; /* ปรับระยะห่างจากด้านบน */
+}
+
+.contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.contentHeader h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.detailCard {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ทำให้ h4 มีกรอบพื้นหลังเทาและขอบมนด้านบน */
+.detailCard h4 {
+  background-color: #f8f9fa;
+  padding: 15px 25px;
+  border-radius: 11px 11px 0 0;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ทำให้ ul ที่ตามหลัง h4 มี padding */
+.detailCard h4 + ul,
+.detailCard h4 + div {
+  padding: 15px 25px;
+}
+
+.subtleDivider {
+    display: none; 
+}
+
+.infoList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+}
+
+.infoList li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+.infoList li:not(:last-child) {
+    border-bottom: 1px dashed #e9ecef;
+}
+
+.infoList label {
+    color: #555;
+    flex-shrink: 0;
+    margin-right: 20px;
+}
+
+.infoList span {
+    font-weight: 600;
+    text-align: right;
+    word-break: break-word;
+}
+
+.commentBox {
+    background-color: #f8f9fa;
+    border-left: 4px solid #e9ecef;
+    padding: 15px 20px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    line-height: 1.7;
+    font-size: 15px;
+    margin: 10px 0;
+}
+
+.subsection {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.subsection:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.subsection h5 {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.infoList.compact li {
+  padding: 8px 0;
+}
+
+.thesisTitle {
+    font-style: italic;
+}
+
+.fileLink {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+.fileLink:hover {
+  text-decoration: underline;
+}
+
+.evaluatorDetailCard {
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 6px;
+}
+.evaluatorDetailCard:not(:last-child) {
+    margin-bottom: 10px;
+}
+.evaluatorDetailCard h6 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+}

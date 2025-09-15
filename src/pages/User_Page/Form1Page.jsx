@@ -67,8 +67,10 @@ function Form1Page() {
       return;
     }
 
+    const formPrefix = "Form1"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+    const newDocId = `${formPrefix}`;
     const submissionData = {
-      doc_id: `form1_${userEmail}_${Date.now()}`,
+      doc_id: newDocId,
       type: "ฟอร์ม 1",
       title: "แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม",
       student_email: userEmail,

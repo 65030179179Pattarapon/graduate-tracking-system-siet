@@ -60,8 +60,10 @@ const handleSubmit = (e) => {
 
         const finalExamType = examType === 'OTHER' ? otherExamType.trim() : examType;
 
+        const formPrefix = "FormEng"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+        const newDocId = `${formPrefix}`;
         const submissionData = {
-            doc_id: `eng_test_${userEmail}_${Date.now()}`,
+            doc_id: newDocId,
             type: "ผลสอบภาษาอังกฤษ",
             title: `ยื่นผลสอบ ${finalExamType} (${degree})`,
             student_email: userEmail,
@@ -211,8 +213,10 @@ const QEForm = ({ studentInfo }) => {
             return;
         }
 
+        const formPrefix = "FormQE"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+        const newDocId = `${formPrefix}`;
         const submissionData = {
-            doc_id: `qe_test_${userEmail}_${Date.now()}`,
+            doc_id: newDocId,
             type: "ผลสอบวัดคุณสมบัติ",
             title: "ยื่นผลสอบวัดคุณสมบัติ (QE)",
             student_email: userEmail,

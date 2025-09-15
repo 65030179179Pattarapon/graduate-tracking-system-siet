@@ -1,0 +1,230 @@
+/* src/pages/Admin_Page/AdminHomePage.module.css */
+
+.contentSection h1 {
+    font-size: 28px;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.contentSection > p {
+    font-size: 16px;
+    color: #555;
+    margin-top: -15px;
+    margin-bottom: 30px;
+}
+
+/* --- Stats Cards --- */
+.statsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.statCard {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+.statTitle {
+    font-size: 15px;
+    font-weight: 500;
+    color: #555;
+    margin: 0 0 8px 0;
+}
+.statValue {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+.statSubValues {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+}
+.statSubValues div {
+    text-align: center;
+}
+.statSubValues label {
+    font-size: 14px;
+    color: #555;
+}
+.statSubValues span {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* --- Dashboard Layout --- */
+.dashboardLayout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* --- Table Card --- */
+.tableCard {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.tableHeader {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+.tableHeader h2 {
+    margin: 0;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- ✅ นี่คือส่วนที่แก้ไข --- */
+.tableContainer {
+    /* max-height: 400px; <-- ลบบรรทัดนี้ออก */
+    overflow-y: auto; /* ยังคงคำสั่งนี้ไว้เผื่อกรณีอื่นๆ */
+}
+/* --- จบส่วนที่แก้ไข --- */
+
+.tableContainer table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.tableContainer th, .tableContainer td {
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+.tableContainer th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+}
+.tableContainer tbody tr:last-child td {
+    border-bottom: none;
+}
+.clickableRow {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.clickableRow:hover {
+    background-color: #f8f9fa;
+}
+.statusBadge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.statusBadge.approved { background-color: #e6f7ec; color: #0b802c; }
+.statusBadge.pending { background-color: #fffbe6; color: #b58105; }
+.statusBadge.rejected { background-color: #fff1f0; color: #d4380d; }
+
+/* --- Activity Feed --- */
+.activityFeed {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.activityFeed li {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+.activityFeed li:last-child {
+    border-bottom: none;
+}
+.activityIcon {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.activityIcon.approved { background-color: #e6f7ec; color: #0b802c; }
+.activityIcon.pending { background-color: #fffbe6; color: #b58105; }
+.activityDetails span {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+}
+.activityDetails small {
+    color: #555;
+    font-size: 12px;
+}
+
+.filterContainer {
+  display: flex; /* จัดเรียง select กับ input ในแนวนอน */
+  gap: 12px; /* ระยะห่างระหว่าง select กับ input */
+  margin-bottom: 20px; /* ระยะห่างจากตาราง */
+  padding: 15px;
+  background-color: #f8f9fa; /* สีพื้นหลังอ่อนๆ */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+/* --- สไตล์ร่วมสำหรับ cả select และ input --- */
+.filterSelect,
+.filterInput {
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 40px; /* ทำให้สูงเท่ากัน */
+}
+
+/* --- สไตล์เมื่อผู้ใช้กำลังพิมพ์หรือคลิก --- */
+.filterSelect:focus,
+.filterInput:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* --- สไตล์เฉพาะของ Select (Dropdown) --- */
+.filterSelect {
+  width: 200px; /* กำหนดความกว้างของ dropdown */
+  cursor: pointer;
+}
+
+/* --- สไตล์เฉพาะของ Input (ช่องค้นหา) --- */
+.filterInput {
+  flex-grow: 1; /* ทำให้ช่องค้นหายืดเต็มพื้นที่ที่เหลือ */
+}
+
+.tableContainer th {
+  /* --- ✅ ส่วนที่สำคัญที่สุด --- */
+  cursor: pointer; /* 1. ทำให้เมาส์เปลี่ยนเป็นรูปมือชี้ */
+  user-select: none; /* 2. ป้องกันการเลือกข้อความตอนดับเบิ้ลคลิก */
+  transition: background-color 0.2s ease; /* 3. ทำให้การเปลี่ยนสีพื้นหลังนุ่มนวล */
+  white-space: nowrap;
+}
+
+/* :hover คือ "เมื่อนำเมาส์ไปวาง" 
+  สไตล์นี้จะทำงานเมื่อผู้ใช้เอาเมาส์ไปชี้ที่หัวข้อตาราง
+*/
+.tableContainer th:hover {
+  background-color: #e9ecef; /* 4. ทำให้พื้นหลังมีสีเข้มขึ้น */
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.clickableRow:hover {
+  background-color: #f1f3f5; /* หรือสีที่คุณต้องการ */
+}

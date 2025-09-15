@@ -108,8 +108,10 @@ function Form3Page() {
     }
     // --- จบส่วนที่แก้ไข ---
 
+    const formPrefix = "Form3"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+    const newDocId = `${formPrefix}`;
     const submissionData = {
-      doc_id: `form3_${userEmail}_${Date.now()}`,
+      doc_id: newDocId,
       type: "ฟอร์ม 3",
       title: "แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม",
       student_email: userEmail,

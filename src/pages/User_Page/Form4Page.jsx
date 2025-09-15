@@ -142,8 +142,10 @@ function Form4Page() {
     }
 
     // --- Construct Submission Object ---
-    const submissionData = {
-        doc_id: `form4_${userEmail}_${Date.now()}`,
+      const formPrefix = "Form4"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+      const newDocId = `${formPrefix}`;
+      const submissionData = {
+        doc_id: newDocId,
         type: "ฟอร์ม 4",
         title: "แบบขอหนังสือเชิญเป็นผู้ทรงคุณวุฒิตรวจและประเมิน...เพื่อการวิจัย",
         student_email: userEmail,

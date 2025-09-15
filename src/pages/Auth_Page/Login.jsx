@@ -71,7 +71,7 @@ function LoginPage() {
         navigate(`/${userRole}/home`);
       } else {
         // ถ้ายังไม่เคยเซ็น ให้ไปหน้าตั้งค่าลายเซ็น
-        navigate('/signature');
+        navigate('/student/signature'); 
       }
     } else {
       // สำหรับ Role อื่นๆ ที่อาจมีในอนาคต หรือกรณีที่ไม่ตรงเงื่อนไข

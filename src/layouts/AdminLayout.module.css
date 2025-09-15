@@ -1,0 +1,23 @@
+/* src/layouts/AdminLayout.module.css */
+
+.adminLayoutRoot {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f4f7f6;
+  overflow: hidden;
+}
+
+.adminPageLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  flex-grow: 1;
+  overflow: hidden; 
+  margin-top: 60px; /* ✅ เพิ่มบรรทัดนี้: ระยะห่างเท่ากับความสูงของ Navbar */
+}
+
+.mainContent {
+  padding: 30px;
+  overflow-y: auto;
+  height: calc(100vh - 65px);
+}

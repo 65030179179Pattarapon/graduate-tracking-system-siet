@@ -1,0 +1,25 @@
+.sidebar {
+  background: white;
+  border-right: 1px solid #e9ecef;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sidebarBtn {
+  width: 100%;
+  border: none;
+  background-color: transparent;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sidebarBtn:hover { background-color: #f8f9fa; }
+.sidebarBtn.active { background-color: var(--color-primary); color: white; }

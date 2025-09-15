@@ -110,8 +110,11 @@ function Form2Page() {
          return;
      }
 
-     const submissionData = {
-       doc_id: `form2_${userEmail}_${Date.now()}`, type: "ฟอร์ม 2",
+    const formPrefix = "Form2"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+    const newDocId = `${formPrefix}`;
+    const submissionData = {
+      doc_id: newDocId, 
+       type: "ฟอร์ม 2",
        title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", student_email: userEmail,
        student_id: studentInfo.student_id, thesis_title_th: formData.thesisTitleTh,
        thesis_title_en: formData.thesisTitleEn,

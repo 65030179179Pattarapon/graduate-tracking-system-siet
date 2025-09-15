@@ -3,11 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 // --- Layouts ---
 import UserLayout from './layouts/UserLayout'; 
+import AdminLayout from './layouts/AdminLayout';
 
 // --- Public Pages ---
 import LoginPage from './pages/Auth_Page/Login';
 
-// --- Student Pages ---
+// --- Student & User Pages ---
 import SignaturePage from './pages/User_Page/SignaturePage';
 import HomePage from './pages/User_Page/HomePage'; 
 import StatusPage from './pages/User_Page/StatusPage';
@@ -19,9 +20,13 @@ import Form4Page from './pages/User_Page/Form4Page';
 import Form5Page from './pages/User_Page/Form5Page';
 import Form6Page from './pages/User_Page/Form6Page';
 import ExamSubmitPage from './pages/User_Page/ExamSubmitPage';
-import TemplatesPage from './pages/User_Page/TemplatesPage';
-import GuidePage from './pages/User_Page/GuidePage'; // 👈 1. Import หน้า GuidePage เข้ามา
 import ProfilePage from './pages/User_Page/ProfilePage';
+
+// --- Admin Pages ---
+import AdminHomePage from './pages/Admin_Page/AdminHomePage';
+import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
+import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage'; // <-- 1. นำเข้า
+
 
 function App() {
   return (
@@ -29,13 +34,14 @@ function App() {
       {/* --- Public Routes --- */}
       <Route path="/" element={<Navigate replace to="/login" />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/signature" element={<SignaturePage />} />
 
-      {/* --- Student Protected Routes (all under UserLayout) --- */}
+      {/* --- Student Routes (Nested under UserLayout) --- */}
       <Route path="/student" element={<UserLayout />}>
         <Route index element={<Navigate replace to="home" />} /> 
         <Route path="home" element={<HomePage />} />
         <Route path="status" element={<StatusPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="signature" element={<SignaturePage />} />
         <Route path="form1" element={<Form1Page />} />
         <Route path="form2" element={<Form2Page />} />
         <Route path="form3" element={<Form3Page />} />
@@ -43,22 +49,16 @@ function App() {
         <Route path="form5" element={<Form5Page />} />
         <Route path="form6" element={<Form6Page />} />
         <Route path="exam-submit" element={<ExamSubmitPage />} />
-        
-        {/* Dynamic Route for Document Details */}
         <Route path="docs/:docId" element={<DocumentDetailPage />} />
-        
-        <Route path="templates" element={<TemplatesPage />} />
-
-        <Route path="guide" element={<GuidePage />} /> {/* 👈 2. เพิ่ม Route สำหรับหน้า GuidePage */}
-
-        <Route path="profile" element={<ProfilePage />} />
       </Route>
       
-      {/* You can add routes for other roles like Admin here in the future */}
-      {/* <Route path="/admin" element={<AdminLayout />}>
-        ...
-      </Route> 
-      */}
+      {/* --- Admin Routes (Nested under AdminLayout) --- */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate replace to="home" />} />
+        <Route path="home" element={<AdminHomePage />} />
+        <Route path="profile" element={<AdminProfilePage />} />
+        <Route path="document/:docId" element={<AdminDocumentDetailPage />} />
+      </Route>
 
     </Routes>
   );

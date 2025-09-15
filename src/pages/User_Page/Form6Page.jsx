@@ -162,8 +162,10 @@ function Form6Page() {
     }
     
     const userEmail = localStorage.getItem("current_user");
+    const formPrefix = "Form6"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
+    const newDocId = `${formPrefix}`;
     const submissionData = {
-        doc_id: `form6_${userEmail}_${Date.now()}`,
+        doc_id: newDocId,
         type: "ฟอร์ม 6",
         title: "บันทึกข้อความ: ขอแต่งตั้งคณะกรรมการการสอบวิทยานิพนธ์ขั้นสุดท้าย",
         student_email: userEmail,
