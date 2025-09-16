@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../../pages/User_Page/DocumentDetailPage.module.css';
 
 // ฟังก์ชันสำหรับหาชื่ออาจารย์จาก ID
@@ -9,6 +8,7 @@ const findAdvisorName = (id, advisors) => {
 };
 
 function Form2Detail({ doc, user, advisors, programs, departments }) {
+  console.log('ข้อมูลไฟล์แนบที่ได้รับ:', doc.files);
   const programName = programs.find(p => p.id === user.program_id)?.name || '-';
   const departmentName = departments.find(d => d.id === user.department_id)?.name || '-';
   
@@ -72,10 +72,22 @@ function Form2Detail({ doc, user, advisors, programs, departments }) {
           doc.files.map((file, index) => (
             <li key={index}>
               <label>{file.type}:</label>
-              {/* ในอนาคตสามารถทำเป็นลิงก์สำหรับดาวน์โหลดได้ */}
-              <a href="#" onClick={(e) => e.preventDefault()} className={styles.fileLink}>
-                {file.name}
-              </a>
+              
+              {/* ✅ ตรวจสอบว่า file.url มีค่าที่ถูกต้องหรือไม่ */}
+              {file.url ? (
+                <a 
+                  href={file.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className={styles.fileLink}
+                >
+                  {file.name}
+                </a>
+              ) : (
+                // ถ้าไม่มี file.url ให้แสดงเป็นข้อความธรรมดา
+                <span>{file.name} (ไม่มีลิงก์)</span>
+              )}
+              
             </li>
           ))
         ) : (

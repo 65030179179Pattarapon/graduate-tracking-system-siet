@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import styles from './AdminHomePage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaginationControls from '../../components/admin/PaginationControls'; // 1. นำเข้า PaginationControls
@@ -174,13 +174,20 @@ const PendingReviewSection = ({ pendingDocs, stats }) => { // เพิ่ม pr
     );
 };
 
+ const PlaceholderSection = ({ title, icon }) => (
+     <section className={styles.contentSection}>
+         <h1><FontAwesomeIcon icon={icon} /> {title}</h1>
+         <p>เนื้อหาสำหรับส่วน "{title}" จะแสดงผลที่นี่</p>
+     </section>
+ );
+
 // --- Component หลัก (แก้ไข State และการแสดงผล) ---
 function AdminHomePage() {
   const [stats, setStats] = useState({ pendingAdmin: 0, totalDocs: 0 });
   const [pendingDocs, setPendingDocs] = useState([]);
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState('pending-review'); // ตั้งค่าเริ่มต้นให้เป็นหน้า "เอกสารรอตรวจ"
+  const { activeSection } = useOutletContext(); // รับค่ามาจาก Sidebar ผ่าน Layout
 
   useEffect(() => {
     const loadAdminData = async () => {
@@ -222,18 +229,22 @@ function AdminHomePage() {
   }, []);
 
   const renderSection = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        // ไม่ได้ใช้แล้ว แต่เก็บไว้เผื่ออนาคต
-        const latestDocs = pendingDocs.slice(0, 5);
-        return <DashboardSection stats={stats} latestDocs={latestDocs} activities={activities} />;
-      case 'pending-review':
-        // ส่ง props stats เข้าไปด้วย
-        return <PendingReviewSection pendingDocs={pendingDocs} stats={stats} />;
-      default:
-        return <PendingReviewSection pendingDocs={pendingDocs} stats={stats} />;
-    }
-  };
+     switch (activeSection) {
+         case 'pending-review':
+             return <PendingReviewSection pendingDocs={pendingDocs} stats={stats} />;
+         case 'pending-advisor':
+             return <PlaceholderSection title="อาจารย์ที่ปรึกษาอนุมัติ" icon={faUserTie} />;
+         case 'pending-external':
+             return <PlaceholderSection title="อาจารย์ภายนอกอนุมัติ" icon={faUserSecret} />;
+         case 'pending-executive':
+             return <PlaceholderSection title="ผู้บริหารอนุมัติ" icon={faUserShield} />;
+         case 'all-documents':
+             return <PlaceholderSection title="เอกสารทั้งหมด" icon={faFolderOpen} />;
+         default:
+             // หากไม่มีค่าตรงกัน ให้กลับไปหน้าเริ่มต้น
+             return <PendingReviewSection pendingDocs={pendingDocs} stats={stats} />;
+     }
+ };
 
   if (loading) return <div>กำลังโหลดข้อมูล...</div>;
 

@@ -1,0 +1,82 @@
+/* src/components/admin/WorkflowTimeline.module.css */
+.timelineCard {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.timelineCard h4 {
+  background-color: #f8f9fa;
+  padding: 15px 25px;
+  border-radius: 11px 11px 0 0;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.timelineList {
+  list-style: none;
+  padding: 15px 25px;
+  margin: 0;
+  position: relative;
+}
+
+/* สร้างเส้นไทม์ไลน์แนวตั้ง */
+.timelineList::before {
+  content: '';
+  position: absolute;
+  left: 35px;
+  top: 25px;
+  bottom: 25px;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+.step {
+  position: relative;
+  padding-left: 30px; /* ระยะห่างจากเส้นไทม์ไลน์ */
+  padding-bottom: 20px;
+}
+.step:last-child {
+  padding-bottom: 0;
+}
+
+/* สร้างจุดวงกลมบนเส้นไทม์ไลน์ */
+.step::before {
+  content: '';
+  position: absolute;
+  left: -8px; /* จัดตำแหน่งให้อยู่บนเส้นพอดี */
+  top: 5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ced4da; /* สีเทาสำหรับสถานะรอ */
+  border: 3px solid #fff;
+  z-index: 1;
+}
+
+/* สไตล์เมื่อขั้นตอนเสร็จสิ้น */
+.step.approved::before {
+  background-color: #28a745; /* สีเขียว */
+}
+.step.approved .stepRole {
+  color: #28a745;
+}
+
+.stepRole {
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+  margin-bottom: 2px;
+}
+.stepName {
+  font-size: 13px;
+  color: #6c757d;
+}
+.stepStatus {
+  font-size: 12px;
+  font-style: italic;
+  color: #adb5bd;
+}

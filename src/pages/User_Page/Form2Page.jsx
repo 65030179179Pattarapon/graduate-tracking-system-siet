@@ -4,6 +4,16 @@ import styles from './Form2Page.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons'; // เปลี่ยน faTimesCircle เป็น faTimes
 
+// วางฟังก์ชันนี้ไว้ด้านบนสุดของไฟล์ Form2Page.jsx
+const fileToDataUrl = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
 function Form2Page() {
   const navigate = useNavigate();
   const [studentInfo, setStudentInfo] = useState(null);
@@ -88,18 +98,8 @@ function Form2Page() {
     }
   };
 
-  const handleRemoveFile = (fileName) => {
-    setFormData(prev => ({
-      ...prev,
-      files: { ...prev.files, [fileName]: null }
-    }));
-    const inputElement = document.getElementById(fileName);
-    if (inputElement) {
-        inputElement.value = "";
-    }
-  };
-
-  const handleSubmit = (e) => {
+ // ✅✅✅ แทนที่ handleSubmit เดิมทั้งหมดด้วยโค้ดนี้ ✅✅✅
+  const handleSubmit = async (e) => {
      e.preventDefault();
      const userEmail = localStorage.getItem("current_user");
 
@@ -110,41 +110,74 @@ function Form2Page() {
          return;
      }
 
-    const formPrefix = "Form2"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
-    const newDocId = `${formPrefix}`;
-    const submissionData = {
-      doc_id: newDocId, 
-       type: "ฟอร์ม 2",
-       title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", student_email: userEmail,
-       student_id: studentInfo.student_id, thesis_title_th: formData.thesisTitleTh,
-       thesis_title_en: formData.thesisTitleEn,
-       committee: {
-         chair_id: formData.committeeChair, co_advisor2_id: formData.coAdvisor2,
-         member5_id: formData.committeeMember5, reserve_external_id: formData.reserveExternal,
-         reserve_internal_id: formData.reserveInternal,
-       },
-       files: [
-           { type: 'เค้าโครงวิทยานิพนธ์ (ไทย)', name: formData.files.proposalFile_th.name },
-           { type: 'เค้าโครงวิทยานิพนธ์ (อังกฤษ)', name: formData.files.proposalFile_en.name },
-           { type: 'หน้าปก (ไทย)', name: formData.files.coverPageFile_th.name },
-           { type: 'หน้าปก (อังกฤษ)', name: formData.files.coverPageFile_en.name },
-           { type: 'สำเนาลงทะเบียน', name: formData.files.registrationProofFile.name }
-       ],
-       details: {
-         registration_semester: formData.registrationSemester,
-         registration_year: formData.registrationYear,
-       },
-       student_comment: formData.comment, submitted_date: new Date().toISOString(),
-       status: "รอตรวจ"
-     };
+    try {
+      // --- 🔽 ส่วนที่เพิ่มเข้ามา: แปลงไฟล์ทั้งหมดเป็น Data URL 🔽 ---
+      const filePromises = [
+        fileToDataUrl(formData.files.proposalFile_th),
+        fileToDataUrl(formData.files.proposalFile_en),
+        fileToDataUrl(formData.files.coverPageFile_th),
+        fileToDataUrl(formData.files.coverPageFile_en),
+        fileToDataUrl(formData.files.registrationProofFile)
+      ];
 
-     const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
-     existingPendingDocs.push(submissionData);
-     localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
-     
-     alert("✅ ยืนยันและส่งแบบฟอร์มเสนอหัวข้อเรียบร้อยแล้ว!");
-     navigate("/student/status");
+      // รอให้ทุกไฟล์แปลงเสร็จ
+      const fileUrls = await Promise.all(filePromises);
+      // --- จบส่วนที่เพิ่มเข้ามา ---
+
+
+      const formPrefix = "Form2";
+      const timestamp = Date.now(); // ดึงตัวเลขเวลาปัจจุบัน
+      const newDocId = `${formPrefix}-${timestamp}`; // นำมาต่อกันเพื่อให้ไม่ซ้ำ
+
+      const submissionData = {
+        doc_id: newDocId, 
+        type: "ฟอร์ม 2",
+        title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", 
+        student_email: userEmail,
+        student_id: studentInfo.student_id, 
+        thesis_title_th: formData.thesisTitleTh,
+        thesis_title_en: formData.thesisTitleEn,
+        committee: {
+          chair_id: formData.committeeChair, 
+          co_advisor2_id: formData.coAdvisor2,
+          member5_id: formData.committeeMember5, 
+          reserve_external_id: formData.reserveExternal,
+          reserve_internal_id: formData.reserveInternal,
+        },
+        // --- 🔽 ส่วนที่แก้ไข: เพิ่ม property 'url' เข้าไป 🔽 ---
+        files: [
+            { type: 'เค้าโครงวิทยานิพนธ์ (ไทย)', name: formData.files.proposalFile_th.name, url: fileUrls[0] },
+            { type: 'เค้าโครงวิทยานิพนธ์ (อังกฤษ)', name: formData.files.proposalFile_en.name, url: fileUrls[1] },
+            { type: 'หน้าปก (ไทย)', name: formData.files.coverPageFile_th.name, url: fileUrls[2] },
+            { type: 'หน้าปก (อังกฤษ)', name: formData.files.coverPageFile_en.name, url: fileUrls[3] },
+            { type: 'สำเนาลงทะเบียน', name: formData.files.registrationProofFile.name, url: fileUrls[4] }
+        ],
+        // --- จบส่วนที่แก้ไข ---
+        details: {
+          registration_semester: formData.registrationSemester,
+          registration_year: formData.registrationYear,
+        },
+        student_comment: formData.comment, 
+        submitted_date: new Date().toISOString(),
+        status: "รอตรวจ"
+      };
+
+      // ✅✅✅ เพิ่มบรรทัดนี้เข้าไป ก่อน localStorage.setItem ✅✅✅
+      console.log("ข้อมูลที่จะถูกบันทึก:", submissionData);
+
+      const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+      existingPendingDocs.push(submissionData);
+      localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
+      
+      alert("✅ ยืนยันและส่งแบบฟอร์มเสนอหัวข้อเรียบร้อยแล้ว!");
+      navigate("/student/status");
+
+    } catch (error) {
+        console.error("Error converting files to Data URL:", error);
+        alert("เกิดข้อผิดพลาดในการประมวลผลไฟล์แนบ กรุณาลองใหม่อีกครั้ง");
+    }
   };
+
 
   if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.error}>เกิดข้อผิดพลาด: {error}</div>;
