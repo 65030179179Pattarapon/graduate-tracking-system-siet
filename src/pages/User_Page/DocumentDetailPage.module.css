@@ -1,34 +1,67 @@
 /* src/pages/User_Page/DocumentDetailPage.module.css */
 
+/* --- ✅ 1. เพิ่มโค้ดนี้ด้านบนสุด: สร้างกรอบให้หน้า --- */
+.pageWrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: calc(95vh - 85px); /* ปรับ 85px ตามความสูง Navbar + padding */
+    display: flex;
+    flex-direction: column;
+}
+
+.pageHeader {
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+/* --- จบส่วนที่เพิ่ม --- */
+
+
+/* --- ✅ 2. ปรับแก้ที่นี่: ให้ Grid ยืดเต็มที่และเอา margin/padding เดิมออก --- */
 .detailContainer {
-  max-width: 1500px;
-  margin: 40px auto;
-  padding: 0 30px;
+  flex-grow: 1; /* ทำให้ Grid ยืดเต็มความสูง */
+  overflow: hidden; /* ป้องกัน scrollbar ซ้อน */
+  /* max-width: 1500px; <-- ไม่จำเป็นแล้ว เพราะ pageWrapper จัดการ */
+  /* margin: 40px auto; <-- ไม่จำเป็นแล้ว เพราะ pageWrapper จัดการ */
+  /* padding: 0 30px; <-- ไม่จำเป็นแล้ว เพราะ pageWrapper จัดการ */
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
   align-items: start;
 }
 
+/* --- ✅ 3. ปรับแก้ที่นี่: เพิ่ม overflow และ height --- */
+.documentContent,
+.documentSidebar {
+  overflow-y: auto; /* เพิ่ม Scrollbar แนวตั้งเมื่อเนื้อหายาวเกิน */
+  height: 100%;
+  padding-right: 15px; /* เพิ่มที่ว่างสำหรับ Scrollbar */
+}
+
+/* --- โค้ดเดิมของคุณ (ไม่มีการเปลี่ยนแปลง) --- */
 .documentContent {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
+/* --- ✅ 4. ปรับแก้ที่นี่: ลบ position: sticky ออก --- */
 .documentSidebar {
   display: flex;
   flex-direction: column;
   gap: 25px;
-  position: sticky;
-  top: 100px;
+  /* position: sticky; <-- ลบออก */
+  /* top: 100px;      <-- ลบออก */
 }
 
+/* --- โค้ดที่เหลือทั้งหมดนี้ คือโค้ดเดิมของคุณ ไม่มีการแก้ไขใดๆ ทั้งสิ้น --- */
 .contentHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
+
 .contentHeader h1 { font-size: 28px; margin: 0; }
 
 .backLink {
@@ -41,10 +74,8 @@
 }
 .backLink:hover { color: var(--color-primary); }
 
-/* --- ✅ นี่คือส่วนที่แก้ไขหลัก --- */
-/* ทำให้ .detailCard มีสไตล์เหมือน .subsection */
 .detailCard {
-  background: #f8f9fa; /* เปลี่ยนพื้นหลังจากขาวเป็นเทาอ่อน */
+  background: #f8f9fa;
   border: 1px solid #e9ecef;
   border-radius: 12px;
   padding: 25px;
@@ -58,37 +89,30 @@
   border-bottom: 1px solid #e9ecef;
 }
 
-/* --- ✅ นี่คือส่วนที่แก้ไขหลัก --- */
-/* เราจะเปลี่ยนสไตล์ของ h4 ให้มีลักษณะเหมือน subsection */
 .detailCard h4 {
-  background-color: #f8f9fa; /* พื้นหลังสีเทาอ่อน */
+  background-color: #f8f9fa;
   padding: 15px;
-  border-radius: 8px 8px 0 0; /* ขอบมนเฉพาะด้านบน */
-  margin: 0; /* ลบ margin เดิม */
+  border-radius: 8px 8px 0 0;
+  margin: 0;
   border-bottom: 1px solid #e9ecef;
   font-size: 16px;
   font-weight: 600;
 }
 
-/* ทำให้ ul ที่ตามหลัง h4 มีกรอบและพื้นหลังขาว */
 .detailCard h4 + ul,
 .detailCard h4 + div {
-  background-color: #ffffff; /* พื้นหลังสีขาว */
+  background-color: #ffffff;
   padding: 15px;
   margin: 0;
-  border-radius: 0 0 8px 8px; /* ขอบมนเฉพาะด้านล่าง */
+  border-radius: 0 0 8px 8px;
   border: 1px solid #e9ecef;
-  border-top: none; /* เอาเส้นขอบบนออก */
+  border-top: none;
 }
 
 .subtleDivider {
-    /* เราอาจจะไม่ต้องใช้ <hr> แล้ว แต่เก็บไว้ก่อน */
     display: none; 
 }
-/* --- จบส่วนที่แก้ไขหลัก --- */
 
-
-/* Status Highlight Card */
 .statusCard {
   border-radius: 12px;
   padding: 20px;
@@ -104,7 +128,6 @@
 .statusText p { margin: 0 0 5px 0; color: #555; }
 .statusText h2 { margin: 0; font-size: 24px; }
 
-/* Info List */
 .infoList {
   list-style: none;
   padding: 0;
@@ -134,9 +157,8 @@
 }
 .errorText { color: var(--rejected-color); }
 
-/* สไตล์ .subsection ตอนนี้จะเหมือน .detailCard โดยอัตโนมัติ */
 .subsection {
-  background-color: #ffffff; /* ทำให้พื้นหลังของกล่องย่อยเป็นสีขาวเพื่อตัดกัน */
+  background-color: #ffffff;
   padding: 15px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
@@ -199,8 +221,48 @@
   background-color: #0056b3;
 }
 
-/* --- สไตล์สำหรับกรณีไม่มีไฟล์แนบ --- */
 .noFileAttached {
   font-style: italic;
   color: #6c757d;
+}
+
+.historyList {
+  list-style: none;
+  padding: 0 !important; /* Override padding จาก .detailCard h3 + ul */
+  margin: 0;
+}
+
+.historyList li {
+  padding: 12px 0;
+  font-size: 14px;
+  display: block; /* Override display:flex จาก .infoList li */
+}
+
+.historyList li:not(:last-child) {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.logAction {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.logActor {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.logDate {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.logComment {
+  font-size: 13px;
+  background-color: #f9fafb;
+  border-left: 3px solid #e5e7eb;
+  padding: 8px 12px;
+  margin: 8px 0 0 0;
+  white-space: pre-wrap;
 }

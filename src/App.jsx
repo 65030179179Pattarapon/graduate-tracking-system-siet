@@ -25,43 +25,44 @@ import ProfilePage from './pages/User_Page/ProfilePage';
 // --- Admin Pages ---
 import AdminHomePage from './pages/Admin_Page/AdminHomePage';
 import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
-import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage'; // <-- 1. นำเข้า
+import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage';
 
 
 function App() {
-  return (
-    <Routes>
-      {/* --- Public Routes --- */}
-      <Route path="/" element={<Navigate replace to="/login" />} />
-      <Route path="/login" element={<LoginPage />} />
+  return (
+    <Routes>
+      {/* --- Public Routes --- */}
+      <Route path="/" element={<Navigate replace to="/login" />} />
+      <Route path="/login" element={<LoginPage />} />
 
-      {/* --- Student Routes (Nested under UserLayout) --- */}
-      <Route path="/student" element={<UserLayout />}>
-        <Route index element={<Navigate replace to="home" />} /> 
-        <Route path="home" element={<HomePage />} />
-        <Route path="status" element={<StatusPage />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="signature" element={<SignaturePage />} />
-        <Route path="form1" element={<Form1Page />} />
-        <Route path="form2" element={<Form2Page />} />
-        <Route path="form3" element={<Form3Page />} />
-        <Route path="form4" element={<Form4Page />} />
-        <Route path="form5" element={<Form5Page />} />
-        <Route path="form6" element={<Form6Page />} />
-        <Route path="exam-submit" element={<ExamSubmitPage />} />
-        <Route path="docs/:docId" element={<DocumentDetailPage />} />
-      </Route>
-      
-      {/* --- Admin Routes (Nested under AdminLayout) --- */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Navigate replace to="home" />} />
-        <Route path="home" element={<AdminHomePage />} />
-        <Route path="profile" element={<AdminProfilePage />} />
-        <Route path="document/:docId" element={<AdminDocumentDetailPage />} />
-      </Route>
+      {/* --- Student Routes (Nested under UserLayout) --- */}
+      <Route path="/student" element={<UserLayout />}>
+        <Route index element={<Navigate replace to="home" />} /> 
+        <Route path="home" element={<HomePage />} />
+        <Route path="status" element={<StatusPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="signature" element={<SignaturePage />} />
+        <Route path="form1" element={<Form1Page />} />
+        <Route path="form2" element={<Form2Page />} />
+        <Route path="form3" element={<Form3Page />} />
+        <Route path="form4" element={<Form4Page />} />
+        <Route path="form5" element={<Form5Page />} />
+        <Route path="form6" element={<Form6Page />} />
+        <Route path="exam-submit" element={<ExamSubmitPage />} />
+        <Route path="docs/:docId" element={<DocumentDetailPage />} />
+      </Route>
+      
+      {/* --- Admin Routes (Nested under AdminLayout) --- */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate replace to="home" />} />
+        <Route path="home" element={<AdminHomePage />} />
+        <Route path="profile" element={<AdminProfilePage />} />
+        {/* ✅ แก้ไข path จาก "document" เป็น "docs" ที่นี่ */}
+        <Route path="docs/:docId" element={<AdminDocumentDetailPage />} />
+      </Route>
 
-    </Routes>
-  );
+    </Routes>
+  );
 }
 
 export default App;

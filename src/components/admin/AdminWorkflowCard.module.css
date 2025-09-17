@@ -1,0 +1,127 @@
+/* src/components/admin/AdminWorkflowCard.module.css (ฉบับอัปเกรด) */
+.card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.header {
+  padding: 15px 25px;
+  border-radius: 11px 11px 0 0;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+}
+
+/* --- Timeline Styles --- */
+.timelineWrapper {
+  padding: 20px 25px;
+}
+.timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.step {
+  display: flex;
+  gap: 15px;
+  position: relative;
+}
+.step:not(:last-child) {
+  padding-bottom: 20px;
+}
+/* เส้นเชื่อมไทม์ไลน์ */
+.step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 30px;
+  width: 2px;
+  height: 100%;
+  background-color: #e5e7eb;
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+}
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #d1d5db; /* สีเทาสำหรับสถานะรอ */
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.step.completed .icon {
+  border-color: #10b981;
+  background-color: #10b981;
+  color: white;
+}
+.details {
+  padding-top: 4px;
+}
+.title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+}
+.actor {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* สไตล์สำหรับลิสต์ย่อย (approvers) */
+.sublist {
+  list-style: none;
+  padding: 8px 0 0 0;
+  margin: 0;
+}
+.sublist li {
+  font-size: 14px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sublist li:not(:last-child){
+  margin-bottom: 5px;
+}
+.sublistIcon {
+  color: #9ca3af;
+}
+.sublistActorEmail {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* --- Divider & Action Styles --- */
+.divider {
+  border: none;
+  border-top: 1px solid #e9ecef;
+  margin: 0;
+}
+
+.actionBody { padding: 20px 25px; }
+.nextStepInfo { font-size: 14px; color: #374151; margin-top: 0; margin-bottom: 15px; font-weight: 600; }
+.actorList { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 15px; margin-bottom: 20px; }
+.actorList ul { list-style: none; padding: 0; margin: 0; }
+.actorList li { font-size: 14px; color: #374151; }
+.actorList li:not(:last-child){ margin-bottom: 8px; }
+.actorList b { color: #111827; }
+
+.actionButtons { display: flex; gap: 10px; }
+.actionButtons button { flex-grow: 1; padding: 12px; font-size: 15px; font-weight: 600; border-radius: 8px; border: none; cursor: pointer; transition: opacity 0.2s; }
+.actionButtons button:hover { opacity: 0.85; }
+.primaryButton { background-color: var(--pending-color); color: rgb(48, 48, 48); }
+.dangerButton { background-color: #ef4444; color: white; }

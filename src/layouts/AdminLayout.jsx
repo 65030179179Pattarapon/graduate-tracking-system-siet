@@ -1,26 +1,27 @@
+// src/layouts/AdminLayout.jsx
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavbarAdmin from '../components/admin/NavbarAdmin';
 import SidebarAdmin from '../components/admin/SidebarAdmin';
-import styles from './AdminLayout.module.css';
+import styles from './AdminLayout.module.css'; // ตรวจสอบว่า import เข้ามา
 
 function AdminLayout() {
-  // --- ✅ นี่คือส่วนที่แก้ไข ---
-  // เปลี่ยนค่าเริ่มต้นจาก 'dashboard' เป็น 'pending-review'
-  const [activeSection, setActiveSection] = useState('pending-review');
-  // --- จบส่วนที่แก้ไข ---
+  const [activeSection, setActiveSection] = useState('pending-review');
 
-  return (
-    <div className={styles.adminLayoutRoot}>
-      <NavbarAdmin />
-      <div className={styles.adminPageLayout}>
-        <SidebarAdmin activeSection={activeSection} setSection={setActiveSection} />
-        <main className={styles.mainContent}>
-          <Outlet context={{ activeSection, setActiveSection }} />
-        </main>
-      </div>
-    </div>
-  );
+  return (
+    // คลาสสำหรับกรอบนอกสุด
+    <div className={styles.adminLayoutRoot}>
+      <NavbarAdmin />
+      {/* คลาสสำหรับส่วน Body ใต้ Navbar */}
+      <div className={styles.adminPageLayout}>
+        <SidebarAdmin activeSection={activeSection} setSection={setActiveSection} />
+        {/* คลาสสำหรับพื้นที่แสดงเนื้อหาหลัก */}
+        <main className={styles.mainContent}>
+          <Outlet context={{ activeSection, setActiveSection }} />
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default AdminLayout;

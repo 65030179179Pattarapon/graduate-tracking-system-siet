@@ -170,3 +170,74 @@
   background-color: #f8f9fa;
   color: var(--color-primary);
 }
+
+/* --- ✅ 1. เพิ่ม CSS สำหรับ Logout Modal --- */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* พื้นหลังโปร่งแสงสีดำ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modalContent h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.modalContent p {
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.modalActions {
+  display: flex;
+  gap: 15px;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.confirmButton {
+  background-color: #dc3545; /* สีแดง */
+  border-color: #dc3545;
+  color: white;
+}
+.confirmButton:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.cancelButton {
+  background-color: #fff;
+  border-color: #ccc;
+  color: #333;
+}
+.cancelButton:hover {
+  background-color: #f8f9fa;
+}

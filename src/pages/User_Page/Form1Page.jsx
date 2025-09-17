@@ -67,8 +67,9 @@ function Form1Page() {
       return;
     }
 
-    const formPrefix = "Form1"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
-    const newDocId = `${formPrefix}`;
+    const formPrefix = "Form1"; // หรือ "Form3", "Form4" ตามแต่ละฟอร์ม
+    const timestamp = Date.now(); // ดึงตัวเลขเวลาปัจจุบัน
+    const newDocId = `${formPrefix}-${timestamp}`; // ✅ สร้าง ID ที่ไม่ซ้ำกัน
     const submissionData = {
       doc_id: newDocId,
       type: "ฟอร์ม 1",

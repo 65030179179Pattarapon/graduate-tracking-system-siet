@@ -90,7 +90,7 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+ useEffect(() => {
     const loadDashboard = async () => {
       try {
         const userEmail = localStorage.getItem("current_user");
@@ -102,29 +102,45 @@ function HomePage() {
         const currentUser = students.find(s => s.email === userEmail);
         if (!currentUser) throw new Error("ไม่พบข้อมูลนักศึกษา");
         
+        // ✅ 1. ดึงข้อมูลจากทุกแหล่งที่เป็นไปได้
         const baseDocs = currentUser.documents || [];
-        const newPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]').filter(doc => doc.student_email === userEmail);
-        const allDocuments = [...baseDocs, ...newPendingDocs];
         
-        const approvedStates = ['อนุมัติแล้ว', 'อนุมัติ', 'ผ่านเกณฑ์'];
-        const rejectedStates = ['ไม่อนุมัติ', 'ตีกลับ', 'ไม่ผ่านเกณฑ์'];
+        const pendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+        const approvedDocsList = JSON.parse(localStorage.getItem('localStorage_approvedDocs') || '[]');
+        const rejectedDocsList = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+        const waitingAdvisorDocs = JSON.parse(localStorage.getItem('localStorage_waitingAdvisorDocs') || '[]');
 
-        const approvedDocs = allDocuments.filter(doc => approvedStates.includes(doc.status));
-        const rejectedDocs = allDocuments.filter(doc => rejectedStates.includes(doc.status));
-        const pendingDocs = allDocuments.filter(doc => !approvedStates.includes(doc.status) && !rejectedStates.includes(doc.status));
+        const allLocalStorageDocs = [
+            ...pendingDocs,
+            ...approvedDocsList,
+            ...rejectedDocsList,
+            ...waitingAdvisorDocs
+        ].filter(doc => doc.student_email === userEmail);
+
+        // ✅ 2. รวมและกรองข้อมูลซ้ำซ้อนออก
+        const allDocuments = [...baseDocs, ...allLocalStorageDocs];
+        const uniqueDocuments = Array.from(new Map(allDocuments.map(doc => [doc.doc_id, doc])).values());
+
+        // --- ส่วนที่เหลือทำงานกับข้อมูลที่ถูกต้องและครบถ้วนแล้ว ---
+        const approvedStates = ['อนุมัติแล้ว', 'อนุมัติ', 'ผ่านเกณฑ์'];
+        const rejectedStates = ['ไม่อนุมัติ', 'ตีกลับ', 'ไม่ผ่านเกณฑ์', 'ส่งกลับแก้ไข'];
+
+        const approvedDocs = uniqueDocuments.filter(doc => approvedStates.includes(doc.status));
+        const rejectedDocs = uniqueDocuments.filter(doc => rejectedStates.includes(doc.status));
+        const pendingDocsCount = uniqueDocuments.filter(doc => !approvedStates.includes(doc.status) && !rejectedStates.includes(doc.status));
         
-        allDocuments.sort((a, b) => new Date(b.submitted_date) - new Date(a.submitted_date));
+        uniqueDocuments.sort((a, b) => new Date(b.submitted_date) - new Date(a.submitted_date));
 
         setDashboardData({
           name: `${currentUser.first_name_th} ${currentUser.last_name_th}`,
           counts: {
-            pending: pendingDocs.length,
+            pending: pendingDocsCount.length,
             approved: approvedDocs.length,
             rejected: rejectedDocs.length,
           },
           approvedDocs: approvedDocs,
           rejectedDocs: rejectedDocs,
-          allDocuments: allDocuments,
+          allDocuments: uniqueDocuments,
         });
 
       } catch (err) {

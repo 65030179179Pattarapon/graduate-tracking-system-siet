@@ -3,7 +3,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import styles from './AdminHomePage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PaginationControls from '../../components/admin/PaginationControls'; // 1. นำเข้า PaginationControls
-import { faInbox, faCheckCircle, } from '@fortawesome/free-solid-svg-icons';
+import { faInbox, faUserTie, faUserSecret, faUserShield, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 // --- Component ย่อยสำหรับ Dashboard (ไม่มีการเปลี่ยนแปลง) ---
 
@@ -128,36 +128,36 @@ const PendingReviewSection = ({ pendingDocs, stats }) => { // เพิ่ม pr
                     <table>
                         <thead>
                             <tr>
-                            <th onClick={() => requestSort('doc_id')}>รหัสเอกสาร </th>
-                            <th onClick={() => requestSort('title')}>ชื่อเอกสาร </th>
-                            <th onClick={() => requestSort('student_email')}>อีเมล </th>
-                            <th onClick={() => requestSort('student_id')}>รหัสนักศึกษา </th>
-                            <th onClick={() => requestSort('studentName')}>ชื่อ-นามสกุล </th>
-                            <th onClick={() => requestSort('submitted_date')}>วันที่ส่ง </th>
-                            <th>สถานะ</th> {/* สถานะมักจะไม่ทำการ sort */}
+                            <th>รหัสเอกสาร</th>
+                            <th>ชื่อเอกสาร</th>
+                            <th>อีเมล</th>
+                            <th>รหัสนักศึกษา</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>วันที่ส่ง</th>
+                            <th>สถานะ</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentDocs.length > 0 ? currentDocs.map(doc => (
-                                <tr key={doc.doc_id} className={styles.clickableRow} onClick={() => navigate(`/admin/document/${doc.doc_id}`)}>
-                                    <td>{doc.doc_id}</td>
-                                    <td>{doc.title}</td>
-                                    <td>{doc.student_email}</td>
-                                    <td>{doc.student_id}</td>
-                                    <td>{doc.studentName}</td>
-                                    <td>{new Date(doc.submitted_date).toLocaleDateString('th-TH')}</td>
-                                    <td>
-                                    <span className={`${styles.status} ${styles[doc.status.toLowerCase()]}`}>
-                                        {doc.status}
-                                    </span>
-                                    </td>
-                                </tr>
+                            <tr key={doc.doc_id} className={styles.clickableRow} onClick={() => navigate(`/admin/docs/${doc.doc_id}`)}>
+                                <td>{doc.doc_id}</td>
+                                <td>{doc.title}</td>
+                                <td>{doc.student_email}</td>
+                                <td>{doc.student_id}</td>
+                                <td>{doc.studentName}</td>
+                                <td>{new Date(doc.submitted_date).toLocaleDateString('th-TH')}</td>
+                                <td>
+                                <span className={`${styles.status} ${styles[doc.status.toLowerCase()]}`}>
+                                    {doc.status}
+                                </span>
+                                </td>
+                            </tr>
                             )) : (
-                                <tr>
-                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
-                                        ไม่มีเอกสารรอตรวจในขณะนี้
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+                                    ไม่มีเอกสารรอตรวจในขณะนี้
+                                </td>
+                            </tr>
                             )}
                         </tbody>
                     </table>
@@ -174,6 +174,52 @@ const PendingReviewSection = ({ pendingDocs, stats }) => { // เพิ่ม pr
     );
 };
 
+    const PendingAdvisorSection = ({ advisorDocs }) => {
+        const navigate = useNavigate();
+        // สามารถเพิ่ม Filter, Sort, Pagination ได้เหมือนกับ PendingReviewSection
+        return (
+            <section className={styles.contentSection}>
+                <h1><FontAwesomeIcon icon={faUserTie} /> อาจารย์ที่ปรึกษาอนุมัติ</h1>
+                <div className={styles.tableCard}>
+                    <div className={styles.tableContainer}>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>รหัสเอกสาร</th>
+                                    <th>ชื่อเอกสาร</th>
+                                    <th>สถานะ</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>วันที่ส่งต่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {advisorDocs.length > 0 ? advisorDocs.map(doc => (
+                                    <tr key={doc.doc_id} className={styles.clickableRow} onClick={() => navigate(`/admin/docs/${doc.doc_id}`)}>
+                                        <td>{doc.doc_id}</td>
+                                        <td>{doc.title}</td>
+                                        <td>
+                                            <span className={`${styles.status} ${styles[doc.status.toLowerCase()]}`}>
+                                                {doc.status}
+                                            </span>
+                                        </td>
+                                        <td>{doc.studentName}</td>
+                                        <td>{new Date(doc.action_date || doc.submitted_date).toLocaleDateString('th-TH')}</td>
+                                    </tr>
+                                )) : (
+                                    <tr>
+                                        <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                                            ไม่มีเอกสารที่รออาจารย์อนุมัติ
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        );
+    };
+
  const PlaceholderSection = ({ title, icon }) => (
      <section className={styles.contentSection}>
          <h1><FontAwesomeIcon icon={icon} /> {title}</h1>
@@ -183,41 +229,60 @@ const PendingReviewSection = ({ pendingDocs, stats }) => { // เพิ่ม pr
 
 // --- Component หลัก (แก้ไข State และการแสดงผล) ---
 function AdminHomePage() {
-  const [stats, setStats] = useState({ pendingAdmin: 0, totalDocs: 0 });
-  const [pendingDocs, setPendingDocs] = useState([]);
-  const [activities, setActivities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { activeSection } = useOutletContext(); // รับค่ามาจาก Sidebar ผ่าน Layout
+    const [stats, setStats] = useState({ pendingAdmin: 0, totalDocs: 0 });
+    const [pendingDocs, setPendingDocs] = useState([]);
+    const [advisorDocs, setAdvisorDocs] = useState([]); // ✅ 2. เพิ่ม State สำหรับเก็บเอกสารรออาจารย์
+    const [loading, setLoading] = useState(true);
+    const { activeSection } = useOutletContext();
 
-  useEffect(() => {
+useEffect(() => {
     const loadAdminData = async () => {
         try {
             const studentsRes = await fetch("/data/student.json");
             const students = await studentsRes.json();
-            const pendingDocuments = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
             
-            let allDocsCount = pendingDocuments.length;
-            students.forEach(s => {
-                if(s.documents) allDocsCount += s.documents.length;
+            const listKeys = [
+                'localStorage_pendingDocs',
+                'localStorage_waitingAdvisorDocs',
+                'localStorage_approvedDocs',
+                'localStorage_rejectedDocs'
+            ];
+
+            let allLocalStorageDocs = [];
+            listKeys.forEach(key => {
+                const docs = JSON.parse(localStorage.getItem(key) || '[]');
+                allLocalStorageDocs.push(...docs);
             });
 
+            let allStaticDocsCount = 0;
+            students.forEach(s => {
+                if (s.documents) allStaticDocsCount += s.documents.length;
+            });
+
+            const totalDocsCount = allLocalStorageDocs.length + allStaticDocsCount;
+            
+            const pendingDocuments = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+            // --- ✅ 1. ดึงข้อมูลส่วนนี้ขึ้นมาถูกต้องแล้ว ---
+            const waitingAdvisorDocuments = JSON.parse(localStorage.getItem('localStorage_waitingAdvisorDocs') || '[]');
+            
             setStats({
                 pendingAdmin: pendingDocuments.length,
-                totalDocs: allDocsCount,
+                totalDocs: totalDocsCount,
             });
 
-            const formattedPendingDocs = pendingDocuments
-                .sort((a, b) => new Date(b.submitted_date) - new Date(a.submitted_date))
-                .map(doc => {
-                    const student = students.find(s => s.email === doc.student_email);
-                    return { ...doc, studentName: student ? `${student.first_name_th} ${student.last_name_th}`.trim() : 'N/A' };
-                });
+            // --- ✅ 2. สร้างฟังก์ชันกลางสำหรับจัดรูปแบบข้อมูล ---
+            const formatDocs = (docs) => {
+                return docs
+                    .sort((a, b) => new Date(b.submitted_date) - new Date(a.submitted_date))
+                    .map(doc => {
+                        const student = students.find(s => s.email === doc.student_email);
+                        return { ...doc, studentName: student ? `${student.first_name_th} ${student.last_name_th}`.trim() : 'N/A' };
+                    });
+            };
             
-            setPendingDocs(formattedPendingDocs);
-
-            setActivities([
-                { type: 'approved', icon: faCheckCircle, text: 'คุณอนุมัติเอกสาร "ฟอร์ม 2"', time: '10 นาทีที่แล้ว' }
-            ]);
+            // --- ✅ 3. เรียกใช้ฟังก์ชันและ SET STATE ให้ครบทั้ง 2 ส่วน ---
+            setPendingDocs(formatDocs(pendingDocuments));
+            setAdvisorDocs(formatDocs(waitingAdvisorDocuments)); // <-- บรรทัดสำคัญที่ขาดไป
 
         } catch (error) {
             console.error("Failed to load admin data:", error);
@@ -226,14 +291,14 @@ function AdminHomePage() {
         }
     };
     loadAdminData();
-  }, []);
+}, []);
 
   const renderSection = () => {
      switch (activeSection) {
          case 'pending-review':
              return <PendingReviewSection pendingDocs={pendingDocs} stats={stats} />;
          case 'pending-advisor':
-             return <PlaceholderSection title="อาจารย์ที่ปรึกษาอนุมัติ" icon={faUserTie} />;
+             return <PendingAdvisorSection advisorDocs={advisorDocs} />;
          case 'pending-external':
              return <PlaceholderSection title="อาจารย์ภายนอกอนุมัติ" icon={faUserSecret} />;
          case 'pending-executive':
@@ -250,7 +315,6 @@ function AdminHomePage() {
 
   return (
     <div>
-      {/* ส่วนนี้จะทำงานร่วมกับ State ที่ส่งมาจาก AdminLayout.jsx */}
       {renderSection()}
     </div>
   );
