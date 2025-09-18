@@ -28,6 +28,7 @@ import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
 import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage';
 // ✅ 1. นำเข้า Component หน้าจัดการผู้ใช้งาน
 import ManageUsersPage from './pages/Admin_Page/ManageUsersPage';
+import ManageStudentDetailPage from './pages/Admin_Page/ManageStudentDetailPage';
 
 
 function App() {
@@ -60,6 +61,8 @@ function App() {
         <Route path="home" element={<AdminHomePage />} />
         {/* ✅ 2. เพิ่ม Route สำหรับหน้าจัดการผู้ใช้งาน */}
         <Route path="manage-users" element={<ManageUsersPage />} />
+        <Route path="manage-users/student/:studentId" element={<ManageStudentDetailPage />} />
+        
         <Route path="profile" element={<AdminProfilePage />} />
         <Route path="docs/:docId" element={<AdminDocumentDetailPage />} />
       </Route>

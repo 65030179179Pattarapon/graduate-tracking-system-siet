@@ -1,0 +1,172 @@
+/* --- 1. โครงสร้าง Layout หลัก --- */
+.pageLayout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.mainContent {
+    flex-grow: 1;
+    min-width: 0; /* ป้องกัน content ดัน layout */
+}
+
+/* --- 2. สไตล์ Sidebar --- */
+.sidebar {
+    flex-shrink: 0;
+    width: 260px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+}
+
+.studentProfileCard {
+    text-align: center;
+    padding: 10px;
+}
+.studentName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+.studentId {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #e9ecef;
+    margin: 15px 0;
+}
+
+.sidebarBtn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    text-align: left;
+}
+.sidebarBtn:hover {
+    background-color: #f8f9fa;
+}
+.sidebarBtn.active {
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 600;
+}
+
+/* --- 3. สไตล์ของการ์ดและฟอร์ม --- */
+.card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.card h3 {
+    padding: 15px 25px;
+    margin: 0;
+    font-size: 18px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 25px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.formGroup input,
+.formGroup select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+.formGroup input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* --- 4. สไตล์ตารางประวัติ --- */
+.historyTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.historyTable th,
+.historyTable td {
+    padding: 12px 25px;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+}
+.historyTable th {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* --- 5. สไตล์ปุ่ม Action ด้านล่างสุด --- */
+.actionsFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px;
+    border-top: 1px solid #e9ecef;
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.saveButton,
+.cancelButton {
+    padding: 10px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.saveButton {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+.saveButton:hover {
+    opacity: 0.9;
+}
+
+.cancelButton {
+    background-color: #fff;
+    border-color: #ced4da;
+    color: #333;
+}
+.cancelButton:hover {
+    background-color: #f8f9fa;
+}

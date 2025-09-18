@@ -1,3 +1,5 @@
+/* src/pages/Admin_Page/ManageUsersPage.module.css */
+
 .pageLayout {
     display: flex;
     gap: 30px;
@@ -10,6 +12,8 @@
     border-radius: 12px;
     padding: 15px;
     align-self: flex-start;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
 }
 
 .sidebarBtn {
@@ -41,11 +45,15 @@
 
 .mainContent {
     flex-grow: 1;
+    min-width: 5; /* ✅ เพิ่ม: ป้องกันไม่ให้ content ดัน layout จนล้น */
 }
 
 .mainContent h1 {
     font-size: 28px;
     margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .mainContent > section > p {
@@ -65,36 +73,194 @@
     background: white;
     border: 1px solid #e9ecef;
     border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .summaryCard {
     padding: 25px;
 }
 
+.statGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.statItem {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+}
+.statItem label {
+    font-size: 14px;
+    color: #555;
+    display: block;
+}
+.statItem span {
+    font-size: 24px;
+    font-weight: 600;
+    display: block;
+}
+
+.chartContainer {
+    height: 200px;
+    position: relative;
+}
+
+/* --- ✅✅✅ ส่วนที่จัดระเบียบใหม่ ✅✅✅ --- */
 .filterCard {
-    padding: 20px;
+    padding: 20px 25px;
     background-color: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
+}
+
+.filterCard h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filterGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px 20px;
+}
+
+.filterGroup label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    color: #555;
+}
+.filterGroup input, .filterGroup select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.filterActions {
+    margin-top: 20px;
+    text-align: right;
+}
+.filterActions button {
+    background: none;
+    border: 1px solid #ced4da;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.filterActions button:hover {
+    background-color: #e9ecef;
 }
 
 .tableHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 20px 25px;
+}
+
+.tableHeader h2 {
+    margin: 0;
+    font-size: 18px;
 }
 
 .btnPrimary {
     background-color: var(--color-primary);
     color: white;
     border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
+    padding: 10px 18px;
+    border-radius: 8px;
     font-weight: 500;
+    font-size: 15px;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: background-color 0.2s;
+}
+.btnPrimary:hover {
+    background-color: #d63384; /* Darker pink */
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.tableContainer table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tableContainer th,
+.tableContainer td {
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+    white-space: nowrap;
+}
+
+.tableContainer th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.tableContainer tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.actionCell {
+    text-align: right;
+}
+.actionBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    color: #6c757d;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+.actionBtn:hover {
+    color: var(--color-primary);
+}
+
+.pagination {
+    padding: 15px 25px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+.pageInfo {
+    font-size: 14px;
+    color: #555;
+}
+.pagination button {
+    background: white;
+    border: 1px solid #dee2e6;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .placeholder {
@@ -106,4 +272,19 @@
     border: 2px dashed #eee;
     margin-top: 20px;
     border-radius: 8px;
+    padding: 20px;
+}
+
+.tableContainer tbody tr.clickableRow {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.tableContainer tbody tr.clickableRow:hover {
+    background-color: #fdf2f7; /* สีชมพูอ่อนๆ ตอน hover */
+}
+
+.actionCell {
+    text-align: right;
+    width: 1%; /* ทำให้คอลัมน์นี้มีความกว้างน้อยที่สุด */
 }
