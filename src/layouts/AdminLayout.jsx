@@ -3,25 +3,38 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavbarAdmin from '../components/admin/NavbarAdmin';
 import SidebarAdmin from '../components/admin/SidebarAdmin';
-import styles from './AdminLayout.module.css'; // ตรวจสอบว่า import เข้ามา
+import styles from './AdminLayout.module.css';
 
 function AdminLayout() {
-  const [activeSection, setActiveSection] = useState('pending-review');
+  const [activeSection, setActiveSection] = useState('pending-review');
+  // ✅ 1. เพิ่ม State สำหรับเก็บข้อมูลการแจ้งเตือน
+  const [notifications, setNotifications] = useState({});
 
-  return (
-    // คลาสสำหรับกรอบนอกสุด
-    <div className={styles.adminLayoutRoot}>
-      <NavbarAdmin />
-      {/* คลาสสำหรับส่วน Body ใต้ Navbar */}
-      <div className={styles.adminPageLayout}>
-        <SidebarAdmin activeSection={activeSection} setSection={setActiveSection} />
-        {/* คลาสสำหรับพื้นที่แสดงเนื้อหาหลัก */}
-        <main className={styles.mainContent}>
-          <Outlet context={{ activeSection, setActiveSection }} />
-        </main>
-      </div>
-    </div>
-  );
+  // ✅ 2. สร้างฟังก์ชันสำหรับอัปเดตเวลาที่เข้าดูล่าสุด
+  const handleSectionChange = (sectionId) => {
+    setActiveSection(sectionId);
+    // บันทึกเวลาปัจจุบันลง localStorage ว่าเราได้เข้ามาดูหน้านี้แล้ว
+    localStorage.setItem(`lastVisited_${sectionId}`, new Date().toISOString());
+    // อัปเดต State เพื่อลบจุดแดงออกทันที
+    setNotifications(prev => ({ ...prev, [sectionId]: false }));
+  };
+
+  return (
+    <div className={styles.adminLayoutRoot}>
+      <NavbarAdmin />
+      <div className={styles.adminPageLayout}>
+        {/* ✅ 3. ส่ง State และฟังก์ชันใหม่ไปให้ Sidebar */}
+        <SidebarAdmin 
+          activeSection={activeSection} 
+          setSection={handleSectionChange} 
+          notifications={notifications}
+        />
+        <main className={styles.mainContent}>
+          {/* ✅ 4. ส่งฟังก์ชัน setNotifications ให้หน้า Home Page */}
+          <Outlet context={{ activeSection, setNotifications }} />
+        </main>
+      </div>
+    </div>
+  );
 }
-
 export default AdminLayout;

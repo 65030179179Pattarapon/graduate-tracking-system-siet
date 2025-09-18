@@ -1,5 +1,6 @@
 /* src/pages/Admin_Page/AdminHomePage.module.css */
 
+
 .contentSection h1 {
     font-size: 28px;
     margin-top: 0;
@@ -227,4 +228,107 @@
 
 .clickableRow:hover {
   background-color: #f1f3f5; /* หรือสีที่คุณต้องการ */
+}
+
+/* --- ✅✅✅ ส่วนที่เพิ่มเข้ามา ✅✅✅ --- */
+/* --- Status Badge Styles --- */
+
+/* สไตล์พื้นฐานของป้ายสถานะ */
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap; /* ป้องกันการตัดคำ */
+}
+
+/* สีสำหรับสถานะต่างๆ */
+.รอตรวจ, .รออาจารย์อนุมัติ {
+  background-color: #fffbe6; /* Yellow background */
+  color: #b45309;             /* Yellow text */
+  border: 1px solid #fef0c7;
+}
+
+.อนุมัติแล้ว {
+  background-color: #f0fdf4; /* Green background */
+  color: #16a34a;             /* Green text */
+  border: 1px solid #dcfce7;
+}
+
+.ส่งกลับแก้ไข {
+  background-color: #fef2f2; /* Red background */
+  color: #ef4444;             /* Red text */
+  border: 1px solid #fee2e2;
+}
+/* --- จบส่วนที่เพิ่ม --- */
+
+/* --- ✅✅✅ ส่วนที่เพิ่มเข้ามาสำหรับ Tabs ✅✅✅ --- */
+.tabContainer {
+  display: flex;
+  gap: 20px; /* ระยะห่างระหว่างปุ่มแท็บ */
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 20px;
+}
+
+.tabButton {
+  /* ลบสไตล์ปุ่มเดิมออก */
+  background: none;
+  border: none;
+  
+  /* สไตล์ใหม่ */
+  font-size: 16px;
+  font-weight: 500;
+  color: #6c757d; /* สีเทาสำหรับแท็บที่ไม่ถูกเลือก */
+  padding: 10px 5px;
+  cursor: pointer;
+  
+  /* สร้างเส้นใต้ที่มองไม่เห็นเพื่อจองที่ไว้ */
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tabButton:hover {
+  color: #333;
+}
+
+/* สไตล์สำหรับแท็บที่กำลังถูกเลือก */
+.activeTab {
+  font-weight: 600;
+  color: var(--color-primary); /* ใช้สีหลักของเว็บ (สีชมพู) */
+  border-bottom-color: var(--color-primary);
+}    
+
+
+/* สไตล์สำหรับกล่องที่ครอบรายการสรุป */
+.breakdownContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* แบ่งเป็น 2 คอลัมน์ */
+  gap: 15px; /* ระยะห่างระหว่างรายการ */
+  margin-top: 15px;
+}
+
+/* สไตล์ของแต่ละรายการ */
+.breakdownItem {
+  display: flex;
+  justify-content: space-between; /* จัดให้ข้อความและตัวเลขอยู่คนละฝั่ง */
+  align-items: center;
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.breakdownItem:nth-last-child(-n+2) {
+    /* ไม่ให้ 2 รายการสุดท้ายมีเส้นขีดล่าง */
+    border-bottom: none;
+}
+
+.breakdownItem span {
+  color: #4b5563; /* สีข้อความ */
+}
+
+.breakdownItem strong {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827; /* สีตัวเลข */
 }

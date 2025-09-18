@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInbox, faUserTie, faUserSecret, faUserShield, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 
 // ✅ รับ props (activeSection, setSection) จาก AdminLayout เพื่อทำงานร่วมกัน
-function SidebarAdmin({ activeSection, setSection }) {
+function SidebarAdmin({ activeSection, setSection, notifications }) {
   
   // ✅ โครงสร้างข้อมูลเมนูที่ชัดเจนและง่ายต่อการแก้ไขเพิ่มเติมในอนาคต
   const menuItems = [
@@ -31,7 +31,11 @@ function SidebarAdmin({ activeSection, setSection }) {
           // เพื่ออัปเดต State และบอกให้หน้าหลักเปลี่ยนเนื้อหาที่แสดงผล
           onClick={() => setSection(item.id)}
         >
-          <FontAwesomeIcon icon={item.icon} /> {item.text}
+
+          <FontAwesomeIcon icon={item.icon} /> 
+          <span>{item.text}</span>
+          {/* ✅ 2. แสดงจุดแดงถ้า notifications[item.id] เป็น true */}
+          {notifications[item.id] && <span className={styles.notificationDot}></span>}
         </button>
       ))}
     </aside>
