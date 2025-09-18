@@ -1,40 +1,46 @@
 // src/layouts/AdminLayout.jsx
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+// ✅ 1. นำเข้า useLocation เพื่อเช็ค URL ปัจจุบัน
+import { Outlet, useLocation } from 'react-router-dom'; 
 import NavbarAdmin from '../components/admin/NavbarAdmin';
 import SidebarAdmin from '../components/admin/SidebarAdmin';
+import SidebarManageUser from '../components/admin/SidebarManageUser'; // ✅ 2. นำเข้า Sidebar ใหม่
 import styles from './AdminLayout.module.css';
 
 function AdminLayout() {
+  const location = useLocation(); // Hook สำหรับดูข้อมูล URL
   const [activeSection, setActiveSection] = useState('pending-review');
-  // ✅ 1. เพิ่ม State สำหรับเก็บข้อมูลการแจ้งเตือน
-  const [notifications, setNotifications] = useState({});
+  const [activeUserSection, setActiveUserSection] = useState('overview');
 
-  // ✅ 2. สร้างฟังก์ชันสำหรับอัปเดตเวลาที่เข้าดูล่าสุด
-  const handleSectionChange = (sectionId) => {
-    setActiveSection(sectionId);
-    // บันทึกเวลาปัจจุบันลง localStorage ว่าเราได้เข้ามาดูหน้านี้แล้ว
-    localStorage.setItem(`lastVisited_${sectionId}`, new Date().toISOString());
-    // อัปเดต State เพื่อลบจุดแดงออกทันที
-    setNotifications(prev => ({ ...prev, [sectionId]: false }));
-  };
+  // ✅ 3. เช็คว่าตอนนี้อยู่ที่หน้า manage-users หรือไม่
+  const isManageUserPage = location.pathname.includes('/admin/manage-users');
 
   return (
     <div className={styles.adminLayoutRoot}>
       <NavbarAdmin />
       <div className={styles.adminPageLayout}>
-        {/* ✅ 3. ส่ง State และฟังก์ชันใหม่ไปให้ Sidebar */}
-        <SidebarAdmin 
-          activeSection={activeSection} 
-          setSection={handleSectionChange} 
-          notifications={notifications}
-        />
+        
+        {/* ✅ 4. ใช้เงื่อนไขเพื่อเลือกว่าจะแสดง Sidebar ไหน */}
+        {isManageUserPage ? (
+          <SidebarManageUser 
+            activeSection={activeUserSection} 
+            setSection={setActiveUserSection} 
+          />
+        ) : (
+          <SidebarAdmin 
+            activeSection={activeSection} 
+            setSection={setActiveSection} 
+            notifications={{}} // ส่งค่าว่างไปก่อน
+          />
+        )}
+
         <main className={styles.mainContent}>
-          {/* ✅ 4. ส่งฟังก์ชัน setNotifications ให้หน้า Home Page */}
-          <Outlet context={{ activeSection, setNotifications }} />
+          {/* ✅ 5. ส่ง State ที่ถูกต้องไปให้ Page ลูก */}
+          <Outlet context={isManageUserPage ? { activeSection: activeUserSection } : { activeSection, setNotifications: () => {} }} />
         </main>
       </div>
     </div>
   );
 }
+
 export default AdminLayout;

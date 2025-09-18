@@ -1,0 +1,84 @@
+/* src/components/admin/RejectionModal.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modalContent {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 500px;
+}
+
+.modalContent h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.modalContent p {
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 15px;
+}
+
+.commentTextarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  box-sizing: border-box; /* Important */
+}
+.commentTextarea:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+
+.modalActions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end; /* Align buttons to the right */
+}
+
+.modalActions button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.confirmButton {
+  background-color: #dc3545; /* Red */
+  border-color: #dc3545;
+  color: white;
+}
+.confirmButton:hover {
+  background-color: #c82333;
+}
+
+.cancelButton {
+  background-color: #fff;
+  border-color: #ccc;
+  color: #333;
+}
+.cancelButton:hover {
+  background-color: #f8f9fa;
+}

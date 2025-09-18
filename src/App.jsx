@@ -26,6 +26,8 @@ import ProfilePage from './pages/User_Page/ProfilePage';
 import AdminHomePage from './pages/Admin_Page/AdminHomePage';
 import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
 import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage';
+// ✅ 1. นำเข้า Component หน้าจัดการผู้ใช้งาน
+import ManageUsersPage from './pages/Admin_Page/ManageUsersPage';
 
 
 function App() {
@@ -56,8 +58,9 @@ function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate replace to="home" />} />
         <Route path="home" element={<AdminHomePage />} />
+        {/* ✅ 2. เพิ่ม Route สำหรับหน้าจัดการผู้ใช้งาน */}
+        <Route path="manage-users" element={<ManageUsersPage />} />
         <Route path="profile" element={<AdminProfilePage />} />
-        {/* ✅ แก้ไข path จาก "document" เป็น "docs" ที่นี่ */}
         <Route path="docs/:docId" element={<AdminDocumentDetailPage />} />
       </Route>
 
