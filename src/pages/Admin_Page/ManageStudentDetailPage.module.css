@@ -1,4 +1,6 @@
-/* --- 1. โครงสร้าง Layout หลัก --- */
+/* src/pages/Admin_Page/ManageStudentDetailPage.module.css */
+
+/* --- โครงสร้าง Layout หลัก --- */
 .pageLayout {
     display: flex;
     gap: 30px;
@@ -7,10 +9,24 @@
 
 .mainContent {
     flex-grow: 1;
-    min-width: 0; /* ป้องกัน content ดัน layout */
+    min-width: 0;
 }
 
-/* --- 2. สไตล์ Sidebar --- */
+.contentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.contentHeader h1 {
+    font-size: 28px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* --- Sidebar Styles --- */
 .sidebar {
     flex-shrink: 0;
     width: 260px;
@@ -19,8 +35,8 @@
     padding: 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     border: 1px solid #e9ecef;
+    align-self: flex-start;
 }
-
 .studentProfileCard {
     text-align: center;
     padding: 10px;
@@ -34,20 +50,18 @@
     font-size: 14px;
     color: #6c757d;
 }
-
 .divider {
     border: none;
     border-top: 1px solid #e9ecef;
     margin: 15px 0;
 }
-
 .sidebarBtn {
     display: flex;
     align-items: center;
     gap: 12px;
     width: 100%;
-    padding: 12px 15px;
-    font-size: 15px;
+    padding: 20px 15px;
+    font-size: 14px;
     font-weight: 500;
     border-radius: 8px;
     border: none;
@@ -66,54 +80,127 @@
     font-weight: 600;
 }
 
-/* --- 3. สไตล์ของการ์ดและฟอร์ม --- */
+/* --- Card & Form Styles (Updated) --- */
 .card {
     background: white;
     border: 1px solid #e9ecef;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     margin-bottom: 25px;
+    overflow: hidden;
 }
 
 .card h3 {
     padding: 15px 25px;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.card h4 {
+    padding: 10px 10px;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cardBody {
+    padding: 25px;
+}
+
+.formSection {
+    margin-bottom: 30px;
+}
+.formSection:last-child {
+    margin-bottom: 0;
+}
+.formSection h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
     border-bottom: 1px solid #e9ecef;
 }
 
 .formGrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 25px;
+    gap: 15px 25px;
+}
+
+.formGrid.threeCols {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.formGrid.fourCols {
+    grid-template-columns: repeat(4, 1fr);
 }
 
 .formGroup {
     display: flex;
     flex-direction: column;
 }
-
 .formGroup label {
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 8px;
     color: #555;
 }
-
 .formGroup input,
-.formGroup select {
+.formGroup select,
+.formGroup textarea {
     padding: 10px 12px;
     font-size: 14px;
     border: 1px solid #ced4da;
     border-radius: 6px;
+    font-family: inherit;
+    background-color: #fff;
+    /* ✅✅✅ ส่วนที่แก้ไข ✅✅✅ */
+    width: 100%;
+    box-sizing: border-box;
 }
-.formGroup input:disabled {
-    background-color: #e9ecef;
+.formGroup input:disabled,
+.readOnlyInput {
+    background-color: #f0f0f0;
     cursor: not-allowed;
+    color: #6c757d;
 }
 
-/* --- 4. สไตล์ตารางประวัติ --- */
+.passwordInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.passwordInputWrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+.passwordIcon {
+    position: absolute;
+    right: 12px;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+/* --- Table & Link Styles --- */
+.tableWrapper {
+    overflow-x: auto;
+}
+.tableHeader {
+    display: flex;
+    justify-content: space-between; /* คำสั่งนี้จะผลัก item ไปคนละฝั่ง */
+    align-items: center;
+    padding: 20px 25px;
+    /* ✅ เพิ่ม 2 บรรทัดนี้สำหรับกรณีข้อความยาว */
+    flex-wrap: wrap; 
+    gap: 15px;
+}
 .historyTable {
     width: 100%;
     border-collapse: collapse;
@@ -123,28 +210,38 @@
     padding: 12px 25px;
     text-align: left;
     border-bottom: 1px solid #f3f4f6;
+    white-space: nowrap;
 }
 .historyTable th {
     font-weight: 600;
     font-size: 13px;
 }
-
-/* --- 5. สไตล์ปุ่ม Action ด้านล่างสุด --- */
-.actionsFooter {
-    display: flex;
-    justify-content: flex-end;
-    gap: 15px;
-    padding: 20px;
-    border-top: 1px solid #e9ecef;
-    background-color: #fff;
-    border-radius: 12px;
+.linkButton {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
 }
+.statusBadge {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.statusBadge.approved { background-color: #e6f7ec; color: #0b802c; }
+.statusBadge.pending { background-color: #fffbe6; color: #b58105; }
+.statusBadge.rejected { background-color: #fff1f0; color: #d4380d; }
 
-.saveButton,
-.cancelButton {
-    padding: 10px 25px;
+/* --- Save Button --- */
+.saveButton {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    padding: 8px 18px;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 500;
     border-radius: 8px;
     border: 1px solid;
     cursor: pointer;
@@ -152,21 +249,196 @@
     align-items: center;
     gap: 8px;
 }
-
-.saveButton {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: white;
-}
 .saveButton:hover {
     opacity: 0.9;
 }
 
-.cancelButton {
+/* สไตล์สำหรับตารางข้อมูลในหน้านี้ */
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.dataTable th, 
+.dataTable td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+/* ✅ ทำให้หัวข้อตารางมีพื้นหลังสีเข้ม */
+.dataTable thead th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+    font-size: 13px;
+    color: #6c757d;
+}
+.noDataRow {
+    text-align: center !important;
+    padding: 25px !important;
+    color: #6c757d;
+}
+
+/* สไตล์สำหรับปุ่มรอง (เช่น ปุ่ม "เพิ่ม...") */
+.btnSecondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ced4da;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+.btnSecondary:hover {
+    background-color: #e9ecef;
+}
+
+/* สไตล์สำหรับแถวใหม่ที่ใช้กรอกข้อมูล */
+.newRow td {
+    background-color: #f8f9fa;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* ทำให้ input ในตารางยืดเต็มช่อง */
+.newRow input[type="file"] {
+    /* กำหนดสไตล์พื้นฐานเพื่อให้มองเห็น */
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    padding: 6px;
+    
+    /* สไตล์สำหรับเบราว์เซอร์ส่วนใหญ่ */
+    border: 1px solid #ced4da;
+    border-radius: 6px;
     background-color: #fff;
-    border-color: #ced4da;
+}
+
+/* ปรับแต่งหน้าตาของปุ่ม "Choose File" */
+.newRow input[type="file"]::file-selector-button {
+    margin-right: 10px;
+    border: 1px solid #ced4da;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color .2s ease-in-out;
+}
+
+.newRow input[type="file"]::file-selector-button:hover {
+    background-color: #e9ecef;
+}
+
+
+/* สไตล์สำหรับปุ่มยืนยันและยกเลิก */
+.actionBtnConfirm,
+.actionBtnCancel {
+    margin: 0 4px;
+    font-size: 16px; /* ขนาดไอคอนใหญ่ขึ้นเล็กน้อย */
+}
+.actionBtnConfirm {
+    color: #16a34a; /* สีเขียว */
+}
+.actionBtnConfirm:hover {
+    color: #15803d;
+}
+.actionBtnCancel {
+    color: #ef4444; /* สีแดง */
+}
+.actionBtnCancel:hover {
+    color: #dc2626;
+}
+
+/* --- ✅✅✅ ส่วนที่เพิ่มเติมเข้ามาสำหรับปุ่ม Action ในตาราง ✅✅✅ --- */
+
+/* จัดการ Layout ของ Cell ที่ chứa ปุ่ม */
+.actionCell {
+    text-align: right; /* จัดให้ปุ่มอยู่ชิดขวา */
+    white-space: nowrap; /* ป้องกันปุ่มตกบรรทัด */
+    width: 10%; /* ทำให้คอลัมน์มีความกว้างพอดีกับเนื้อหา */
+}
+
+/* สไตล์พื้นฐานของปุ่ม */
+.actionBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 2px;
+    padding: 6px 8px;
+    color: #6c757d; /* สีเทา */
+    font-size: 16px;
+    transition: color 0.2s, background-color 0.2s;
+    border-radius: 4px;
+}
+
+/* สไตล์เมื่อนำเมาส์ไปวาง */
+.actionBtn:hover {
+    background-color: #f0f0f0;
     color: #333;
 }
-.cancelButton:hover {
-    background-color: #f8f9fa;
+
+/* --- ✅✅✅ ส่วนที่เพิ่มเติมเข้ามาสำหรับ Clickable Row ✅✅✅ --- */
+
+/* สไตล์สำหรับแถวที่คลิกได้ */
+.clickableRow {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* สไตล์เมื่อนำเมาส์ไปวางบนแถว */
+.clickableRow:hover {
+    background-color: #fdf2f7; /* สีชมพูอ่อนๆ */
+}
+
+/* --- Styles for Sidebar Profile Card --- */
+.studentProfileCard {
+    text-align: center;
+    padding: 10px;
+    line-height: 1.5; /* ปรับระยะห่างบรรทัด */
+}
+
+.profileImageContainer {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 15px auto; /* จัดกึ่งกลางและเพิ่มระยะห่างด้านล่าง */
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #e9ecef;
+    overflow: hidden; /* ป้องกันรูปภาพล้นขอบ */
+}
+
+.profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ทำให้รูปภาพเต็มกรอบโดยไม่เสียสัดส่วน */
+}
+
+.noImagePlaceholder {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.studentName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.studentId {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.studentEmail {
+    font-size: 13px;
+    color: #6c757d;
+    word-break: break-all; /* ตัดคำถ้าอีเมลยาวเกิน */
 }

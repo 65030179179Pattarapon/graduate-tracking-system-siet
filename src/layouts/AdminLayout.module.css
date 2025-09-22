@@ -4,20 +4,21 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f4f7f6;
   overflow: hidden;
+  background-color: #f8f9fa; 
 }
 
 .adminPageLayout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
+  display: flex;
   flex-grow: 1;
-  overflow: hidden; 
-  margin-top: 60px; /* ✅ เพิ่มบรรทัดนี้: ระยะห่างเท่ากับความสูงของ Navbar */
+  overflow: hidden;
+  margin-top: 65px; /* เว้นระยะห่างสำหรับ Navbar */
 }
 
+/* --- ✅✅✅ ส่วนที่แก้ไขหลัก ✅✅✅ --- */
 .mainContent {
+  flex-grow: 1;
+  /* 1. ทำให้พื้นที่แสดงเนื้อหามี scrollbar ของตัวเอง */
+  overflow-y: auto; 
   padding: 30px;
-  overflow-y: auto;
-  height: calc(95vh - 65px);
 }

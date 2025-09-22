@@ -1,42 +1,53 @@
-// src/layouts/AdminLayout.jsx
 import React, { useState } from 'react';
-// ✅ 1. นำเข้า useLocation เพื่อเช็ค URL ปัจจุบัน
 import { Outlet, useLocation } from 'react-router-dom'; 
 import NavbarAdmin from '../components/admin/NavbarAdmin';
 import SidebarAdmin from '../components/admin/SidebarAdmin';
-import SidebarManageUser from '../components/admin/SidebarManageUser'; // ✅ 2. นำเข้า Sidebar ใหม่
+import SidebarManageUser from '../components/admin/SidebarManageUser';
 import styles from './AdminLayout.module.css';
 
 function AdminLayout() {
-  const location = useLocation(); // Hook สำหรับดูข้อมูล URL
+  const location = useLocation();
   const [activeSection, setActiveSection] = useState('pending-review');
   const [activeUserSection, setActiveUserSection] = useState('overview');
 
-  // ✅ 3. เช็คว่าตอนนี้อยู่ที่หน้า manage-users หรือไม่
-  const isManageUserPage = location.pathname.includes('/admin/manage-users');
+  // ✅ 1. ตรวจสอบ Path แบบเจาะจงมากขึ้น
+  // เช็คว่าเป็นหน้า "จัดการผู้ใช้งาน" (แต่ไม่ใช่หน้ารายละเอียด)
+  const isManageUserPage = location.pathname === '/admin/manage-users';
+  // เช็คว่าเป็นหน้ารายละเอียดของนักศึกษาหรือไม่
+  const isStudentDetailPage = location.pathname.startsWith('/admin/manage-users/student/');
+  
+  // Sidebar หลักจะแสดงเมื่อไม่ใช่ทั้ง 2 กรณีข้างต้น
+  const showMainSidebar = !isManageUserPage && !isStudentDetailPage;
 
   return (
     <div className={styles.adminLayoutRoot}>
       <NavbarAdmin />
       <div className={styles.adminPageLayout}>
         
-        {/* ✅ 4. ใช้เงื่อนไขเพื่อเลือกว่าจะแสดง Sidebar ไหน */}
-        {isManageUserPage ? (
+        {/* ✅ 2. ใช้เงื่อนไขที่แม่นยำขึ้นในการแสดงผล */}
+        {isManageUserPage && (
           <SidebarManageUser 
             activeSection={activeUserSection} 
             setSection={setActiveUserSection} 
           />
-        ) : (
+        )}
+
+        {showMainSidebar && (
           <SidebarAdmin 
             activeSection={activeSection} 
             setSection={setActiveSection} 
-            notifications={{}} // ส่งค่าว่างไปก่อน
+            notifications={{}}
           />
         )}
+        
+        {/* ถ้าเป็นหน้ารายละเอียดนักศึกษา (isStudentDetailPage) ส่วนนี้จะไม่แสดง Sidebar ใดๆ เลย */}
 
         <main className={styles.mainContent}>
-          {/* ✅ 5. ส่ง State ที่ถูกต้องไปให้ Page ลูก */}
-          <Outlet context={isManageUserPage ? { activeSection: activeUserSection } : { activeSection, setNotifications: () => {} }} />
+          {/* Outlet จะ render Page Component ที่เรากำหนดใน App.jsx */}
+          <Outlet context={isManageUserPage ? 
+            { activeSection: activeUserSection, setActiveSection: setActiveUserSection } : 
+            { activeSection, setNotifications: () => {} }} 
+          />
         </main>
       </div>
     </div>
