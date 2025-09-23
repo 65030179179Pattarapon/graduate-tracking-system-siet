@@ -288,3 +288,26 @@
     text-align: right;
     width: 1%; /* ทำให้คอลัมน์นี้มีความกว้างน้อยที่สุด */
 }
+
+/* ✅ 1. ทำให้หัวตารางที่จัดเรียงได้ (Sortable) มี cursor เป็นรูปนิ้วชี้ */
+.tableContainer th[onclick] {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* ✅ 2. ทำให้พื้นหลังสีเข้มขึ้นเมื่อนำเมาส์ไปชี้ */
+.tableContainer th[onclick]:hover {
+    background-color: #f0f1f3; /* สีเทาที่เข้มขึ้นเล็กน้อย */
+}
+
+/* ✅ 3. ซ่อนไอคอนลูกศรที่เป็นค่าเริ่มต้นไว้ก่อน */
+.tableContainer th svg {
+    opacity: 0.4;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* ✅ 4. แสดงไอคอนเฉพาะเมื่อหัวตารางนั้นถูกใช้งาน (active) หรือเมื่อกำลังชี้อยู่ */
+.tableContainer th.active svg,
+.tableContainer th[onclick]:hover svg {
+    opacity: 1;
+}
