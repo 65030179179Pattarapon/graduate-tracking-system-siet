@@ -1,22 +1,156 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './ProfilePage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faEdit, faTrash, faUserCircle, faGraduationCap, faSignature, faPaperclip, faPencilAlt, faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
-import Cropper from 'react-cropper';
+import { 
+    faCamera, faEdit, faTrash, faUserCircle, faGraduationCap, faSignature, 
+    faPaperclip, faPencilAlt, faSave, faTimes, faClipboardCheck, faKey,
+    faEye, faEyeSlash // 👈 เพิ่ม 2 ไอคอนนี้เข้าไป
+} from '@fortawesome/free-solid-svg-icons';
 import SignaturePad from 'react-signature-pad-wrapper';
 
-// Helper Functions
-const formatThaiDate = (isoString) => {
-    if (!isoString) return '-';
-    return new Date(isoString).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
-};
-const getStatusClass = (status) => {
-    if (!status) return styles.pending;
-    const approved = ['สำเร็จการศึกษา', 'อนุมัติแล้ว', 'ผ่าน', 'ผ่านเกณฑ์'];
-    if (approved.includes(status)) return styles.approved;
-    const rejected = ['ไม่อนุมัติ', 'ตีกลับ', 'ไม่ผ่าน', 'ไม่ผ่านเกณฑ์'];
-    if (rejected.includes(status)) return styles.rejected;
-    return styles.pending;
+    // Helper Functions
+    const formatThaiDate = (isoString) => {
+        if (!isoString) return '-';
+        return new Date(isoString).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+    const getStatusClass = (status) => {
+        if (!status) return styles.pending;
+        const approved = ['สำเร็จการศึกษา', 'อนุมัติแล้ว', 'ผ่าน', 'ผ่านเกณฑ์'];
+        if (approved.includes(status)) return styles.approved;
+        const rejected = ['ไม่อนุมัติ', 'ตีกลับ', 'ไม่ผ่าน', 'ไม่ผ่านเกณฑ์'];
+        if (rejected.includes(status)) return styles.rejected;
+        return styles.pending;
+    };
+
+    // Component ใหม่สำหรับการจัดการบัญชี
+const AccountManagementSection = ({ currentUser, setCurrentUser }) => {
+    const [passwords, setPasswords] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
+    
+    // ✅ 1. เพิ่ม State สำหรับควบคุมการแสดงผลของแต่ละช่อง
+    const [visibility, setVisibility] = useState({
+        current: false,
+        new: false,
+        confirm: false
+    });
+
+    // ✅ 2. สร้างฟังก์ชันสำหรับสลับการแสดงผล
+    const toggleVisibility = (field) => {
+        setVisibility(prev => ({ ...prev, [field]: !prev[field] }));
+    };
+
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswords(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSavePassword = () => {
+        if (!passwords.currentPassword || !passwords.newPassword || !passwords.confirmPassword) {
+            alert("กรุณากรอกข้อมูลรหัสผ่านให้ครบถ้วน");
+            return;
+        }
+        if (passwords.currentPassword !== currentUser.password) {
+            alert("รหัสผ่านปัจจุบันไม่ถูกต้อง");
+            return;
+        }
+        if (passwords.newPassword.length < 6) {
+            alert("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร");
+            return;
+        }
+        if (passwords.newPassword !== passwords.confirmPassword) {
+            alert("รหัสผ่านใหม่และการยืนยันไม่ตรงกัน");
+            return;
+        }
+
+        const userEmail = localStorage.getItem("current_user");
+        const allStudents = JSON.parse(localStorage.getItem('savedStudents') || '[]');
+        const updatedStudents = allStudents.map(student => {
+            if (student.email === userEmail) {
+                return { ...student, password: passwords.newPassword };
+            }
+            return student;
+        });
+
+        localStorage.setItem('savedStudents', JSON.stringify(updatedStudents));
+        setCurrentUser(prev => ({ ...prev, password: passwords.newPassword }));
+        
+        alert("เปลี่ยนรหัสผ่านเรียบร้อยแล้ว");
+        setIsEditingPassword(false);
+        setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    };
+
+    return (
+        <section className={styles.profileCard}>
+            <h3><FontAwesomeIcon icon={faKey} /> การจัดการบัญชี</h3>
+            <div className={styles.profileDetails}>
+                {!isEditingPassword ? (
+                    <button className={styles.btn} onClick={() => setIsEditingPassword(true)}>
+                        <FontAwesomeIcon icon={faPencilAlt} /> เปลี่ยนรหัสผ่าน
+                    </button>
+                ) : (
+                    <div className={styles.passwordForm}>
+                        {/* ✅ 3. ปรับปรุง JSX ของแต่ละ Input */}
+                        <div className={styles.formGroup}>
+                            <label>รหัสผ่านปัจจุบัน</label>
+                            <div className={styles.passwordInputWrapper}>
+                                <input 
+                                    type={visibility.current ? 'text' : 'password'} 
+                                    name="currentPassword" 
+                                    value={passwords.currentPassword} 
+                                    onChange={handlePasswordChange} 
+                                />
+                                <FontAwesomeIcon 
+                                    icon={visibility.current ? faEyeSlash : faEye} 
+                                    className={styles.passwordIcon}
+                                    onClick={() => toggleVisibility('current')}
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>รหัสผ่านใหม่</label>
+                            <div className={styles.passwordInputWrapper}>
+                                <input 
+                                    type={visibility.new ? 'text' : 'password'} 
+                                    name="newPassword" 
+                                    value={passwords.newPassword} 
+                                    onChange={handlePasswordChange} 
+                                />
+                                <FontAwesomeIcon 
+                                    icon={visibility.new ? faEyeSlash : faEye} 
+                                    className={styles.passwordIcon}
+                                    onClick={() => toggleVisibility('new')}
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>ยืนยันรหัสผ่านใหม่</label>
+                            <div className={styles.passwordInputWrapper}>
+                                <input 
+                                    type={visibility.confirm ? 'text' : 'password'} 
+                                    name="confirmPassword" 
+                                    value={passwords.confirmPassword} 
+                                    onChange={handlePasswordChange} 
+                                />
+                                <FontAwesomeIcon 
+                                    icon={visibility.confirm ? faEyeSlash : faEye} 
+                                    className={styles.passwordIcon}
+                                    onClick={() => toggleVisibility('confirm')}
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.formActions}>
+                            <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={() => setIsEditingPassword(false)}>ยกเลิก</button>
+                            <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSavePassword}>บันทึกรหัสผ่าน</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </section>
+    );
 };
 
 function ProfilePage() {
@@ -98,8 +232,32 @@ function ProfilePage() {
     }, []);
 
     const handleSavePhone = () => {
+        const userEmail = localStorage.getItem("current_user");
+        if (!userEmail) {
+            alert("เกิดข้อผิดพลาด: ไม่พบข้อมูลผู้ใช้ปัจจุบัน");
+            return;
+        }
+
+        // 1. ✅ อ่านข้อมูลนักศึกษาทั้งหมดจาก Local Storage
+        const allStudents = JSON.parse(localStorage.getItem('savedStudents') || '[]');
+
+        // 2. ✅ หาและอัปเดตข้อมูลของนักศึกษาคนปัจจุบัน
+        const updatedStudents = allStudents.map(student => {
+            if (student.email === userEmail) {
+                // ถ้าเจอนักศึกษาคนนี้ ให้คืนค่า object ใหม่พร้อมเบอร์โทรที่อัปเดต
+                return { ...student, phone: phoneInput };
+            }
+            // ถ้าไม่ใช่ ให้คืนค่า student เดิม
+            return student;
+        });
+
+        // 3. ✅ บันทึกข้อมูลที่อัปเดตแล้วทั้งหมดกลับลง Local Storage
+        localStorage.setItem('savedStudents', JSON.stringify(updatedStudents));
+
+        // 4. ✅ อัปเดต State ในหน้าเว็บเพื่อให้เห็นการเปลี่ยนแปลงทันที
         setCurrentUser(prev => ({ ...prev, phone: phoneInput }));
-        alert("เบอร์โทรศัพท์ถูกบันทึกแล้ว (จำลอง)");
+        
+        alert("เบอร์โทรศัพท์ถูกบันทึกเรียบร้อยแล้ว");
         setIsEditingPhone(false);
     };
 
@@ -163,7 +321,6 @@ function ProfilePage() {
         setSignatureModalOpen(false);
     }
 
-    // --- ✅ นี่คือส่วนที่แก้ไข Logic ---
     const handleDeleteSignature = () => {
         if (window.confirm("คุณต้องการลบลายเซ็นดิจิทัลใช่หรือไม่? การลบจะทำให้คุณต้องตั้งค่าลายเซ็นใหม่ทันที")) {
             const userEmail = localStorage.getItem("current_user");
@@ -174,12 +331,10 @@ function ProfilePage() {
                 
                 alert("ลบลายเซ็นเรียบร้อยแล้ว กรุณาตั้งค่าลายเซ็นใหม่เพื่อดำเนินการต่อ");
                 
-                // เปิด Modal แก้ไขลายเซ็นขึ้นมาทันที
                 setSignatureModalOpen(true);
             }
         }
     };
-    // --- จบส่วนที่แก้ไข ---
 
     if (loading) return <div className={styles.loadingText}>กำลังโหลดข้อมูลโปรไฟล์...</div>;
     if (error) return <div className={styles.errorText}>เกิดข้อผิดพลาด: {error}</div>;
@@ -213,6 +368,7 @@ function ProfilePage() {
                                 <div className={styles.detailsGrid}>
                                     <div><label>ระดับการศึกษา:</label><span>{currentUser.degree || '-'}</span></div>
                                     <div><label>แผนการเรียน:</label><span>{currentUser.plan || '-'}</span></div>
+                                    <div><label>ประเภทรับเข้า:</label><span>{currentUser.admit_type || '-'}</span></div>
                                     <div><label>หลักสูตร/สาขา:</label><span>{processedData.programName}</span></div>
                                     <div><label>ภาควิชา:</label><span>{processedData.departmentName}</span></div>
                                     <div><label>คณะ:</label><span>{currentUser.faculty || '-'}</span></div>
@@ -238,10 +394,14 @@ function ProfilePage() {
                                 </div>
                             </div>
                         </section>
+
+                         {/* ✅✅✅ เรียกใช้ Component ที่สร้างขึ้นมาตรงนี้ ✅✅✅ */}
+                        <AccountManagementSection currentUser={currentUser} setCurrentUser={setCurrentUser} />
+
                         <section className={styles.profileCard}>
                             <h3><FontAwesomeIcon icon={faSignature} /> ลายเซ็นดิจิทัล</h3>
-                             <div className={styles.signatureDisplayArea}>
-                                {signatureImage ? <img src={signatureImage} alt="ลายเซ็น" /> : <p>ยังไม่มีลายเซ็น</p>}
+                               <div className={styles.signatureDisplayArea}>
+                                 {signatureImage ? <img src={signatureImage} alt="ลายเซ็น" /> : <p>ยังไม่มีลายเซ็น</p>}
                             </div>
                             <div className={styles.signatureActions}>
                                 <button className={styles.btn} onClick={() => setSignatureModalOpen(true)}><FontAwesomeIcon icon={faEdit} /> แก้ไขลายเซ็น</button>
@@ -249,68 +409,90 @@ function ProfilePage() {
                             </div>
                         </section>
                     </div>
+
                     {/* --- Right Column --- */}
                     <div className={styles.sideProfileColumn}>
+                        {/* ✅ 1. การ์ดข้อมูลวิทยานิพนธ์และอาจารย์ที่ปรึกษา */}
                         <section className={styles.profileCard}>
-                            <h3><FontAwesomeIcon icon={faGraduationCap} /> สรุปสถานะการศึกษา</h3>
+                            <h3><FontAwesomeIcon icon={faGraduationCap} /> ข้อมูลวิทยานิพนธ์</h3>
                             <div className={styles.statusGroup}>
-                                <h4 className={styles.groupTitle}>ข้อมูลวิทยานิพนธ์</h4>
+                                <h4 className={styles.groupTitle}>รายละเอียดวิทยานิพนธ์</h4>
                                 <ul className={styles.statusListDetailed}>
-                                    <li><label>ชื่อวิทยานิพนธ์ (ไทย):</label><span>{currentUser.thesis_title_th || '-'}</span></li>
-                                    <li><label>ชื่อวิทยานิพนธ์ (อังกฤษ):</label><span>{currentUser.thesis_title_en || '-'}</span></li>
+                                    <li><label>ชื่อ (ไทย):</label><span>{currentUser.thesis_title_th || '-'}</span></li>
+                                    <li><label>ชื่อ (อังกฤษ):</label><span>{currentUser.thesis_title_en || '-'}</span></li>
                                 </ul>
                             </div>
                             <div className={styles.statusGroup}>
-                                <h4 className={styles.groupTitle}>รายชื่ออาจารย์ที่ปรึกษาวิทยานิพนธ์</h4>
+                                <h4 className={styles.groupTitle}>อาจารย์ที่ปรึกษา</h4>
                                 <ul className={styles.statusListDetailed}>
-                                    <li><label>อาจารย์ที่ปรึกษาหลัก:</label><span>{processedData.mainAdvisorName}</span></li>
-                                    <li><label>อาจารย์ที่ปรึกษาร่วม 1:</label><span>{processedData.coAdvisor1Name}</span></li>
-                                    <li><label>อาจารย์ที่ปรึกษาร่วม 2:</label><span>{processedData.coAdvisor2Name}</span></li>
+                                    <li><label>ที่ปรึกษาหลัก:</label><span>{processedData.mainAdvisorName}</span></li>
+                                    <li><label>ที่ปรึกษาร่วม 1:</label><span>{processedData.coAdvisor1Name}</span></li>
+                                    <li><label>ที่ปรึกษาร่วม 2:</label><span>{processedData.coAdvisor2Name}</span></li>
                                 </ul>
                             </div>
+                        </section>
+
+                        {/* ✅✅✅ โค้ดส่วนที่แก้ไขทั้งหมด ✅✅✅ */}
+                        <section className={styles.profileCard}>
+                            <h3><FontAwesomeIcon icon={faClipboardCheck} /> สรุปผลการดำเนินการ</h3>
+
+                            {/* --- 1. การสอบหัวข้อและเค้าโครง --- */}
                             <div className={styles.statusGroup}>
                                 <h4 className={styles.groupTitle}>การสอบหัวข้อและเค้าโครง</h4>
                                 <ul className={styles.statusListDetailed}>
-                                    <li><label>วันที่สอบหัวข้อ:</label><span>-</span></li>
-                                    <li><label>สถานะการสอบ:</label><span className={getStatusClass(currentUser.proposal_status)}>{currentUser.proposal_status || 'ยังไม่ยื่น'}</span></li>
+                                    <li><label>สถานะการสอบ:</label><span className={getStatusClass(currentUser.proposal_status)}>{currentUser.proposal_status || '-'}</span></li>
+                                    <li><label>วันที่สอบหัวข้อ:</label><span>{formatThaiDate(currentUser.proposal_submission_date)}</span></li>
                                     <li><label>วันที่อนุมัติหัวข้อ:</label><span>{formatThaiDate(currentUser.proposal_approval_date)}</span></li>
                                 </ul>
                             </div>
+
+                            {/* --- 2. การสอบวิทยานิพนธ์ขั้นสุดท้าย --- */}
                             <div className={styles.statusGroup}>
                                 <h4 className={styles.groupTitle}>การสอบวิทยานิพนธ์ขั้นสุดท้าย</h4>
                                 <ul className={styles.statusListDetailed}>
-                                     <li><label>วันที่สอบขั้นสุดท้าย:</label><span>{formatThaiDate(currentUser.final_defense_date)}</span></li>
-                                     <li><label>สถานะการสอบ:</label><span className={getStatusClass(currentUser.final_defense_status)}>{currentUser.final_defense_status || '-'}</span></li>
-                                     <li><label>วันที่สำเร็จการศึกษา:</label><span>{formatThaiDate(currentUser.graduation_date)}</span></li>
+                                      <li><label>สถานะการสอบ:</label><span className={getStatusClass(currentUser.final_defense_status)}>{currentUser.final_defense_status || '-'}</span></li>
+                                      <li><label>วันที่สอบจบ:</label><span>{formatThaiDate(currentUser.final_defense_date)}</span></li>
+                                      <li><label>วันที่สำเร็จการศึกษา:</label><span>{formatThaiDate(currentUser.graduation_date)}</span></li>
                                 </ul>
                             </div>
-                             <div className={styles.statusGroup}>
-                                <h4 className={styles.groupTitle}>ผลการสอบภาษาอังกฤษ ป.โท</h4>
+
+                            {/* --- 3. การสอบวัดคุณสมบัติ --- */}
+                            <div className={styles.statusGroup}>
+                                <h4 className={styles.groupTitle}>การสอบวัดคุณสมบัติ (QE)</h4>
                                 <ul className={styles.statusListDetailed}>
-                                    <li><label>ประเภทการสอบ:</label><span>{processedData.approvedEngMasterDoc?.details?.exam_type || '-'}</span></li>
-                                    <li><label>วันที่อนุมัติผลสอบ:</label><span>{formatThaiDate(processedData.approvedEngMasterDoc?.action_date)}</span></li>
-                                    <li><label>สถานะ:</label><span className={getStatusClass(processedData.approvedEngMasterDoc?.status)}>{processedData.approvedEngMasterDoc?.status || 'ยังไม่ยื่น'}</span></li>
+                                    <li><label>ผลการสอบ:</label><span className={getStatusClass(processedData.approvedQEDoc?.status)}>{processedData.approvedQEDoc?.status || 'ยังไม่ยื่น'}</span></li>
+                                    <li><label>วันที่ผ่านการสอบ:</label><span>{formatThaiDate(processedData.approvedQEDoc?.action_date)}</span></li>
                                 </ul>
                             </div>
-                             <div className={styles.statusGroup}>
-                                <h4 className={styles.groupTitle}>ผลการสอบภาษาอังกฤษ ป.เอก</h4>
-                                <ul className={styles.statusListDetailed}>
-                                    <li><label>ประเภทการสอบ:</label><span>{processedData.approvedEngPhdDoc?.details?.exam_type || '-'}</span></li>
-                                    <li><label>วันที่อนุมัติผลสอบ:</label><span>{formatThaiDate(processedData.approvedEngPhdDoc?.action_date)}</span></li>
-                                    <li><label>สถานะ:</label><span className={getStatusClass(processedData.approvedEngPhdDoc?.status)}>{processedData.approvedEngPhdDoc?.status || 'ยังไม่ยื่น'}</span></li>
-                                </ul>
-                            </div>
-                             <div className={styles.statusGroup}>
-                                <h4 className={styles.groupTitle}>ผลการสอบวัดคุณสมบัติ</h4>
-                                <ul className={styles.statusListDetailed}>
-                                    <li><label>วันที่อนุมัติผลสอบ:</label><span>{formatThaiDate(processedData.approvedQEDoc?.action_date)}</span></li>
-                                    <li><label>สถานะ:</label><span className={getStatusClass(processedData.approvedQEDoc?.status)}>{processedData.approvedQEDoc?.status || 'ยังไม่ยื่น'}</span></li>
-                                </ul>
-                            </div>
+
+                            {/* --- 4. การสอบภาษาอังกฤษ (ปริญญาโท) --- */}
+                            {currentUser.degree === 'ปริญญาโท' && (
+                                <div className={styles.statusGroup}>
+                                    <h4 className={styles.groupTitle}>การสอบภาษาอังกฤษ (ปริญญาโท)</h4>
+                                    <ul className={styles.statusListDetailed}>
+                                        <li><label>ผลคะแนนรับเข้า:</label><span>-</span></li>
+                                        <li><label>ผลคะแนนจบ:</label><span>-</span></li>
+                                        <li><label>วันที่ผ่านเกณฑ์:</label><span>{formatThaiDate(processedData.approvedEngMasterDoc?.action_date)}</span></li>
+                                    </ul>
+                                </div>
+                            )}
+
+                            {/* --- 5. การสอบภาษาอังกฤษ (ปริญญาเอก) --- */}
+                            {currentUser.degree === 'ปริญญาเอก' && (
+                                <div className={styles.statusGroup}>
+                                    <h4 className={styles.groupTitle}>การสอบภาษาอังกฤษ (ปริญญาเอก)</h4>
+                                    <ul className={styles.statusListDetailed}>
+                                        <li><label>ผลคะแนนรับเข้า:</label><span>-</span></li>
+                                        <li><label>ผลคะแนนจบ:</label><span>-</span></li>
+                                        <li><label>วันที่ผ่านเกณฑ์:</label><span>{formatThaiDate(processedData.approvedEngPhdDoc?.action_date)}</span></li>
+                                    </ul>
+                                </div>
+                            )}
                          </section>
-                         <section className={styles.profileCard}>
+
+                          <section className={styles.profileCard}>
                             <h3><FontAwesomeIcon icon={faPaperclip} /> เอกสารแนบในระบบ (ที่อนุมัติแล้ว)</h3>
-                             <ul className={styles.fileList}>
+                              <ul className={styles.fileList}>
                                 {processedData.allApprovedFiles && processedData.allApprovedFiles.length > 0 ? (
                                     processedData.allApprovedFiles.map((file, index) => (
                                         <li key={index}>
@@ -321,7 +503,7 @@ function ProfilePage() {
                                 ) : (
                                     <li className={styles.loadingText}>ยังไม่มีเอกสารแนบที่อนุมัติแล้ว</li>
                                 )}
-                             </ul>
+                              </ul>
                          </section>
                     </div>
                 </div>
@@ -355,12 +537,12 @@ function ProfilePage() {
             {isSignatureModalOpen && (
                 <div className={styles.modalOverlay}>
                      <div className={`${styles.modalBox} ${styles.signatureModalBox}`}>
-                         <h3>แก้ไขลายเซ็นดิจิทัล</h3>
-                         <div className={styles.tabNav}>
-                             <button className={`${styles.tabBtn} ${signatureTab === 'draw' ? styles.active : ''}`} onClick={() => setSignatureTab('draw')}>วาดลายเซ็น</button>
-                             <button className={`${styles.tabBtn} ${signatureTab === 'upload' ? styles.active : ''}`} onClick={() => setSignatureTab('upload')}>อัปโหลด</button>
-                         </div>
-                         <div className={styles.tabContent}>
+                          <h3>แก้ไขลายเซ็นดิจิทัล</h3>
+                          <div className={styles.tabNav}>
+                              <button className={`${styles.tabBtn} ${signatureTab === 'draw' ? styles.active : ''}`} onClick={() => setSignatureTab('draw')}>วาดลายเซ็น</button>
+                              <button className={`${styles.tabBtn} ${signatureTab === 'upload' ? styles.active : ''}`} onClick={() => setSignatureTab('upload')}>อัปโหลด</button>
+                          </div>
+                          <div className={styles.tabContent}>
                             {signatureTab === 'draw' && (
                                 <div className={styles.canvasWrapper}>
                                     <SignaturePad 
@@ -378,22 +560,22 @@ function ProfilePage() {
                                     <input type="file" id="signature-upload-input" ref={signatureFileInputRef} accept="image/*" style={{display: 'none'}} />
                                 </div>
                             )}
-                         </div>
-                         <div className={styles.modalActionsStacked}>
-                             <div className={styles.mainActions}>
-                                <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={() => setSignatureModalOpen(false)}>ยกเลิก</button>
-                                <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSaveSignature}>บันทึก</button>
-                             </div>
-                             <div className={styles.secondaryActions}>
-                                <button className={styles.btnText} onClick={() => {
-                                    if (signatureTab === 'draw' && signaturePadRef.current) {
-                                        signaturePadRef.current.clear();
-                                    } else {
-                                        if (signatureFileInputRef.current) signatureFileInputRef.current.value = null;
-                                    }
-                                }}>ล้าง</button>
-                             </div>
-                         </div>
+                          </div>
+                          <div className={styles.modalActionsStacked}>
+                              <div className={styles.mainActions}>
+                                  <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={() => setSignatureModalOpen(false)}>ยกเลิก</button>
+                                  <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleSaveSignature}>บันทึก</button>
+                              </div>
+                              <div className={styles.secondaryActions}>
+                                  <button className={styles.btnText} onClick={() => {
+                                      if (signatureTab === 'draw' && signaturePadRef.current) {
+                                          signaturePadRef.current.clear();
+                                      } else {
+                                          if (signatureFileInputRef.current) signatureFileInputRef.current.value = null;
+                                      }
+                                  }}>ล้าง</button>
+                              </div>
+                          </div>
                      </div>
                 </div>
             )}
@@ -401,4 +583,5 @@ function ProfilePage() {
     );
 }
 
-export default ProfilePage; 
+export default ProfilePage;
+

@@ -75,7 +75,7 @@ function StudentTable({ students, advisors, onDelete }) {
                             </th>
                             <th>เบอร์โทรศัพท์</th>
                             <th>ที่ปรึกษาหลัก</th>
-                            <th style={{textAlign: 'right'}}>ดำเนินการ</th>
+                            <th style={{textAlign: 'center'}}>ดำเนินการ</th>
                         </tr>
                     </thead>
                     <tbody>

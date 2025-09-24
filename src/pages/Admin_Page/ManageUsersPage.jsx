@@ -39,16 +39,14 @@ function ManageUsersPage() {
 
     const fetchData = async () => {
         try {
-            // ✅ ดึงข้อมูลจาก localStorage ก่อน ถ้าไม่มีค่อย fetch จากไฟล์
             const savedStudents = JSON.parse(localStorage.getItem('savedStudents'));
-            const savedAdvisors = JSON.parse(localStorage.getItem('savedAdvisors')); // สมมติว่ามีของ advisor ด้วย
+            const savedAdvisors = JSON.parse(localStorage.getItem('savedAdvisors'));
 
             const [studentsRes, advisorsRes] = await Promise.all([
                 savedStudents ? Promise.resolve(savedStudents) : fetch('/data/student.json').then(res => res.json()),
                 savedAdvisors ? Promise.resolve(savedAdvisors) : fetch('/data/advisor.json').then(res => res.json())
             ]);
             
-            // บันทึกข้อมูลตั้งต้นลง localStorage หากยังไม่มี
             if (!savedStudents) localStorage.setItem('savedStudents', JSON.stringify(studentsRes));
             if (!savedAdvisors) localStorage.setItem('savedAdvisors', JSON.stringify(advisorsRes));
 
@@ -77,25 +75,40 @@ function ManageUsersPage() {
     };
     
     const handleAddNewAdvisor = () => {
-        alert('(ตัวอย่าง) กำลังไปที่หน้าเพิ่มอาจารย์ใหม่');
+        navigate('/admin/manage-users/advisor/new');
     };
 
-    // ✅ 1. เพิ่มฟังก์ชันสำหรับลบนักศึกษา
     const handleDeleteStudent = (studentIdToDelete) => {
         if (window.confirm(`คุณต้องการลบนักศึกษา ID: ${studentIdToDelete} ใช่หรือไม่?`)) {
-            // กรองข้อมูลนักศึกษาคนที่จะลบออก
             const updatedStudents = masterData.students.filter(student => student.student_id !== studentIdToDelete);
             
-            // อัปเดต State เพื่อให้หน้าเว็บแสดงผลใหม่ทันที
             setMasterData(prevData => ({
                 ...prevData,
                 students: updatedStudents
             }));
 
-            // อัปเดตข้อมูลใน localStorage ให้ตรงกัน
             localStorage.setItem('savedStudents', JSON.stringify(updatedStudents));
             
             alert(`ลบนักศึกษา ID: ${studentIdToDelete} เรียบร้อยแล้ว`);
+        }
+    };
+
+    // ✅ 1. เพิ่มฟังก์ชันสำหรับลบอาจารย์
+    const handleDeleteAdvisor = (advisorIdToDelete) => {
+        if (window.confirm(`คุณต้องการลบข้อมูลอาจารย์ ID: ${advisorIdToDelete} ใช่หรือไม่?`)) {
+            // กรองข้อมูลอาจารย์ที่จะลบออก
+            const updatedAdvisors = masterData.advisors.filter(advisor => advisor.advisor_id !== advisorIdToDelete);
+
+            // อัปเดต State
+            setMasterData(prevData => ({
+                ...prevData,
+                advisors: updatedAdvisors
+            }));
+
+            // อัปเดต Local Storage
+            localStorage.setItem('savedAdvisors', JSON.stringify(updatedAdvisors));
+            
+            alert(`ลบข้อมูลอาจารย์ ID: ${advisorIdToDelete} เรียบร้อยแล้ว`);
         }
     };
 
@@ -107,13 +120,15 @@ function ManageUsersPage() {
                             advisors={masterData.advisors} 
                             navigate={navigate}
                             onAddNewStudent={handleAddNewStudent}
-                            // ✅ 2. ส่งฟังก์ชันลบลงไปเป็น prop
                             onDeleteStudent={handleDeleteStudent} 
                         />;
             case 'advisors':
                 return <ManageAdvisorsSection 
                             advisors={masterData.advisors} 
                             onAddNewAdvisor={handleAddNewAdvisor}
+                            navigate={navigate}
+                            // ✅ 2. ส่งฟังก์ชันลบลงไปเป็น prop
+                            onDeleteAdvisor={handleDeleteAdvisor}
                         />;
             case 'overview':
             default:
@@ -225,12 +240,11 @@ const ManageStudentsSection = ({ students, advisors, navigate, onAddNewStudent, 
     );
 };
 
-const ManageAdvisorsSection = ({ advisors, onAddNewAdvisor, navigate }) => {
+// ✅ 3. แก้ไข ManageAdvisorsSection ให้รับและส่งต่อฟังก์ชัน onDeleteAdvisor
+const ManageAdvisorsSection = ({ advisors, onAddNewAdvisor, navigate, onDeleteAdvisor }) => {
     const [filters, setFilters] = useState({ name: '', email: '', phone: '', type: '' });
-
     const advisorTypes = useMemo(() => [...new Set(advisors.map(a => a.type).filter(Boolean))], [advisors]);
 
-    // ✅ 1. กรองข้อมูลอย่างเดียว ไม่ต้องเรียงลำดับหรือแบ่งหน้าที่นี่
     const filteredAdvisors = useMemo(() => {
         let data = [...advisors];
         if (filters.name) data = data.filter(a => `${a.prefix_th}${a.first_name_th} ${a.last_name_th}`.toLowerCase().includes(filters.name.toLowerCase()));
@@ -269,10 +283,11 @@ const ManageAdvisorsSection = ({ advisors, onAddNewAdvisor, navigate }) => {
                     <button className={styles.btnPrimary} onClick={onAddNewAdvisor}><FontAwesomeIcon icon={faPlus} /> เพิ่มอาจารย์ใหม่</button>
                 </div>
                 
-                {/* ✅ 2. ส่งข้อมูลที่กรองแล้วและ navigate function ไปให้ AdvisorTable */}
+                {/* ✅ 4. ส่งฟังก์ชัน onDelete ต่อไปให้ AdvisorTable */}
                 <AdvisorTable 
                     advisors={filteredAdvisors} 
-                    navigate={navigate} 
+                    navigate={navigate}
+                    onDelete={onDeleteAdvisor}
                 />
             </div>
         </section>

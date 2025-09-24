@@ -1,18 +1,21 @@
 // src/components/admin/AdvisorTable.jsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../pages/Admin_Page/ManageUsersPage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTrashAlt, faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import PaginationControls from './PaginationControls'; // ตรวจสอบให้แน่ใจว่า path ถูกต้อง
 
-function AdvisorTable({ advisors, navigate }) {
-    // ✅ 1. จัดการ State ของการเรียงข้อมูลและการแบ่งหน้าภายใน Component นี้
+// ✅ 1. เพิ่ม onDelete เข้าไปใน props ที่รับเข้ามา
+function AdvisorTable({ advisors, navigate, onDelete }) {
     const [sortConfig, setSortConfig] = useState({ key: 'full_name', direction: 'ascending' });
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // ✅ 2. จัดเรียงข้อมูล advisors ที่ได้รับมา
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [advisors]);
+
     const sortedAdvisors = useMemo(() => {
         let sortableItems = [...advisors];
         if (sortConfig.key) {
@@ -40,7 +43,7 @@ function AdvisorTable({ advisors, navigate }) {
             direction = 'descending';
         }
         setSortConfig({ key, direction });
-        setCurrentPage(1); // กลับไปหน้าแรกเมื่อเรียงข้อมูล
+        setCurrentPage(1);
     };
 
     const getSortIcon = (key) => {
@@ -48,16 +51,14 @@ function AdvisorTable({ advisors, navigate }) {
         return sortConfig.direction === 'ascending' ? faSortUp : faSortDown;
     };
 
-    // ✅ 3. คำนวณและตัดข้อมูลเพื่อแสดงผลในหน้าปัจจุบัน
     const totalPages = Math.ceil(sortedAdvisors.length / itemsPerPage);
     const currentTableData = sortedAdvisors.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
-    const handleRowClick = (advisor) => {
-        // navigate(`/admin/manage-users/advisor/${advisor.advisor_id}`);
-        alert(`(ตัวอย่าง) ไปที่หน้ารายละเอียดของ: ${advisor.first_name_th}`);
+    const handleRowClick = (advisorId) => {
+        navigate(`/admin/manage-users/advisor/${advisorId}`);
     };
 
     return (
@@ -66,10 +67,10 @@ function AdvisorTable({ advisors, navigate }) {
                 <table>
                     <thead>
                         <tr>
-                            <th onClick={() => requestSort('full_name')}>ชื่อ-นามสกุล <FontAwesomeIcon icon={getSortIcon('full_name')} /></th>
-                            <th onClick={() => requestSort('email')}>อีเมล <FontAwesomeIcon icon={getSortIcon('email')} /></th>
+                            <th onClick={() => requestSort('full_name')} className={sortConfig.key === 'full_name' ? styles.active : ''}>ชื่อ-นามสกุล <FontAwesomeIcon icon={getSortIcon('full_name')} /></th>
+                            <th onClick={() => requestSort('email')} className={sortConfig.key === 'email' ? styles.active : ''}>อีเมล <FontAwesomeIcon icon={getSortIcon('email')} /></th>
                             <th>เบอร์โทรศัพท์</th>
-                            <th onClick={() => requestSort('type')}>ประเภท <FontAwesomeIcon icon={getSortIcon('type')} /></th>
+                            <th onClick={() => requestSort('type')} className={sortConfig.key === 'type' ? styles.active : ''}>ประเภท <FontAwesomeIcon icon={getSortIcon('type')} /></th>
                             <th>บทบาท (Roles)</th>
                             <th style={{ textAlign: 'center' }}>ดำเนินการ</th>
                         </tr>
@@ -77,7 +78,7 @@ function AdvisorTable({ advisors, navigate }) {
                     <tbody>
                         {currentTableData.length > 0 ? (
                             currentTableData.map((advisor) => (
-                                <tr key={advisor.advisor_id} className={styles.clickableRow} onClick={() => handleRowClick(advisor)}>
+                                <tr key={advisor.advisor_id} className={styles.clickableRow} onClick={() => handleRowClick(advisor.advisor_id)}>
                                     <td>{`${advisor.prefix_th}${advisor.first_name_th} ${advisor.last_name_th}`}</td>
                                     <td>{advisor.email || '-'}</td>
                                     <td>{advisor.phone || '-'}</td>
@@ -89,10 +90,18 @@ function AdvisorTable({ advisors, navigate }) {
                                         }
                                     </td>
                                     <td className={styles.actionCell}>
-                                        <button className={styles.actionBtn} title="แก้ไข" onClick={(e) => { e.stopPropagation(); handleRowClick(advisor); }}>
+                                        <button className={styles.actionBtn} title="แก้ไข" onClick={(e) => { e.stopPropagation(); handleRowClick(advisor.advisor_id); }}>
                                             <FontAwesomeIcon icon={faPencilAlt} />
                                         </button>
-                                        <button className={styles.actionBtn} title="ลบ" onClick={(e) => { e.stopPropagation(); alert(`(ตัวอย่าง) ลบ ID: ${advisor.advisor_id}`); }}>
+                                        {/* ✅ 2. แก้ไข onClick ของปุ่มลบ */}
+                                        <button 
+                                            className={styles.actionBtn} 
+                                            title="ลบ" 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); // หยุดไม่ให้ event click ลามไปถึง tr
+                                                onDelete(advisor.advisor_id); // เรียกใช้ฟังก์ชัน onDelete ที่ได้รับมา
+                                            }}
+                                        >
                                             <FontAwesomeIcon icon={faTrashAlt} />
                                         </button>
                                     </td>
@@ -107,7 +116,6 @@ function AdvisorTable({ advisors, navigate }) {
                 </table>
             </div>
             
-            {/* ✅ 4. เพิ่มส่วนควบคุม Pagination ที่ด้านล่าง */}
             {totalPages > 1 &&
                 <div className={styles.pagination}>
                     <PaginationControls 

@@ -413,3 +413,37 @@
 .secondaryActions {
     text-align: center;
 }
+
+/* --- Styles for Password Inputs with Icons --- */
+.passwordInputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.passwordInputWrapper input {
+    width: 100%;
+    /* เพิ่ม padding ด้านขวาเพื่อไม่ให้ตัวหนังสือทับไอคอน */
+    padding-right: 40px; 
+}
+
+.passwordIcon {
+    position: absolute;
+    right: 12px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.passwordIcon:hover {
+    color: #333;
+}
+
+.formActions {
+    display: flex;
+    /* ✅ แก้ไขบรรทัดนี้ */
+    justify-content: space-between; 
+    gap: 10px;
+    margin-top: 10px;
+}

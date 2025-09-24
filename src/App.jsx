@@ -29,6 +29,9 @@ import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage'
 import ManageUsersPage from './pages/Admin_Page/ManageUsersPage';
 import ManageStudentDetailPage from './pages/Admin_Page/ManageStudentDetailPage';
 import AddStudentPage from './pages/Admin_Page/AddStudentPage'; 
+import ManageAdvisorDetailPage from './pages/Admin_Page/ManageAdvisorDetailPage';
+// ✅ 1. Import Component หน้าเพิ่มอาจารย์เข้ามา
+import AddAdvisorPage from './pages/Admin_Page/AddAdvisorPage';
 
 function App() {
   return (
@@ -63,10 +66,17 @@ function App() {
         <Route path="manage-users">
             <Route index element={<ManageUsersPage />} />
 
-            {/* ✅✅✅ แก้ไข path จาก "students" เป็น "student" ที่นี่ ✅✅✅ */}
+            {/* Routes สำหรับนักศึกษา */}
             <Route path="student">
                 <Route path="new" element={<AddStudentPage />} />
                 <Route path=":studentId" element={<ManageStudentDetailPage />} />
+            </Route>
+            
+            {/* Routes สำหรับอาจารย์ */}
+            <Route path="advisor">
+                {/* ✅ 2. เพิ่ม Route ใหม่สำหรับหน้าเพิ่มอาจารย์ */}
+                <Route path="new" element={<AddAdvisorPage />} />
+                <Route path=":advisorId" element={<ManageAdvisorDetailPage />} />
             </Route>
         </Route>
 

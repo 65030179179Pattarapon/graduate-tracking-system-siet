@@ -5,9 +5,9 @@ import { faChartPie, faUserGraduate, faUserTie } from '@fortawesome/free-solid-s
 
 function SidebarManageUser({ activeSection, setSection }) {
     const menuItems = [
-        { id: 'overview', icon: faChartPie, text: 'สรุปภาพรวม' },
-        { id: 'students', icon: faUserGraduate, text: 'จัดการนักศึกษา' },
-        { id: 'advisors', icon: faUserTie, text: 'จัดการอาจารย์' },
+        { id: 'overview', icon: faChartPie, text: 'สรุปภาพรวมของผู้ใช้งาน' },
+        { id: 'students', icon: faUserGraduate, text: 'จัดการรายชื่อนักศึกษา' },
+        { id: 'advisors', icon: faUserTie, text: 'จัดการรายชื่ออาจารย์' },
     ];
 
     return (
