@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Form1Page.module.css';
 
 function Form1Page() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   // --- State สำหรับข้อมูล ---
   const [studentInfo, setStudentInfo] = useState(null);
   const [advisors, setAdvisors] = useState([]);
@@ -14,6 +16,10 @@ function Form1Page() {
   const [mainAdvisor, setMainAdvisor] = useState('');
   const [coAdvisor, setCoAdvisor] = useState('');
   const [comment, setComment] = useState('');
+
+  // --- State สำหรับโหมดแก้ไข ---
+  const [editingDoc, setEditingDoc] = useState(null);
+  const isEditMode = !!editingDoc;
 
   // --- Effect สำหรับดึงข้อมูลเมื่อเปิดหน้า ---
   useEffect(() => {
@@ -42,6 +48,25 @@ function Form1Page() {
           program: programName,
         });
         setAdvisors(advisorList);
+
+        // ✅ ตรวจสอบ URL parameter สำหรับโหมดแก้ไข
+        const queryParams = new URLSearchParams(location.search);
+        const docIdToEdit = queryParams.get('edit');
+
+        if (docIdToEdit) {
+          const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+          const docToEdit = rejectedDocs.find(doc => doc.doc_id === docIdToEdit);
+          
+          if (docToEdit) {
+            setEditingDoc(docToEdit);
+            // ✅ ดึงข้อมูลเดิมมาใส่ใน State ของฟอร์ม
+            setMainAdvisor(docToEdit.selected_main_advisor_id || '');
+            setCoAdvisor(docToEdit.selected_co_advisor_id || '');
+            setComment(docToEdit.student_comment || '');
+          } else {
+            setError(`ไม่พบเอกสารที่ถูกส่งกลับแก้ไข (ID: ${docIdToEdit})`);
+          }
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -49,7 +74,7 @@ function Form1Page() {
       }
     };
     loadFormData();
-  }, []);
+  }, [location.search]);
 
   // --- Logic การ Submit ฟอร์ม ---
   const handleSubmit = (e) => {
@@ -63,46 +88,91 @@ function Form1Page() {
     const signatureData = localStorage.getItem(`${userEmail}_signature_data`);
     if (!signatureData) {
       alert("ไม่พบข้อมูลลายเซ็น กรุณาตั้งค่าลายเซ็นก่อน");
-      navigate('/student/signature'); // อาจส่งไปหน้า signature
+      navigate('/student/signature');
       return;
     }
 
-    const formPrefix = "Form1"; // หรือ "Form3", "Form4" ตามแต่ละฟอร์ม
-    const timestamp = Date.now(); // ดึงตัวเลขเวลาปัจจุบัน
-    const newDocId = `${formPrefix}-${timestamp}`; // ✅ สร้าง ID ที่ไม่ซ้ำกัน
-    const submissionData = {
-      doc_id: newDocId,
-      type: "ฟอร์ม 1",
-      title: "แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม",
-      student_email: userEmail,
-      student_id: studentInfo.student_id,
-      student: studentInfo.fullname,
-      selected_main_advisor_id: mainAdvisor,
-      selected_co_advisor_id: coAdvisor || null,
-      student_comment: comment,
-      submitted_date: new Date().toISOString(),
-      signature: signatureData,
-      status: "รอตรวจ"
-    };
+    if (isEditMode) {
+        // --- Logic สำหรับการ "แก้ไขและส่งใหม่" ---
+        const submissionData = {
+            ...editingDoc, // ใช้ข้อมูลเดิมเป็นฐาน
+            selected_main_advisor_id: mainAdvisor,
+            selected_co_advisor_id: coAdvisor || null,
+            student_comment: comment,
+            submitted_date: new Date().toISOString(), // อัปเดตวันที่ส่ง
+            status: "รอตรวจ", // เปลี่ยนสถานะกลับเป็นรอตรวจ
+            admin_comment: '', // ล้างคอมเมนต์ของแอดมินออก
+        };
+        
+        // 1. ลบเอกสารเดิมออกจาก rejected list
+        const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+        const updatedRejectedDocs = rejectedDocs.filter(doc => doc.doc_id !== editingDoc.doc_id);
+        localStorage.setItem('localStorage_rejectedDocs', JSON.stringify(updatedRejectedDocs));
 
-    // --- บันทึกข้อมูลลง Local Storage (เหมือนเดิม) ---
-    const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
-    existingPendingDocs.push(submissionData);
-    localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
-    
-    alert("✅ ยืนยันและส่งแบบฟอร์มเรียบร้อยแล้ว!");
-    navigate("/student/status"); // ส่งไปหน้า status
+        // 2. เพิ่มเอกสารที่แก้ไขแล้วเข้าไปใน pending list
+        const pendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+        pendingDocs.push(submissionData);
+        localStorage.setItem('localStorage_pendingDocs', JSON.stringify(pendingDocs));
+        
+        alert("✅ แก้ไขและส่งแบบฟอร์มเรียบร้อยแล้ว!");
+        navigate("/student/status");
+
+    } else {
+        // --- Logic สำหรับการ "สร้างและส่งใหม่" (เหมือนเดิม) ---
+        const formPrefix = "Form1";
+        const timestamp = Date.now();
+        const newDocId = `${formPrefix}-${timestamp}`;
+        const submissionData = {
+            doc_id: newDocId,
+            type: "ฟอร์ม 1",
+            title: "แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม",
+            student_email: userEmail,
+            student_id: studentInfo.student_id,
+            student: studentInfo.fullname,
+            selected_main_advisor_id: mainAdvisor,
+            selected_co_advisor_id: coAdvisor || null,
+            student_comment: comment,
+            submitted_date: new Date().toISOString(),
+            signature: signatureData,
+            status: "รอตรวจ"
+        };
+
+        const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+        existingPendingDocs.push(submissionData);
+        localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
+        
+        alert("✅ ยืนยันและส่งแบบฟอร์มเรียบร้อยแล้ว!");
+        navigate("/student/status");
+    }
   };
 
-  // --- ส่วนแสดงผล ---
-  if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูลฟอร์ม...</div>;
+  if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.error}>เกิดข้อผิดพลาด: {error}</div>;
 
   const coAdvisorOptions = advisors.filter(adv => adv.advisor_id && adv.advisor_id !== mainAdvisor);
 
   return (
-    <div className={styles.formContainer}>
-      <h2>📑 แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม</h2>
+      <div className={styles.formContainer}>
+          {/* ✅✅✅ แก้ไขส่วนนี้ทั้งหมด ✅✅✅ */}
+            <div className={styles.titleContainer}>
+              <h2>{isEditMode ? '📝 แก้ไขแบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม' : '📑 แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม'}</h2>
+            </div>
+                {isEditMode && (
+                  <div className={styles.backButtonContainer}>
+                    <button type="button" className={styles.backButton} onClick={() => navigate('/student/status')}>
+                        กลับไปหน้าสถานะ
+                    </button>
+                  </div>
+                )}
+      
+      {/* ✅ แสดง Comment ของแอดมินถ้าอยู่ในโหมดแก้ไข */}
+      {isEditMode && editingDoc.admin_comment && (
+        <div className={styles.rejectionNotice}>
+            <strong>เหตุผลที่ส่งกลับแก้ไข:</strong>
+            <p>{editingDoc.admin_comment}</p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>📌 ข้อมูลนักศึกษา</legend>
@@ -161,7 +231,7 @@ function Form1Page() {
           </div>
         </fieldset>
         
-        <button type="submit">📤 ยืนยันและส่งแบบฟอร์ม</button>
+        <button type="submit">{isEditMode ? '📤 แก้ไขและส่งแบบฟอร์มอีกครั้ง' : '📤 ยืนยันและส่งแบบฟอร์ม'}</button>
       </form>
     </div>
   );

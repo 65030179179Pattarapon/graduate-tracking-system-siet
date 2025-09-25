@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ 1. Import useNavigate
 import styles from './StatusPage.module.css';
 import StatusColumn from '../../components/StatusColumn';
 
@@ -6,6 +7,7 @@ function StatusPage() {
   const [documents, setDocuments] = useState({ approved: [], pending: [], rejected: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // ✅ 2. สร้าง navigate function
 
   useEffect(() => {
     const loadStatusData = async () => {
@@ -18,17 +20,13 @@ function StatusPage() {
         const currentUser = students.find(s => s.email === userEmail);
         if (!currentUser) throw new Error("ไม่พบข้อมูลนักศึกษา");
 
-        // 1. ดึงข้อมูลเอกสารพื้นฐานจาก student.json (ถ้ามี)
         const baseDocs = currentUser.documents || [];
 
-        // ✅✅✅ ส่วนที่แก้ไข: ดึงข้อมูลจาก localStorage ทุกส่วน ✅✅✅
-        // 2. ดึงเอกสารใหม่ที่ถูกบันทึกไว้ใน localStorage จากทุกสถานะที่เป็นไปได้
         const pendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
         const approvedDocs = JSON.parse(localStorage.getItem('localStorage_approvedDocs') || '[]');
         const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
         const waitingAdvisorDocs = JSON.parse(localStorage.getItem('localStorage_waitingAdvisorDocs') || '[]');
         
-        // 3. รวมเอกสารทั้งหมดจาก localStorage
         const allLocalStorageDocs = [
             ...pendingDocs, 
             ...approvedDocs, 
@@ -36,19 +34,13 @@ function StatusPage() {
             ...waitingAdvisorDocs
         ];
         
-        // 4. กรองเอาเฉพาะเอกสารของ user ที่ login อยู่
         const userLocalStorageDocs = allLocalStorageDocs.filter(doc => doc.student_email === userEmail);
         
-        // 5. รวมข้อมูลจาก student.json และ localStorage เข้าด้วยกัน
-        // (อาจมีข้อมูลซ้ำกัน ถ้ามีเอกสารตัวเดียวกันใน student.json และ localStorage, ต้องมีวิธีจัดการในอนาคต)
         const allDocs = [...baseDocs, ...userLocalStorageDocs];
-        // --- จบส่วนที่แก้ไข ---
 
-        // --- ส่วนที่เหลือทำงานเหมือนเดิม ---
         const approvedStates = ['อนุมัติแล้ว', 'อนุมัติ', 'ผ่านเกณฑ์'];
         const rejectedStates = ['ไม่อนุมัติ', 'ตีกลับ', 'ส่งกลับแก้ไข', 'ไม่ผ่านเกณฑ์'];
 
-        // ใช้ new Set เพื่อกรองเอกสารที่ซ้ำกันออก (กรองจาก doc_id)
         const uniqueDocs = Array.from(new Map(allDocs.map(doc => [doc.doc_id, doc])).values());
 
         const approved = uniqueDocs.filter(doc => approvedStates.includes(doc.status));
@@ -69,7 +61,7 @@ function StatusPage() {
       }
     };
     loadStatusData();
-  }, []); // Dependency array ว่างเปล่า หมายความว่า Effect นี้จะทำงานครั้งเดียวเมื่อ Component โหลด
+  }, []);
 
   if (loading) return <div className={styles.loadingText}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.errorText}>เกิดข้อผิดพลาด: {error}</div>;
@@ -78,9 +70,25 @@ function StatusPage() {
     <main className={styles.statusPageContainer}>
       <h1>📄 สถานะเอกสารของคุณ</h1>
       <div className={styles.statusGrid}>
-        <StatusColumn title="❌ ไม่อนุมัติ / ต้องแก้ไข" statusType="rejected" documents={documents.rejected} />
-        <StatusColumn title="⌛ กำลังดำเนินการ" statusType="pending" documents={documents.pending} />
-        <StatusColumn title="✔️ อนุมัติแล้ว" statusType="approved" documents={documents.approved} />
+        {/* ✅ 3. ส่ง navigate function ไปยัง StatusColumn */}
+        <StatusColumn 
+            title="❌ ไม่อนุมัติ / ต้องแก้ไข" 
+            statusType="rejected" 
+            documents={documents.rejected} 
+            navigate={navigate}
+        />
+        <StatusColumn 
+            title="⌛ กำลังดำเนินการ" 
+            statusType="pending" 
+            documents={documents.pending} 
+            navigate={navigate}
+        />
+        <StatusColumn 
+            title="✔️ อนุมัติแล้ว" 
+            statusType="approved" 
+            documents={documents.approved} 
+            navigate={navigate}
+        />
       </div>
     </main>
   );

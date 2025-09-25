@@ -1,24 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // ✅ 1. Import useLocation
 import styles from './Form3Page.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 
+const fileToDataUrl = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
 function Form3Page() {
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ 2. สร้าง instance ของ useLocation
 
+  // --- State สำหรับข้อมูล ---
   const [displayData, setDisplayData] = useState(null);
-  // ไม่ต้องใช้ programChairs แล้ว
-  // const [programChairs, setProgramChairs] = useState([]);
-  
   const [formData, setFormData] = useState({
-    // programChair ไม่ต้องมีในนี้แล้ว เพราะเราจะดึงมาแสดงผลอย่างเดียว
     outlineFile: null,
     comment: '',
   });
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // ✅ 3. เพิ่ม State สำหรับโหมดแก้ไข
+  const [editingDoc, setEditingDoc] = useState(null);
+  const isEditMode = !!editingDoc;
 
   useEffect(() => {
     const loadFormData = async () => {
@@ -50,7 +60,6 @@ function Form3Page() {
             return advisor ? `${advisor.prefix_th}${advisor.first_name_th} ${advisor.last_name_th}`.trim() : 'ไม่มีข้อมูล';
         };
 
-        // --- ✅ ส่วนที่แก้ไข: ดึงข้อมูลประธานกรรมการสอบจากฟอร์ม 2 ---
         const programChairId = approvedForm2?.committee?.chair_id;
         const programChairName = findAdvisorName(programChairId);
 
@@ -66,11 +75,29 @@ function Form3Page() {
           mainAdvisorName: findAdvisorName(currentUser.main_advisor_id),
           coAdvisor1Name: findAdvisorName(currentUser.co_advisor1_id),
           coAdvisor2Name: findAdvisorName(approvedForm2?.committee?.co_advisor2_id),
-          programChairId: programChairId, // เก็บ ID ไว้เพื่อใช้ตอน Submit
-          programChairName: programChairName, // เก็บชื่อไว้เพื่อแสดงผล
+          programChairId: programChairId,
+          programChairName: programChairName,
         });
-        // --- จบส่วนที่แก้ไข ---
+        
+        // ✅ 4. เพิ่ม Logic ดึงข้อมูลสำหรับโหมดแก้ไข
+        const queryParams = new URLSearchParams(location.search);
+        const docIdToEdit = queryParams.get('edit');
 
+        if (docIdToEdit) {
+            const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+            const docToEdit = rejectedDocs.find(doc => doc.doc_id === docIdToEdit);
+            
+            if (docToEdit) {
+                setEditingDoc(docToEdit);
+                // ดึงข้อมูลเดิมมาใส่ใน State ของฟอร์ม
+                setFormData(prev => ({
+                    ...prev,
+                    comment: docToEdit.student_comment || ''
+                }));
+            } else {
+                setError(`ไม่พบเอกสารที่ถูกส่งกลับแก้ไข (ID: ${docIdToEdit})`);
+            }
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -78,7 +105,7 @@ function Form3Page() {
       }
     };
     loadFormData();
-  }, []);
+  }, [location.search]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,149 +121,183 @@ function Form3Page() {
   
   const handleRemoveFile = (fileName) => {
     setFormData(prev => ({ ...prev, [fileName]: null }));
-    document.getElementById(fileName).value = "";
+    const fileInput = document.getElementById(fileName);
+    if (fileInput) fileInput.value = "";
   };
 
-  const handleSubmit = (e) => {
+  // ✅ 5. แก้ไข handleSubmit ให้รองรับทั้งการสร้างใหม่และแก้ไข
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const userEmail = localStorage.getItem("current_user");
 
-    // --- ✅ ส่วนที่แก้ไข: ตรวจสอบว่ามีข้อมูลประธานหลักสูตรหรือไม่ ---
     if (!formData.outlineFile) {
-      alert("กรุณาแนบไฟล์เค้าโครงวิทยานิพนธ์");
-      return;
+        alert("กรุณาแนบไฟล์เค้าโครงวิทยานิพนธ์");
+        return;
     }
-    // --- จบส่วนที่แก้ไข ---
-
-    const formPrefix = "Form3"; // กำหนดรหัสย่อของฟอร์มนี้ เช่น F1, F2, F3
-    const newDocId = `${formPrefix}`;
-    const submissionData = {
-      doc_id: newDocId,
-      type: "ฟอร์ม 3",
-      title: "แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม",
-      student_email: userEmail,
-      student_id: displayData.student_id,
-      files: [{ type: 'เค้าโครงวิทยานิพนธ์ฉบับสมบูรณ์', name: formData.outlineFile.name }],
-      student_comment: formData.comment,
-      submitted_date: new Date().toISOString(),
-      status: "รอตรวจ",
-      approvers: {
-        program_chair_id: displayData.programChairId, // <-- ใช้ ID ที่ดึงมา
-      }
-    };
-
-    const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
-    existingPendingDocs.push(submissionData);
-    localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
     
-    alert("✅ ยืนยันและนำส่งเอกสารเรียบร้อยแล้ว!");
-    navigate("/student/status");
+    try {
+        const fileUrl = await fileToDataUrl(formData.outlineFile);
+
+        const commonData = {
+            type: "ฟอร์ม 3",
+            title: "แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม",
+            student_email: userEmail,
+            student_id: displayData.student_id,
+            files: [{ type: 'เค้าโครงวิทยานิพนธ์ฉบับสมบูรณ์', name: formData.outlineFile.name, url: fileUrl }],
+            student_comment: formData.comment,
+            submitted_date: new Date().toISOString(),
+            status: "รอตรวจ",
+            approvers: {
+                program_chair_id: displayData.programChairId,
+            }
+        };
+
+        if (isEditMode) {
+            // --- Logic สำหรับการ "แก้ไขและส่งใหม่" ---
+            const submissionData = { ...editingDoc, ...commonData };
+            
+            const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+            const updatedRejectedDocs = rejectedDocs.filter(doc => doc.doc_id !== editingDoc.doc_id);
+            localStorage.setItem('localStorage_rejectedDocs', JSON.stringify(updatedRejectedDocs));
+
+            const pendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+            pendingDocs.push(submissionData);
+            localStorage.setItem('localStorage_pendingDocs', JSON.stringify(pendingDocs));
+            
+            alert("✅ แก้ไขและส่งแบบฟอร์มเรียบร้อยแล้ว!");
+            navigate("/student/status");
+
+        } else {
+            // --- Logic สำหรับการ "สร้างและส่งใหม่" (เหมือนเดิม) ---
+            const formPrefix = "Form3";
+            const timestamp = Date.now();
+            const newDocId = `${formPrefix}-${timestamp}`;
+            const submissionData = { ...commonData, doc_id: newDocId };
+
+            const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+            existingPendingDocs.push(submissionData);
+            localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
+            
+            alert("✅ ยืนยันและนำส่งเอกสารเรียบร้อยแล้ว!");
+            navigate("/student/status");
+        }
+    } catch (error) {
+        console.error("Error processing form submission:", error);
+        alert("เกิดข้อผิดพลาดในการประมวลผลไฟล์แนบ กรุณาลองใหม่อีกครั้ง");
+    }
   };
 
   if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.error}>เกิดข้อผิดพลาด: {error}</div>;
 
   return (
-    <div className={styles.formContainer}>
-      <h2>📑 แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม</h2>
-      <form onSubmit={handleSubmit}>
-        <fieldset>
-          <legend>📌 ข้อมูลนักศึกษา</legend>
-          <div className={styles.infoGrid}>
-            <div><label>ชื่อ-นามสกุล:</label><input type="text" value={displayData?.fullname || ''} disabled /></div>
-            <div><label>รหัสนักศึกษา:</label><input type="text" value={displayData?.student_id || ''} disabled /></div>
-            <div><label>ระดับปริญญา:</label><input type="text" value={displayData?.degree || ''} disabled /></div>
-            <div><label>หลักสูตรและสาขาวิชา:</label><input type="text" value={displayData?.programName || ''} disabled /></div>
-            <div className={styles.fullWidth}><label>ภาควิชา:</label><input type="text" value={displayData?.departmentName || ''} disabled /></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>📖 ข้อมูลหัวข้อวิทยานิพนธ์ (ที่ได้รับอนุมัติ)</legend>
-          <div className={styles.formGroup}>
-            <label>วันที่อนุมัติหัวข้อ:</label>
-            <input 
-              type="text" 
-              value={displayData?.proposal_approval_date ? new Date(displayData.proposal_approval_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : "ยังไม่มีข้อมูล (รอฟอร์ม 2 อนุมัติ)"} 
-              disabled 
-            />
-          </div>
-          <div className={styles.formGroup}>
-            <label>ชื่อเรื่อง (ภาษาไทย):</label>
-            <textarea value={displayData?.thesis_title_th || ''} rows="2" disabled />
-          </div>
-          <div className={styles.formGroup}>
-            <label>ชื่อเรื่อง (ภาษาอังกฤษ):</label>
-            <textarea value={displayData?.thesis_title_en || ''} rows="2" disabled />
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>👨‍🏫 อาจารย์ผู้รับผิดชอบ</legend>
-          {/* --- ✅ ส่วนที่แก้ไข: เปลี่ยน Dropdown เป็น Input Disabled --- */}
-          <div className={styles.formGroup}>
-            <label htmlFor="programChair">ประธานกรรมการสอบ (จากฟอร์ม 2)</label>
-            <input 
-              type="text" 
-              id="programChair" 
-              value={displayData?.programChairName || ''} 
-              disabled 
-            />
-          </div>
-          {/* --- จบส่วนที่แก้ไข --- */}
-          <div className={`${styles.infoGrid} ${styles.threeCols}`}>
-            <div><label>อาจารย์ที่ปรึกษาหลัก:</label><input type="text" value={displayData?.mainAdvisorName || ''} disabled /></div>
-            <div><label>อาจารย์ที่ปรึกษาร่วม 1:</label><input type="text" value={displayData?.coAdvisor1Name || ''} disabled /></div>
-            <div><label>อาจารย์ที่ปรึกษาร่วม 2:</label><input type="text" value={displayData?.coAdvisor2Name || ''} disabled /></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>📎 แนบไฟล์เค้าโครงวิทยานิพนธ์</legend>
-          <div className={`${styles.subSection} ${formData.outlineFile ? styles.attached : ''}`}>
-            <label htmlFor="outlineFile">ไฟล์เค้าโครงวิทยานิพนธ์ฉบับสมบูรณ์*</label>
-            <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F3_PROPOSAL_REVISED_DDMMYYYY.pdf</small>
-            <div className={styles.fileInputWrapper}>
-              <label htmlFor="outlineFile" className={styles.fileInputLabel}>
-                {formData.outlineFile ? 'เปลี่ยนไฟล์' : 'เลือกไฟล์'}
-              </label>
-              <input type="file" id="outlineFile" name="outlineFile" onChange={handleFileChange} />
-              {formData.outlineFile ? (
-                <div className={styles.fileInfo}>
-                  <FontAwesomeIcon icon={faCheckCircle} className={styles.checkIcon} />
-                  <a href={URL.createObjectURL(formData.outlineFile)} target="_blank" rel="noopener noreferrer" className={styles.fileNameDisplay}>
-                    {formData.outlineFile.name}
-                  </a>
-                  <button type="button" onClick={() => handleRemoveFile('outlineFile')} className={styles.removeFileBtn}>
-                    <FontAwesomeIcon icon={faTimes} />
-                  </button>
-                </div>
-              ) : (
-                <span className={styles.fileNameDisplay}>ยังไม่ได้เลือกไฟล์</span>
-              )}
+      <div className={styles.formContainer}>
+          {/* ✅✅✅ แก้ไขส่วนนี้ทั้งหมด ✅✅✅ */}
+            <div className={styles.titleContainer}>
+              <h2>{isEditMode ? '📝 แก้ไขแบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม' : '📑 แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม'}</h2>
             </div>
-          </div>
-        </fieldset>
+                {isEditMode && (
+                  <div className={styles.backButtonContainer}>
+                    <button type="button" className={styles.backButton} onClick={() => navigate('/student/status')}>
+                        กลับไปหน้าสถานะ
+                    </button>
+                  </div>
+                )}
 
-        <fieldset>
-          <legend>📝 ความคิดเห็นเพิ่มเติม (ถ้ามี)</legend>
-          <div className={styles.formGroup}>
-            <label htmlFor="comment">คุณสามารถใส่คำแนะนำหรือข้อมูลเพิ่มเติมถึงเจ้าหน้าที่ได้ที่นี่</label>
-            <textarea 
-              id="comment" 
-              name="comment"
-              rows="4" 
-              maxLength="250" 
-              placeholder="ความคิดเห็นเพิ่มเติม... (ไม่เกิน 250 ตัวอักษร)"
-              value={formData.comment}
-              onChange={handleChange}
-            />
-            <div className={styles.charCounter}>{formData.comment.length} / 250</div>
-          </div>
-        </fieldset>
+        {isEditMode && editingDoc.admin_comment && (
+            <div className={styles.rejectionNotice}>
+                <strong>เหตุผลที่ส่งกลับแก้ไข:</strong>
+                <p>{editingDoc.admin_comment}</p>
+            </div>
+        )}
 
-        <button type="submit">📤 ยืนยันและส่งแบบฟอร์ม</button>
-      </form>
+        <form onSubmit={handleSubmit}>
+            <fieldset>
+                <legend>📌 ข้อมูลนักศึกษา</legend>
+                <div className={styles.infoGrid}>
+                    <div><label>ชื่อ-นามสกุล:</label><input type="text" value={displayData?.fullname || ''} disabled /></div>
+                    <div><label>รหัสนักศึกษา:</label><input type="text" value={displayData?.student_id || ''} disabled /></div>
+                    <div><label>ระดับปริญญา:</label><input type="text" value={displayData?.degree || ''} disabled /></div>
+                    <div><label>หลักสูตรและสาขาวิชา:</label><input type="text" value={displayData?.programName || ''} disabled /></div>
+                    <div className={styles.fullWidth}><label>ภาควิชา:</label><input type="text" value={displayData?.departmentName || ''} disabled /></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>📖 ข้อมูลหัวข้อวิทยานิพนธ์ (ที่ได้รับอนุมัติ)</legend>
+                <div className={styles.formGroup}>
+                    <label>วันที่อนุมัติหัวข้อ:</label>
+                    <input type="text" value={displayData?.proposal_approval_date ? new Date(displayData.proposal_approval_date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' }) : "ยังไม่มีข้อมูล (รอฟอร์ม 2 อนุมัติ)"} disabled />
+                </div>
+                <div className={styles.formGroup}>
+                    <label>ชื่อเรื่อง (ภาษาไทย):</label>
+                    <textarea value={displayData?.thesis_title_th || ''} rows="2" disabled />
+                </div>
+                <div className={styles.formGroup}>
+                    <label>ชื่อเรื่อง (ภาษาอังกฤษ):</label>
+                    <textarea value={displayData?.thesis_title_en || ''} rows="2" disabled />
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>👨‍🏫 อาจารย์ผู้รับผิดชอบ</legend>
+                <div className={styles.formGroup}>
+                    <label htmlFor="programChair">ประธานกรรมการสอบ (จากฟอร์ม 2)</label>
+                    <input type="text" id="programChair" value={displayData?.programChairName || ''} disabled />
+                </div>
+                <div className={`${styles.infoGrid} ${styles.threeCols}`}>
+                    <div><label>อาจารย์ที่ปรึกษาหลัก:</label><input type="text" value={displayData?.mainAdvisorName || ''} disabled /></div>
+                    <div><label>อาจารย์ที่ปรึกษาร่วม 1:</label><input type="text" value={displayData?.coAdvisor1Name || ''} disabled /></div>
+                    <div><label>อาจารย์ที่ปรึกษาร่วม 2:</label><input type="text" value={displayData?.coAdvisor2Name || ''} disabled /></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>📎 แนบไฟล์เค้าโครงวิทยานิพนธ์</legend>
+                <div className={`${styles.subSection} ${formData.outlineFile ? styles.attached : ''}`}>
+                    <label htmlFor="outlineFile">ไฟล์เค้าโครงวิทยานิพนธ์ฉบับสมบูรณ์*</label>
+                    <small className={styles.fileNamingInstruction}>*ตั้งชื่อ: รหัสนักศึกษา_F3_PROPOSAL_REVISED_DDMMYYYY.pdf</small>
+                    <div className={styles.fileInputWrapper}>
+                        <label htmlFor="outlineFile" className={styles.fileInputLabel}>
+                            {formData.outlineFile ? 'เปลี่ยนไฟล์' : 'เลือกไฟล์'}
+                        </label>
+                        <input type="file" id="outlineFile" name="outlineFile" onChange={handleFileChange} required/>
+                        {formData.outlineFile ? (
+                            <div className={styles.fileInfo}>
+                                <FontAwesomeIcon icon={faCheckCircle} className={styles.checkIcon} />
+                                <a href={URL.createObjectURL(formData.outlineFile)} target="_blank" rel="noopener noreferrer" className={styles.fileNameDisplay}>
+                                    {formData.outlineFile.name}
+                                </a>
+                                <button type="button" onClick={() => handleRemoveFile('outlineFile')} className={styles.removeFileBtn}>
+                                    <FontAwesomeIcon icon={faTimes} />
+                                </button>
+                            </div>
+                        ) : (
+                            <span className={styles.fileNameDisplay}>ยังไม่ได้เลือกไฟล์</span>
+                        )}
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>📝 ความคิดเห็นเพิ่มเติม (ถ้ามี)</legend>
+                <div className={styles.formGroup}>
+                    <label htmlFor="comment">คุณสามารถใส่คำแนะนำหรือข้อมูลเพิ่มเติมถึงเจ้าหน้าที่ได้ที่นี่</label>
+                    <textarea 
+                        id="comment" 
+                        name="comment"
+                        rows="4" 
+                        maxLength="250" 
+                        placeholder="ความคิดเห็นเพิ่มเติม... (ไม่เกิน 250 ตัวอักษร)"
+                        value={formData.comment}
+                        onChange={handleChange}
+                    />
+                    <div className={styles.charCounter}>{formData.comment.length} / 250</div>
+                </div>
+            </fieldset>
+
+            <button type="submit">{isEditMode ? '📤 แก้ไขและส่งแบบฟอร์มอีกครั้ง' : '📤 ยืนยันและส่งแบบฟอร์ม'}</button>
+        </form>
     </div>
   );
 }

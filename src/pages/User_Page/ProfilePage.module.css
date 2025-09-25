@@ -332,6 +332,9 @@
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; 
 }
 .modalBox h3 {
     margin-top: 0;
@@ -343,14 +346,18 @@
 }
 .cropperContainer {
     margin: 20px 0;
-    height: 400px;
-    width: 100%;
+    flex-grow: 1; /* ทำให้พื้นที่นี้ยืดหยุ่นตามพื้นที่ที่เหลือ */
+    overflow-y: auto; /* เพิ่ม scrollbar เมื่อรูปภาพสูงเกินไป */
+    display: flex; /* จัดให้รูปอยู่ตรงกลาง */
+    align-items: center;
+    justify-content: center;
 }
 .modalActions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 15px;
   margin-top: 25px;
+  flex-shrink: 0; 
 }
 .signatureModalBox {
     width: 90%;

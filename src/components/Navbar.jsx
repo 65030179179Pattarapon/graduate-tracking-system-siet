@@ -35,7 +35,7 @@ function Navbar({ userData, onLogoutClick }) {
             <ul className={styles.dropdownMenu}>
               <li className={styles.dropdownHeader}>ขั้นการสอบหัวข้อและเค้าโครง</li>
               <li><Link to="/student/form1">แบบฟอร์มขอรับรองการเป็นอาจารย์ที่ปรึกษาวิทยานิพนธ์ หลัก/ร่วม</Link></li>
-              <li><Link to="/student/form2">แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์ ระดับบัณฑิตศึกษ</Link></li>
+              <li><Link to="/student/form2">แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์ ระดับบัณฑิตศึกษา</Link></li>
               <li><Link to="/student/form3">แบบนำส่งเอกสารหัวข้อและเค้าโครงวิทยานิพนธ์ 1 เล่ม</Link></li>
               <li><Link to="/student/form4">แบบขอหนังสือเชิญเป็นผู้ทรงคุณวุฒิตรวจและประเมิน...เพื่อการวิจัย</Link></li>
               <li><Link to="/student/form5">แบบขอหนังสือขออนุญาตเก็บรวบรวมข้อมูล (วิทยานิพนธ์)</Link></li>

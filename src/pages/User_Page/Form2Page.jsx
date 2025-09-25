@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Form2Page.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons'; // เปลี่ยน faTimesCircle เป็น faTimes
+import { faCheckCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 
-// วางฟังก์ชันนี้ไว้ด้านบนสุดของไฟล์ Form2Page.jsx
 const fileToDataUrl = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -16,6 +15,9 @@ const fileToDataUrl = (file) => {
 
 function Form2Page() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // --- State สำหรับข้อมูล ---
   const [studentInfo, setStudentInfo] = useState(null);
   const [advisorLists, setAdvisorLists] = useState({
     mainAdvisorName: '', coAdvisor1Name: '', potentialChairs: [],
@@ -23,18 +25,20 @@ function Form2Page() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // --- State สำหรับค่าในฟอร์ม ---
   const [formData, setFormData] = useState({
     thesisTitleTh: '', thesisTitleEn: '', committeeChair: '', coAdvisor2: '',
     committeeMember5: '', reserveExternal: '', reserveInternal: '',
     registrationSemester: '', registrationYear: '', comment: '',
     files: {
-      proposalFile_th: null,
-      proposalFile_en: null,
-      coverPageFile_th: null,
-      coverPageFile_en: null,
-      registrationProofFile: null,
+      proposalFile_th: null, proposalFile_en: null, coverPageFile_th: null,
+      coverPageFile_en: null, registrationProofFile: null,
     },
   });
+  
+  const [editingDoc, setEditingDoc] = useState(null);
+  const isEditMode = !!editingDoc;
 
   useEffect(() => {
     const loadFormData = async () => {
@@ -73,6 +77,33 @@ function Form2Page() {
           internalMembers: internalAdvisors.filter(a => !usedAdvisorIds.includes(a.advisor_id)),
           externalMembers: externalAdvisors,
         });
+
+        const queryParams = new URLSearchParams(location.search);
+        const docIdToEdit = queryParams.get('edit');
+
+        if (docIdToEdit) {
+          const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+          const docToEdit = rejectedDocs.find(doc => doc.doc_id === docIdToEdit);
+          
+          if (docToEdit) {
+            setEditingDoc(docToEdit);
+            setFormData(prev => ({
+              ...prev,
+              thesisTitleTh: docToEdit.thesis_title_th || '',
+              thesisTitleEn: docToEdit.thesis_title_en || '',
+              committeeChair: docToEdit.committee?.chair_id || '',
+              coAdvisor2: docToEdit.committee?.co_advisor2_id || '',
+              committeeMember5: docToEdit.committee?.member5_id || '',
+              reserveExternal: docToEdit.committee?.reserve_external_id || '',
+              reserveInternal: docToEdit.committee?.reserve_internal_id || '',
+              registrationSemester: docToEdit.details?.registration_semester || '',
+              registrationYear: docToEdit.details?.registration_year || '',
+              comment: docToEdit.student_comment || '',
+            }));
+          } else {
+            setError(`ไม่พบเอกสารที่ถูกส่งกลับแก้ไข (ID: ${docIdToEdit})`);
+          }
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -80,7 +111,7 @@ function Form2Page() {
       }
     };
     loadFormData();
-  }, []);
+  }, [location.search]);
 
   const handleChange = (e) => {
     const { id, value, name } = e.target;
@@ -98,20 +129,25 @@ function Form2Page() {
     }
   };
 
- // ✅✅✅ แทนที่ handleSubmit เดิมทั้งหมดด้วยโค้ดนี้ ✅✅✅
-  const handleSubmit = async (e) => {
-     e.preventDefault();
-     const userEmail = localStorage.getItem("current_user");
+  const handleRemoveFile = (fileName) => {
+    setFormData(prev => ({
+        ...prev,
+        files: { ...prev.files, [fileName]: null }
+    }));
+  };
 
-     if (!formData.files.proposalFile_th || !formData.files.proposalFile_en ||
-         !formData.files.coverPageFile_th || !formData.files.coverPageFile_en ||
-         !formData.files.registrationProofFile) {
-         alert("กรุณาแนบไฟล์ประกอบให้ครบถ้วนทุกช่อง");
-         return;
-     }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const userEmail = localStorage.getItem("current_user");
+
+    if (!formData.files.proposalFile_th || !formData.files.proposalFile_en ||
+        !formData.files.coverPageFile_th || !formData.files.coverPageFile_en ||
+        !formData.files.registrationProofFile) {
+        alert("กรุณาแนบไฟล์ประกอบให้ครบถ้วนทุกช่อง");
+        return;
+    }
 
     try {
-      // --- 🔽 ส่วนที่เพิ่มเข้ามา: แปลงไฟล์ทั้งหมดเป็น Data URL 🔽 ---
       const filePromises = [
         fileToDataUrl(formData.files.proposalFile_th),
         fileToDataUrl(formData.files.proposalFile_en),
@@ -119,75 +155,97 @@ function Form2Page() {
         fileToDataUrl(formData.files.coverPageFile_en),
         fileToDataUrl(formData.files.registrationProofFile)
       ];
-
-      // รอให้ทุกไฟล์แปลงเสร็จ
       const fileUrls = await Promise.all(filePromises);
-      // --- จบส่วนที่เพิ่มเข้ามา ---
 
-
-      const formPrefix = "Form2";
-      const timestamp = Date.now(); // ดึงตัวเลขเวลาปัจจุบัน
-      const newDocId = `${formPrefix}-${timestamp}`; // นำมาต่อกันเพื่อให้ไม่ซ้ำ
-
-      const submissionData = {
-        doc_id: newDocId, 
-        type: "ฟอร์ม 2",
-        title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", 
-        student_email: userEmail,
-        student_id: studentInfo.student_id, 
-        thesis_title_th: formData.thesisTitleTh,
-        thesis_title_en: formData.thesisTitleEn,
-        committee: {
-          chair_id: formData.committeeChair, 
-          co_advisor2_id: formData.coAdvisor2,
-          member5_id: formData.committeeMember5, 
-          reserve_external_id: formData.reserveExternal,
-          reserve_internal_id: formData.reserveInternal,
-        },
-        // --- 🔽 ส่วนที่แก้ไข: เพิ่ม property 'url' เข้าไป 🔽 ---
-        files: [
-            { type: 'เค้าโครงวิทยานิพนธ์ (ไทย)', name: formData.files.proposalFile_th.name, url: fileUrls[0] },
-            { type: 'เค้าโครงวิทยานิพนธ์ (อังกฤษ)', name: formData.files.proposalFile_en.name, url: fileUrls[1] },
-            { type: 'หน้าปก (ไทย)', name: formData.files.coverPageFile_th.name, url: fileUrls[2] },
-            { type: 'หน้าปก (อังกฤษ)', name: formData.files.coverPageFile_en.name, url: fileUrls[3] },
-            { type: 'สำเนาลงทะเบียน', name: formData.files.registrationProofFile.name, url: fileUrls[4] }
-        ],
-        // --- จบส่วนที่แก้ไข ---
-        details: {
-          registration_semester: formData.registrationSemester,
-          registration_year: formData.registrationYear,
-        },
-        student_comment: formData.comment, 
-        submitted_date: new Date().toISOString(),
-        status: "รอตรวจ"
+      const commonData = {
+          type: "ฟอร์ม 2",
+          title: "แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์", 
+          student_email: userEmail,
+          student_id: studentInfo.student_id, 
+          thesis_title_th: formData.thesisTitleTh,
+          thesis_title_en: formData.thesisTitleEn,
+          committee: {
+            chair_id: formData.committeeChair, 
+            co_advisor2_id: formData.coAdvisor2,
+            member5_id: formData.committeeMember5, 
+            reserve_external_id: formData.reserveExternal,
+            reserve_internal_id: formData.reserveInternal,
+          },
+          files: [
+              { type: 'เค้าโครงวิทยานิพนธ์ (ไทย)', name: formData.files.proposalFile_th.name, url: fileUrls[0] },
+              { type: 'เค้าโครงวิทยานิพนธ์ (อังกฤษ)', name: formData.files.proposalFile_en.name, url: fileUrls[1] },
+              { type: 'หน้าปก (ไทย)', name: formData.files.coverPageFile_th.name, url: fileUrls[2] },
+              { type: 'หน้าปก (อังกฤษ)', name: formData.files.coverPageFile_en.name, url: fileUrls[3] },
+              { type: 'สำเนาลงทะเบียน', name: formData.files.registrationProofFile.name, url: fileUrls[4] }
+          ],
+          details: {
+            registration_semester: formData.registrationSemester,
+            registration_year: formData.registrationYear,
+          },
+          student_comment: formData.comment, 
+          submitted_date: new Date().toISOString(),
+          status: "รอตรวจ"
       };
 
-      // ✅✅✅ เพิ่มบรรทัดนี้เข้าไป ก่อน localStorage.setItem ✅✅✅
-      console.log("ข้อมูลที่จะถูกบันทึก:", submissionData);
+      if (isEditMode) {
+          const submissionData = { ...editingDoc, ...commonData };
 
-      const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
-      existingPendingDocs.push(submissionData);
-      localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
-      
-      alert("✅ ยืนยันและส่งแบบฟอร์มเสนอหัวข้อเรียบร้อยแล้ว!");
-      navigate("/student/status");
+          const rejectedDocs = JSON.parse(localStorage.getItem('localStorage_rejectedDocs') || '[]');
+          const updatedRejectedDocs = rejectedDocs.filter(doc => doc.doc_id !== editingDoc.doc_id);
+          localStorage.setItem('localStorage_rejectedDocs', JSON.stringify(updatedRejectedDocs));
 
+          const pendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+          pendingDocs.push(submissionData);
+          localStorage.setItem('localStorage_pendingDocs', JSON.stringify(pendingDocs));
+          
+          alert("✅ แก้ไขและส่งแบบฟอร์มเรียบร้อยแล้ว!");
+          navigate("/student/status");
+      } else {
+          const formPrefix = "Form2";
+          const timestamp = Date.now();
+          const newDocId = `${formPrefix}-${timestamp}`;
+          const submissionData = { ...commonData, doc_id: newDocId };
+
+          const existingPendingDocs = JSON.parse(localStorage.getItem('localStorage_pendingDocs') || '[]');
+          existingPendingDocs.push(submissionData);
+          localStorage.setItem('localStorage_pendingDocs', JSON.stringify(existingPendingDocs));
+          
+          alert("✅ ยืนยันและส่งแบบฟอร์มเสนอหัวข้อเรียบร้อยแล้ว!");
+          navigate("/student/status");
+      }
     } catch (error) {
-        console.error("Error converting files to Data URL:", error);
-        alert("เกิดข้อผิดพลาดในการประมวลผลไฟล์แนบ กรุณาลองใหม่อีกครั้ง");
+      console.error("Error converting files to Data URL:", error);
+      alert("เกิดข้อผิดพลาดในการประมวลผลไฟล์แนบ กรุณาลองใหม่อีกครั้ง");
     }
   };
-
 
   if (loading) return <div className={styles.loading}>กำลังโหลดข้อมูล...</div>;
   if (error) return <div className={styles.error}>เกิดข้อผิดพลาด: {error}</div>;
 
   const currentThaiYear = new Date().getFullYear() + 543;
   const yearOptions = Array.from({ length: 20 }, (_, i) => currentThaiYear - i);
-
+      
   return (
-    <div className={styles.formContainer}>
-      <h2>📑 แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์ ระดับบัณฑิตศึกษา</h2>
+      <div className={styles.formContainer}>
+          {/* ✅✅✅ แก้ไขส่วนนี้ทั้งหมด ✅✅✅ */}
+            <div className={styles.titleContainer}>
+              <h2>{isEditMode ? '📝 แก้ไขแบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์' : '📑 แบบเสนอหัวข้อและเค้าโครงวิทยานิพนธ์'}</h2>
+            </div>  
+                {isEditMode && (
+                  <div className={styles.backButtonContainer}>
+                    <button type="button" className={styles.backButton} onClick={() => navigate('/student/status')}>
+                        กลับไปหน้าสถานะ
+                    </button>
+                  </div>
+                )}
+      
+      {isEditMode && editingDoc.admin_comment && (
+        <div className={styles.rejectionNotice}>
+            <strong>เหตุผลที่ส่งกลับแก้ไข:</strong>
+            <p>{editingDoc.admin_comment}</p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>📌 ข้อมูลนักศึกษา</legend>
@@ -270,7 +328,6 @@ function Form2Page() {
 
         <fieldset>
           <legend>📎 แนบเอกสารประกอบ</legend>
-
           {/* --- ✅ ส่วนที่แก้ไข: เงื่อนไขการเปลี่ยนสี --- */}
           <div className={`${styles.subSection} ${formData.files.proposalFile_th && formData.files.proposalFile_en ? styles.attached : ''}`}>
             <label>1. ไฟล์หัวข้อและเค้าโครงวิทยานิพนธ์* (.pdf, .docx)</label>

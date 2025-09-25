@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../pages/User_Page/StatusPage.module.css'; // ใช้ CSS จากหน้าหลักได้เลย
+import styles from '../pages/User_Page/StatusPage.module.css';
 
 // ฟังก์ชันสำหรับแปลงวันที่
 const formatDate = (isoString) => {
@@ -11,13 +11,24 @@ const formatDate = (isoString) => {
   }) + ' น.';
 };
 
+// ✅ 1. สร้าง Object สำหรับจับคู่ประเภทฟอร์มกับ Path
+const formPathMap = {
+  'ฟอร์ม 1': '/student/form1',
+  'ฟอร์ม 2': '/student/form2',
+  'ฟอร์ม 3': '/student/form3',
+  'ฟอร์ม 4': '/student/form4',
+  'ฟอร์ม 5': '/student/form5',
+  'ฟอร์ม 6': '/student/form6',
+  'ผลสอบภาษาอังกฤษ': '/student/exam-submit',
+  'ผลสอบวัดคุณสมบัติ': '/student/exam-submit',
+};
+
 const ROWS_PER_PAGE = 5;
 
-// Component นี้จะรับ props 3 อย่าง: title, statusType, และ documents
-function StatusColumn({ title, statusType, documents }) {
+// ✅ 2. เพิ่ม navigate เข้ามาใน props
+function StatusColumn({ title, statusType, documents, navigate }) {
   const [currentPage, setCurrentPage] = useState(1);
 
-  // --- Logic การแบ่งหน้า (Pagination) ---
   const totalPages = Math.ceil(documents.length / ROWS_PER_PAGE) || 1;
   const indexOfLastDoc = currentPage * ROWS_PER_PAGE;
   const indexOfFirstDoc = indexOfLastDoc - ROWS_PER_PAGE;
@@ -31,15 +42,27 @@ function StatusColumn({ title, statusType, documents }) {
       <ul>
         {currentDocs.length > 0 ? (
           currentDocs.map((doc, index) => {
-            // กำหนดว่าจะใช้ key วันที่ตัวไหนในการแสดงผล
             const dateLabel = statusType === 'approved' ? 'วันที่อนุมัติ' : (statusType === 'rejected' ? 'วันที่ส่งกลับ' : 'วันที่ส่ง');
-            const dateToShow = doc[`${statusType}_date`] || doc.submitted_date;
+            const dateToShow = doc.action_date || doc.submitted_date;
+
+            // ✅ 3. เพิ่ม Logic ในการตัดสินใจเลือก URL ที่จะไป
+            let destinationUrl = `/student/docs/${doc.doc_id}`; // URL ปกติ
+            
+            // ถ้าเป็นเอกสารที่ "ส่งกลับแก้ไข" และมี Path ใน formPathMap
+            if (statusType === 'rejected' && doc.status === 'ส่งกลับแก้ไข' && formPathMap[doc.type]) {
+              // ให้เปลี่ยน URL ไปยังหน้าฟอร์มพร้อมส่ง doc_id ไปเป็น query parameter
+              destinationUrl = `${formPathMap[doc.type]}?edit=${doc.doc_id}`;
+            }
 
             return (
               <li key={doc.doc_id || index}>
-                <Link to={`/student/docs/${doc.doc_id}`}>
+                {/* ✅ 4. ใช้ destinationUrl ที่เราสร้างขึ้น */}
+                <Link to={destinationUrl}>
                   <span className={styles.docTitle}>{doc.title}</span>
                   <span className={styles.docDetails}>{dateLabel}: {formatDate(dateToShow)}</span>
+                  {doc.admin_comment && statusType === 'rejected' && (
+                    <span className={styles.docComment}>เหตุผล: {doc.admin_comment}</span>
+                  )}
                 </Link>
               </li>
             );
@@ -49,7 +72,6 @@ function StatusColumn({ title, statusType, documents }) {
         )}
       </ul>
       
-      {/* จะแสดง Pagination ก็ต่อเมื่อมีเอกสารมากกว่า 1 หน้า */}
       {documents.length > ROWS_PER_PAGE && (
         <div className={styles.paginationControls}>
           <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>ᐸ ก่อนหน้า</button>

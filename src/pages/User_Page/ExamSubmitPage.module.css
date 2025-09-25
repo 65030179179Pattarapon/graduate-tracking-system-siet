@@ -190,4 +190,53 @@ input:disabled {
 .submitButton:hover {
     background: #e24a1e;
 }
-/* --- จบส่วนที่แก้ไข --- */
+
+/* --- ✅✅✅ เพิ่มโค้ดส่วนนี้เข้าไปใหม่ ✅✅✅ --- */
+.rejectionNotice {
+    background-color: #fff1f0;
+    border: 1px solid #ffccc7;
+    border-left: 5px solid #d4380d;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.5s;
+}
+
+.rejectionNotice strong {
+    color: #d4380d;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.rejectionNotice p {
+    margin: 0;
+    color: #5f2120;
+    font-size: 15px;
+    white-space: pre-wrap;
+}
+
+.editHeader {
+  display: flex;
+  justify-content: flex-end; /* ✅ จัดให้ปุ่มไปอยู่ชิดขวาสุด */
+  margin-bottom: 20px;      /* ✅ สร้างระยะห่างจากกล่องข้างล่าง (ปรับค่าได้) */
+}
+
+.backButton {
+    /* สไตล์ของปุ่มเหมือนเดิม */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.backButton:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}

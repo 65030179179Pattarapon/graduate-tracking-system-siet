@@ -7,7 +7,8 @@ import {
     faEye, faEyeSlash // 👈 เพิ่ม 2 ไอคอนนี้เข้าไป
 } from '@fortawesome/free-solid-svg-icons';
 import SignaturePad from 'react-signature-pad-wrapper';
-
+import ReactCrop from 'react-image-crop'; // 👈 เพิ่มบรรทัดนี้
+import 'react-image-crop/dist/ReactCrop.css'; // 👈 และบรรทัดนี้
     // Helper Functions
     const formatThaiDate = (isoString) => {
         if (!isoString) return '-';
@@ -163,9 +164,12 @@ function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
-    const [imageToCrop, setImageToCrop] = useState(null);
+    // ✅ 2. เปลี่ยน State และ Ref สำหรับไลบรารีใหม่
+    const [imgSrc, setImgSrc] = useState('');
+    const [crop, setCrop] = useState();
+    const [completedCrop, setCompletedCrop] = useState(null);
     const [isCropModalOpen, setCropModalOpen] = useState(false);
-    const cropperRef = useRef(null);
+    const imgRef = useRef(null);
 
     const [isSignatureModalOpen, setSignatureModalOpen] = useState(false);
     const [signatureTab, setSignatureTab] = useState('draw');
@@ -261,32 +265,64 @@ function ProfilePage() {
         setIsEditingPhone(false);
     };
 
+   // ✅ 3. แก้ไขฟังก์ชันจัดการการเปลี่ยนรูปโปรไฟล์
     const handleProfilePictureChange = (e) => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
+        if (e.target.files && e.target.files.length > 0) {
+            setCrop(undefined); // รีเซ็ตค่า crop ทุกครั้งที่เลือกรูปใหม่
             const reader = new FileReader();
-            reader.onload = () => {
-                setImageToCrop(reader.result);
-                setCropModalOpen(true);
-            };
-            reader.readAsDataURL(file);
+            reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''));
+            reader.readAsDataURL(e.target.files[0]);
+            setCropModalOpen(true);
         }
-        e.target.value = '';
+        e.target.value = ''; // เคลียร์ค่า input file
     };
 
-    const handleConfirmCrop = () => {
-        if (cropperRef.current?.cropper) {
-            const croppedImageData = cropperRef.current.cropper.getCroppedCanvas({
-                width: 256, height: 256,
-            }).toDataURL('image/png');
+    // ✅ 4. แก้ไขฟังก์ชันยืนยันการ Crop
+    const handleConfirmCrop = async () => {
+        if (completedCrop?.width && completedCrop?.height && imgRef.current) {
+            const croppedImageData = getCroppedImg(
+                imgRef.current,
+                completedCrop
+            );
             setProfileImage(croppedImageData);
             const userEmail = localStorage.getItem("current_user");
             localStorage.setItem(`${userEmail}_profile_image`, croppedImageData);
             setCropModalOpen(false);
-            setImageToCrop(null);
+            setImgSrc('');
         }
     };
+    
+    // ✅ 5. เพิ่มฟังก์ชัน Helper สำหรับการตัดรูปภาพ
+    function getCroppedImg(image, crop) {
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        const pixelRatio = window.devicePixelRatio;
+        
+        canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
+        canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            throw new Error('No 2d context');
+        }
+
+        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+        ctx.imageSmoothingQuality = 'high';
+
+        ctx.drawImage(
+            image,
+            crop.x * scaleX,
+            crop.y * scaleY,
+            crop.width * scaleX,
+            crop.height * scaleY,
+            0, 0,
+            crop.width * scaleX,
+            crop.height * scaleY
+        );
+
+        return canvas.toDataURL('image/png');
+    }
     
     const handleSaveSignature = () => {
         const userEmail = localStorage.getItem("current_user");
@@ -509,22 +545,26 @@ function ProfilePage() {
                 </div>
             </main>
 
+             {/* ✅ 6. แก้ไข JSX ของ Modal สำหรับ Crop รูปภาพ */}
             {isCropModalOpen && (
                 <div className={styles.modalOverlay}>
                     <div className={`${styles.modalBox} ${styles.cropModalBox}`}>
                         <h3>ปรับขนาดรูปโปรไฟล์</h3>
                         <div className={styles.cropperContainer}>
-                            <Cropper
-                                ref={cropperRef}
-                                src={imageToCrop}
-                                style={{ height: 400, width: '100%' }}
-                                aspectRatio={1 / 1}
-                                viewMode={1}
-                                background={false}
-                                responsive={true}
-                                checkOrientation={false}
-                                guides={true}
-                            />
+                            {imgSrc && (
+                                <ReactCrop
+                                    crop={crop}
+                                    onChange={(_, percentCrop) => setCrop(percentCrop)}
+                                    onComplete={(c) => setCompletedCrop(c)}
+                                    aspect={1}
+                                >
+                                    <img
+                                        ref={imgRef}
+                                        alt="Crop me"
+                                        src={imgSrc}
+                                    />
+                                </ReactCrop>
+                            )}
                         </div>
                         <div className={styles.modalActions}>
                             <button onClick={() => setCropModalOpen(false)} className={`${styles.btn} ${styles.btnSecondary}`}>ยกเลิก</button>
