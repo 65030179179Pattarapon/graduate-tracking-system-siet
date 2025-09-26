@@ -1,0 +1,15 @@
+.layoutContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+.mainContent {
+  flex-grow: 1;
+  width: 100%;
+  max-width: 1200px; /* จำกัดความกว้างสูงสุดของเนื้อหา */
+  margin: 0 auto; /* จัดให้อยู่กึ่งกลาง */
+  padding: 0 2rem; /* เพิ่ม padding ด้านข้าง */
+  box-sizing: border-box;
+}

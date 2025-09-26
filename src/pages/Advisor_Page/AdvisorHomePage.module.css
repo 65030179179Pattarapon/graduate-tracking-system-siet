@@ -1,0 +1,201 @@
+/* --- Page Layout --- */
+.pageContainer {
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+}
+.pageHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+.pageHeader p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* --- Dashboard Grid Layout --- */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+}
+
+/* --- Stat Cards --- */
+.statCard {
+  grid-column: span 6; /* ในจอเล็กจะเรียง 2 อัน */
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.statCard svg {
+  font-size: 2rem;
+  padding: 1rem;
+  border-radius: 50%;
+  color: white;
+}
+.pendingCard svg { background-color: var(--pending-color); }
+.adviseeCard svg { background-color: #3b82f6; }
+
+.statInfo {
+  display: flex;
+  flex-direction: column;
+}
+.statNumber {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.statLabel {
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+/* --- Main Action Card --- */
+.actionCard {
+  grid-column: span 12; /* เต็มแถว */
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.actionCard h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.docList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.docItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+.docItem:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.docInfo {
+  display: flex;
+  flex-direction: column;
+}
+.docTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.docStudent {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.docMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* --- Advisees Card --- */
+.adviseesCard {
+  grid-column: span 12; /* เต็มแถว */
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.adviseesCard h2 {
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.adviseeList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.adviseeList li a {
+  display: block;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: color 0.2s;
+}
+.adviseeList li:last-child a {
+  border-bottom: none;
+}
+.adviseeList li a:hover {
+  color: var(--color-primary);
+}
+.viewAllButton {
+  display: block;
+  margin-top: 1rem;
+  text-align: right;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* --- Empty States & Loaders --- */
+.emptyState {
+  text-align: center;
+  padding: 2rem;
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+.emptyStateSmall {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.loading, .error {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+.error {
+  color: var(--rejected-color);
+}
+
+/* --- Responsive Adjustments --- */
+@media (min-width: 768px) {
+  .statCard { grid-column: span 6; }
+  .actionCard { grid-column: span 12; }
+  .adviseesCard { grid-column: span 12; }
+}
+
+@media (min-width: 1024px) {
+  .statCard { grid-column: span 6; }
+  .actionCard { grid-column: span 8; grid-row: 2; }
+  .adviseesCard { grid-column: span 4; grid-row: 2; }
+}

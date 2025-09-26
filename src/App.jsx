@@ -2,16 +2,15 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // --- Layouts ---
-// ✅ แก้ไข: เปลี่ยนเป็น Relative Path
 import UserLayout from './layouts/UserLayout'; 
 import AdminLayout from './layouts/AdminLayout';
+// ✅ 1. Import Layout ใหม่สำหรับอาจารย์
+import AdvisorLayout from './layouts/AdvisorLayout'; 
 
 // --- Public Pages ---
-// ✅ แก้ไข: เปลี่ยนเป็น Relative Path
 import LoginPage from './pages/Auth_Page/Login';
 
 // --- Student & User Pages ---
-// ✅ แก้ไข: เปลี่ยนเป็น Relative Path ทั้งหมด
 import SignaturePage from './pages/User_Page/SignaturePage';
 import HomePage from './pages/User_Page/HomePage'; 
 import StatusPage from './pages/User_Page/StatusPage';
@@ -25,8 +24,12 @@ import Form6Page from './pages/User_Page/Form6Page';
 import ExamSubmitPage from './pages/User_Page/ExamSubmitPage';
 import ProfilePage from './pages/User_Page/ProfilePage';
 
+// --- Advisor Pages ---
+import AdvisorSignaturePage from './pages/Advisor_Page/AdvisorSignaturePage';
+// ✅ 2. Import หน้าหลักของอาจารย์เข้ามา
+import AdvisorHomePage from './pages/Advisor_Page/AdvisorHomePage';
+
 // --- Admin Pages ---
-// ✅ แก้ไข: เปลี่ยนเป็น Relative Path ทั้งหมด
 import AdminHomePage from './pages/Admin_Page/AdminHomePage';
 import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
 import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage';
@@ -62,6 +65,15 @@ function App() {
         <Route path="exam-submit" element={<ExamSubmitPage />} />
         <Route path="docs/:docId" element={<DocumentDetailPage />} />
       </Route>
+
+      {/* --- Advisor Routes --- */}
+      {/* ✅ 3. จัดกลุ่ม Route ของอาจารย์ให้อยู่ภายใต้ Layout ของตนเอง */}
+      <Route path="/advisor" element={<AdvisorLayout />}>
+        <Route index element={<Navigate replace to="home" />} />
+        <Route path="home" element={<AdvisorHomePage />} />
+        <Route path="signature" element={<AdvisorSignaturePage />} />
+        {/* คุณสามารถเพิ่ม Route อื่นๆ ของอาจารย์ที่นี่ในอนาคต */}
+      </Route>
       
       {/* --- Admin Routes (Nested under AdminLayout) --- */}
       <Route path="/admin" element={<AdminLayout />}>
@@ -69,22 +81,17 @@ function App() {
         <Route path="home" element={<AdminHomePage />} />
         <Route path="structures" element={<ManageStructurePage />} />
         <Route path="settings" element={<SettingsPage />} />
-
-        {/* จัดกลุ่ม Route ที่เกี่ยวกับการจัดการผู้ใช้งาน */}
         <Route path="manage-users">
             <Route index element={<ManageUsersPage />} />
-            {/* Routes สำหรับนักศึกษา */}
             <Route path="student">
                 <Route path="new" element={<AddStudentPage />} />
                 <Route path=":studentId" element={<ManageStudentDetailPage />} />
             </Route>
-            {/* Routes สำหรับอาจารย์ */}
             <Route path="advisor">
                 <Route path="new" element={<AddAdvisorPage />} />
                 <Route path=":advisorId" element={<ManageAdvisorDetailPage />} />
             </Route>
         </Route>
-
         <Route path="profile" element={<AdminProfilePage />} />
         <Route path="docs/:docId" element={<AdminDocumentDetailPage />} />
       </Route>
@@ -94,4 +101,3 @@ function App() {
 }
 
 export default App;
-
