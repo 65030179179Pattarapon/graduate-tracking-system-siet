@@ -1,0 +1,279 @@
+/* --- Global Variables (ปรับแก้สีหลักได้ที่นี่) --- */
+:root {
+  --primary-color: #ed4988; /* สีชมพู */
+  --primary-color-light: #f5f3ff;
+  --danger-color: #da1010; /* สีแดง */
+  --danger-color-light: #fee2e2;
+  --success-color: #10b981; /* สีเขียว */
+  --text-color-dark: #111827;
+  --text-color-medium: #374151;
+  --text-color-light: #6b7280;
+  --border-color: #e5e7eb;
+  --background-color-light: #f9fafb;
+}
+
+/* --- Page Layout --- */
+.pageContainer {
+  padding: 1px 32px; /* เพิ่ม padding รอบๆ */
+  background-color: var(--background-color-light);
+  min-height: calc(100vh - 60px); /* ให้ความสูงเต็มพื้นที่ที่เหลือจาก Navbar */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.pageHeader {
+  margin-bottom: 24px;
+}
+
+.pageHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-color-dark);
+}
+
+.pageHeader p {
+  font-size: 16px;
+  color: var(--text-color-light);
+  margin-top: 4px;
+}
+
+/* --- Tabs --- */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.tabButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--text-color-light);
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  margin-bottom: -2px; /* ทำให้เส้นขอบล่างพอดีกับเส้นของ .tabs */
+}
+
+.tabButton:hover {
+  color: var(--primary-color);
+}
+
+.activeTab {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* --- Content & Table Styles --- */
+.contentWrapper {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+}
+
+.tabContent {
+  padding: 24px;
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.contentHeader h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color-dark);
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dataTable th, .dataTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dataTable thead {
+  background-color: var(--background-color-light);
+}
+
+.dataTable th {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color-light);
+  text-transform: uppercase;
+}
+
+.dataTable tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.dataTable tbody tr:hover {
+  background-color: var(--background-color-light);
+}
+
+/* --- Buttons Styles --- */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ปุ่มหลักด้านบน (เช่น เพิ่มภาควิชา) */
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addButton:hover {
+  background-color: #d10f59;
+}
+
+/* ปุ่ม Action ในตาราง (แก้ไข / ลบ) */
+.editButton, .deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  color: var(--text-color-light);
+  transition: color 0.2s;
+}
+
+.editButton:hover {
+  color: var(--primary-color);
+}
+
+.deleteButton:hover {
+  color: var(--danger-color);
+}
+
+/* --- Modal Styles --- */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 500px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-color-dark);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color-light);
+}
+
+.modalBody label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color-medium);
+  margin-bottom: 8px;
+}
+
+.modalBody input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.cancelButton, .confirmButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.cancelButton {
+  background-color: #f1f5f9;
+  color: var(--text-color-medium);
+  border-color: #e2e8f0;
+}
+
+.cancelButton:hover {
+  background-color: #e2e8f0;
+}
+
+.confirmButton {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.confirmButton:hover {
+  opacity: 0.9;
+}
+.modalBody .formGroup {
+  margin-bottom: 20px; /* ✅ เพิ่มบรรทัดนี้ (หรือปรับค่าตามต้องการ) */
+}

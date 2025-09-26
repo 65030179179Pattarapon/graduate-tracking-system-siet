@@ -125,3 +125,20 @@
 .actionButtons button:hover { opacity: 0.85; }
 .primaryButton { background-color: var(--pending-color); color: rgb(48, 48, 48); }
 .dangerButton { background-color: #ef4444; color: white; }
+
+.successButton {
+  background-color: #0dbb35; /* สีเขียว */
+  color: white;
+}
+
+/* 2. ปุ่มสีเหลือง (สำหรับส่งต่อ) ยังใช้ Class เดิม */
+.primaryButton { 
+  background-color: var(--pending-color); /* สีเหลือง */
+  color: rgb(48, 48, 48); 
+}
+
+/* 3. ปุ่มสีแดง (สำหรับส่งกลับแก้ไข) ยังใช้ Class เดิม */
+.dangerButton { 
+  background-color: #ef4444; /* สีแดง */
+  color: white; 
+}

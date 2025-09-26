@@ -1,0 +1,196 @@
+/* --- Page Layout --- */
+.pageContainer {
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pageHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.pageHeader p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* --- 2-Column Layout --- */
+.profileLayout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* --- Left Card: Profile Info --- */
+.profileCard {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.profileIcon {
+  font-size: 80px;
+  color: #adb5bd;
+  margin-bottom: 1rem;
+}
+
+.profileCard h2 {
+  font-size: 20px;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+}
+
+.profileCard p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.roleBadge {
+  display: inline-block;
+  background-color: #e9ecef;
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* --- Right Card: Settings --- */
+.settingsCard {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.settingFieldset {
+  border: none;
+  /* ✅ เพิ่ม padding-top ให้มากขึ้น */
+  padding: 2.5rem 1.5rem 1.5rem 1.5rem; 
+  margin: 0;
+}
+
+.settingFieldset legend {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* --- Action Button --- */
+.actions {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  background-color: #f8f9fa;
+  border-radius: 0 0 12px 12px;
+}
+
+.saveButton {
+  background-color: var(--approved-color);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Message Boxes --- */
+.messageBox {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .profileLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Styles for Password Input with Eye Icon --- */
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrapper input {
+  padding-right: 40px; /* เพิ่มที่ว่างด้านขวาในช่อง input สำหรับไอคอน */
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+  padding: 0 4px;
+}
+
+.legendWrapper {
+  padding-top: 1rem; /* สร้างระยะห่างด้านบน 1rem */
+}

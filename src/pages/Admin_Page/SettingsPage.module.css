@@ -1,0 +1,406 @@
+/* --- Page Layout --- */
+.pageContainer {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto; /* ทำให้เนื้อหาอยู่กึ่งกลางจอ */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageHeader {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pageHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.pageHeader p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* --- Content Layout --- */
+.settingsContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* ระยะห่างระหว่าง fieldset */
+}
+
+.settingFieldset {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: var(--bg-card);
+}
+
+.settingFieldset legend {
+  padding: 0 0.5rem;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Form Elements --- */
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.formGroupRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 15px;
+  box-sizing: border-box;
+  font-family: 'Sarabun', sans-serif;
+}
+
+/* --- Checkbox Toggle --- */
+.toggleLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.toggleLabel input[type="checkbox"] {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+/* --- Main Actions --- */
+.mainActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.saveButton {
+  background-color: var(--approved-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.saveButton:hover {
+  opacity: 0.85;
+}
+
+/* --- Danger Zone --- */
+.dangerZone {
+  border-color: var(--rejected-color);
+  background-color: #fff5f5;
+}
+.dangerZone legend {
+  color: var(--rejected-color);
+}
+.dangerText {
+  font-size: 14px;
+  color: #c53030;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+.dangerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.actionButton, .dangerButton {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.actionButton {
+  background-color: #4b5563;
+  color: white;
+}
+.dangerButton {
+  background-color: var(--rejected-color);
+  color: white;
+}
+
+/* --- Template Management Section --- */
+.templateUploadSection {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.uploadButton {
+  background-color: #4a5568;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.5rem;
+}
+.uploadButton:hover {
+  background-color: #2d3748;
+}
+
+.templateList h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.templateList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.templateList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* --- ✅✅✅ เพิ่มและแก้ไขโค้ดส่วนนี้ทั้งหมด ✅✅✅ --- */
+
+/* --- Styles for Template List (Upgraded) --- */
+.fileInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1; 
+    min-width: 0;
+}
+
+.fileText {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.templateName {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.uploadDate {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.templateActions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0; 
+}
+
+.editButton, .deleteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+.editButton:hover {
+  color: var(--color-primary);
+}
+.deleteButton:hover {
+  color: var(--rejected-color);
+}
+
+.noTemplates {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 1rem;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+}
+
+/* --- Custom File Input Styles --- */
+.fileInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 5px;
+  padding-right: 12px;
+}
+
+/* ซ่อน input type="file" ของจริง */
+.fileInputHidden {
+  display: none;
+}
+
+/* สร้างปุ่มหลอกที่สวยงามด้วย Label */
+.fileInputLabel {
+  background-color: #e2e8f0;
+  color: #475569;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap; /* ป้องกันไม่ให้ข้อความตกบรรทัด */
+  transition: background-color 0.2s;
+}
+
+.fileInputLabel:hover {
+  background-color: #cbd5e1;
+}
+
+/* ส่วนแสดงชื่อไฟล์ */
+.fileNameDisplay {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* แสดง ... เมื่อชื่อไฟล์ยาวเกินไป */
+}
+
+/* --- Modal Styles (สำหรับหน้าต่างแก้ไข) --- */
+.modalOverlay {
+  position: fixed; /* ✅ ทำให้ลอยอยู่เหนือเนื้อหาอื่น */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* ✅ พื้นหลังสีดำโปร่งแสง */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* ✅ ทำให้แสดงอยู่ชั้นบนสุด */
+  animation: fadeIn 0.3s ease;
+}
+
+.modalContent {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 500px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalContent h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+/* --- Modal Action Buttons (New Design) --- */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* สไตล์ปุ่มพื้นฐาน */
+.cancelButton, .confirmButton {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* ปุ่มยกเลิก (Secondary) */
+.cancelButton {
+  background-color: #f1f5f9; /* สีพื้นหลังเทาอ่อน */
+  color: var(--text-secondary); /* สีตัวอักษรเทาเข้ม */
+  border-color: #e2e8f0; /* สีขอบเทา */
+}
+
+.cancelButton:hover {
+  background-color: #e2e8f0; /* สีเข้มขึ้นเมื่อ hover */
+  border-color: #cbd5e1;
+}
+
+/* ปุ่มยืนยัน/บันทึก (Primary) */
+.confirmButton {
+  background-color: var(--color-primary); /* ใช้สีหลักของธีม */
+  color: white;
+}
+
+.confirmButton:hover {
+  opacity: 0.85; /* ลดความสว่างลงเล็กน้อยเมื่อ hover */
+}

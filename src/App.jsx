@@ -2,13 +2,16 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // --- Layouts ---
+// ✅ แก้ไข: เปลี่ยนเป็น Relative Path
 import UserLayout from './layouts/UserLayout'; 
 import AdminLayout from './layouts/AdminLayout';
 
 // --- Public Pages ---
+// ✅ แก้ไข: เปลี่ยนเป็น Relative Path
 import LoginPage from './pages/Auth_Page/Login';
 
 // --- Student & User Pages ---
+// ✅ แก้ไข: เปลี่ยนเป็น Relative Path ทั้งหมด
 import SignaturePage from './pages/User_Page/SignaturePage';
 import HomePage from './pages/User_Page/HomePage'; 
 import StatusPage from './pages/User_Page/StatusPage';
@@ -23,6 +26,7 @@ import ExamSubmitPage from './pages/User_Page/ExamSubmitPage';
 import ProfilePage from './pages/User_Page/ProfilePage';
 
 // --- Admin Pages ---
+// ✅ แก้ไข: เปลี่ยนเป็น Relative Path ทั้งหมด
 import AdminHomePage from './pages/Admin_Page/AdminHomePage';
 import AdminProfilePage from './pages/Admin_Page/AdminProfilePage';
 import AdminDocumentDetailPage from './pages/Admin_Page/AdminDocumentDetailPage';
@@ -30,8 +34,10 @@ import ManageUsersPage from './pages/Admin_Page/ManageUsersPage';
 import ManageStudentDetailPage from './pages/Admin_Page/ManageStudentDetailPage';
 import AddStudentPage from './pages/Admin_Page/AddStudentPage'; 
 import ManageAdvisorDetailPage from './pages/Admin_Page/ManageAdvisorDetailPage';
-// ✅ 1. Import Component หน้าเพิ่มอาจารย์เข้ามา
 import AddAdvisorPage from './pages/Admin_Page/AddAdvisorPage';
+import ManageStructurePage from './pages/Admin_Page/ManageStructurePage';
+import SettingsPage from './pages/Admin_Page/SettingsPage';
+
 
 function App() {
   return (
@@ -61,20 +67,19 @@ function App() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate replace to="home" />} />
         <Route path="home" element={<AdminHomePage />} />
-        
+        <Route path="structures" element={<ManageStructurePage />} />
+        <Route path="settings" element={<SettingsPage />} />
+
         {/* จัดกลุ่ม Route ที่เกี่ยวกับการจัดการผู้ใช้งาน */}
         <Route path="manage-users">
             <Route index element={<ManageUsersPage />} />
-
             {/* Routes สำหรับนักศึกษา */}
             <Route path="student">
                 <Route path="new" element={<AddStudentPage />} />
                 <Route path=":studentId" element={<ManageStudentDetailPage />} />
             </Route>
-            
             {/* Routes สำหรับอาจารย์ */}
             <Route path="advisor">
-                {/* ✅ 2. เพิ่ม Route ใหม่สำหรับหน้าเพิ่มอาจารย์ */}
                 <Route path="new" element={<AddAdvisorPage />} />
                 <Route path=":advisorId" element={<ManageAdvisorDetailPage />} />
             </Route>
@@ -89,3 +94,4 @@ function App() {
 }
 
 export default App;
+

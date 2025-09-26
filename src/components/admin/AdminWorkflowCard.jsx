@@ -93,8 +93,8 @@ function AdminWorkflowCard({ document, user, advisors, onAction }) {
             <b>ขั้นตอนต่อไป:</b> ตรวจสอบและยืนยันผลการสอบ
           </p>
           <div className={styles.actionButtons}>
-            <button onClick={() => onAction('อนุมัติ')} className={styles.primaryButton}>อนุมัติ</button>
             <button onClick={() => onAction('ส่งกลับแก้ไข', prompt("กรุณาใส่เหตุผล:"))} className={styles.dangerButton}>ส่งกลับแก้ไข</button>
+            <button onClick={() => onAction('อนุมัติ')} className={styles.successButton}>อนุมัติ</button>
           </div>
         </div>
       );
@@ -123,7 +123,7 @@ function AdminWorkflowCard({ document, user, advisors, onAction }) {
         </p>
         {nextStepDetails}
         <div className={styles.actionButtons}>
-          <button onClick={() => onAction('ส่งต่อ')} className={styles.primaryButton}>ส่งต่อ</button>
+          {/* ย้ายปุ่ม "ส่งกลับให้แก้ไข" ขึ้นมาเป็นอันแรก */}
           <button 
             onClick={() => {
                 const reason = prompt("กรุณาใส่เหตุผลในการส่งกลับ (ถ้ามี):");
@@ -133,6 +133,7 @@ function AdminWorkflowCard({ document, user, advisors, onAction }) {
           >
             ส่งกลับให้แก้ไข
           </button>
+          <button onClick={() => onAction('ส่งต่อ')} className={styles.primaryButton}>ส่งต่อ</button>
         </div>
       </div>
     );

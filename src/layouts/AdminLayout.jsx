@@ -10,16 +10,20 @@ function AdminLayout() {
   const [activeSection, setActiveSection] = useState('pending-review'); // สำหรับ SidebarAdmin
   const [activeUserSection, setActiveUserSection] = useState('overview'); // สำหรับ SidebarManageUser
 
-  // ✅ 1. ตรวจสอบ Path สำหรับหน้ารายละเอียดอาจารย์
+  // --- ตรวจสอบ Path ปัจจุบัน ---
   const isManageUserPage = location.pathname === '/admin/manage-users';
   const isStudentDetailPage = location.pathname.startsWith('/admin/manage-users/student/');
-  const isAdvisorDetailPage = location.pathname.startsWith('/admin/manage-users/advisor/'); // 👈 เพิ่มบรรทัดนี้
+  const isAdvisorDetailPage = location.pathname.startsWith('/admin/manage-users/advisor/');
+  const isManageStructurePage = location.pathname.startsWith('/admin/structures');
+  const isSettingsPage = location.pathname.startsWith('/admin/settings');
+  // ✅ 1. เพิ่มตัวแปรสำหรับตรวจสอบหน้า "โปรไฟล์"
+  const isAdminProfilePage = location.pathname.startsWith('/admin/profile');
 
-  // Sidebar หลัก (SidebarAdmin) จะแสดงเมื่อไม่ใช่หน้า "จัดการผู้ใช้งาน" และไม่ใช่หน้ารายละเอียดใดๆ
-  const showMainSidebar = !isManageUserPage && !isStudentDetailPage && !isAdvisorDetailPage; // 👈 แก้ไขเงื่อนไข
+  // ✅ 2. อัปเดตเงื่อนไขการแสดง Sidebar หลัก
+  // Sidebar หลักจะแสดงเมื่อ "ไม่ใช่" หน้าเหล่านี้ทั้งหมด
+  const showMainSidebar = !isManageUserPage && !isStudentDetailPage && !isAdvisorDetailPage && !isManageStructurePage && !isSettingsPage && !isAdminProfilePage;
 
-  // Sidebar ของหน้าจัดการผู้ใช้งาน (SidebarManageUser) จะแสดงเมื่อเป็นหน้า '/admin/manage-users' เท่านั้น
-  // และไม่แสดงในหน้ารายละเอียดนักศึกษาหรืออาจารย์
+  // Sidebar ของหน้าจัดการผู้ใช้งานจะแสดงเมื่อเป็นหน้า '/admin/manage-users' เท่านั้น
   const showManageUserSidebar = isManageUserPage; 
 
 
@@ -28,7 +32,7 @@ function AdminLayout() {
       <NavbarAdmin />
       <div className={styles.adminPageLayout}>
         
-        {/* ✅ 2. ปรับเงื่อนไขการแสดง SidebarManageUser */}
+        {/* แสดง Sidebar ของหน้าจัดการผู้ใช้งาน */}
         {showManageUserSidebar && (
           <SidebarManageUser 
             activeSection={activeUserSection} 
@@ -36,7 +40,7 @@ function AdminLayout() {
           />
         )}
 
-        {/* ✅ 3. ปรับเงื่อนไขการแสดง SidebarAdmin */}
+        {/* แสดง Sidebar หลัก (Home) */}
         {showMainSidebar && (
           <SidebarAdmin 
             activeSection={activeSection} 
@@ -45,10 +49,6 @@ function AdminLayout() {
           />
         )}
         
-        {/* ถ้าเป็นหน้ารายละเอียดนักศึกษา (isStudentDetailPage) 
-            หรือหน้ารายละเอียดอาจารย์ (isAdvisorDetailPage) 
-            ส่วนนี้จะไม่แสดง Sidebar ใดๆ เลย */}
-
         <main className={styles.mainContent}>
           {/* Outlet จะ render Page Component ที่เรากำหนดใน App.jsx */}
           <Outlet context={isManageUserPage ? 

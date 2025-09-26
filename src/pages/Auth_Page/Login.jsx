@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
 import logo from '../../assets/images/logo.png';
+// ✅ 1. นำเข้าไอคอนและ Component จาก Font Awesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // ✅ 2. เพิ่ม State สำหรับสลับการแสดงผลรหัสผ่าน
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // ... (ฟังก์ชัน handleLogin และอื่นๆ เหมือนเดิมทั้งหมด) ...
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -51,7 +57,7 @@ function LoginPage() {
       return;
     }
 
-  const currentUser = users[formattedEmail];
+    const currentUser = users[formattedEmail];
     localStorage.setItem("current_user", formattedEmail);
     localStorage.setItem("role", currentUser.role);
     const userFullName = `${currentUser.prefix_th || ''}${currentUser.first_name_th || currentUser.fullname || ''} ${currentUser.last_name_th || ''}`.trim();
@@ -61,23 +67,19 @@ function LoginPage() {
     const userRole = currentUser.role;
 
     if (userRole === 'admin') {
-      // ถ้าเป็น Admin ให้ไปหน้าหลักของ Admin เลย
       navigate('/admin'); 
     } else if (userRole === 'student' || userRole === 'advisor') {
-      // ถ้าเป็น Student หรือ Advisor ให้เช็คว่าเคยเซ็นชื่อหรือยัง
       const hasSigned = localStorage.getItem(`${formattedEmail}_signed`) === "true";
       if (hasSigned) {
-        // ถ้าเคยเซ็นแล้ว ให้ไปหน้า Home ของ Role นั้นๆ
         navigate(`/${userRole}/home`);
       } else {
-        // ถ้ายังไม่เคยเซ็น ให้ไปหน้าตั้งค่าลายเซ็น
         navigate('/student/signature'); 
       }
     } else {
-      // สำหรับ Role อื่นๆ ที่อาจมีในอนาคต หรือกรณีที่ไม่ตรงเงื่อนไข
       setError("ไม่สามารถกำหนดหน้าถัดไปสำหรับบทบาทของคุณได้");
     }
   };
+
 
   return (
     <div className={styles.loginPageContainer}>
@@ -100,19 +102,30 @@ function LoginPage() {
               />
             </div>
 
+            {/* ✅ 3. ปรับแก้ JSX ของช่องรหัสผ่านทั้งหมด */}
             <div className={styles.inputGroup}>
               <label htmlFor="password">รหัสผ่าน</label>
-              <input
-                type="password"
-                id="password"
-                placeholder="รหัสผ่าน"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className={styles.passwordWrapper}> {/* เพิ่ม div ครอบ */}
+                <input
+                  type={passwordVisible ? "text" : "password"} // เปลี่ยน type ตาม state
+                  id="password"
+                  placeholder="รหัสผ่าน"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button 
+                  type="button" 
+                  className={styles.eyeIcon} 
+                  onClick={() => setPasswordVisible(!passwordVisible)} // สลับค่า state เมื่อคลิก
+                >
+                  <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
+                </button>
+              </div>
             </div>
 
-            <button type="submit">🚀 เข้าสู่ระบบ</button>
+            {/* ✅ 4. เพิ่ม className ให้ปุ่ม Login เพื่อให้ CSS เจาะจงได้ */}
+            <button type="submit" className={styles.submitButton}>🚀 เข้าสู่ระบบ</button>
             {error && <p className={styles.errorMsg}>{error}</p>}
           </form>
         </div>
@@ -122,4 +135,3 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
